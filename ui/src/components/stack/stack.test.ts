@@ -54,8 +54,8 @@ describe("card render smoke", () => {
     expect(renderToStaticMarkup(h(RateLimitCard, { platform }))).toContain("1 of 2");
     expect(renderToStaticMarkup(h(RateLimitCard, { platform: null }))).toContain("not reported");
   });
-  it("page renders its six cards before data arrives", () => {
+  it("page renders its seven cards before data arrives", () => {
     const html = renderToStaticMarkup(h(StackPage));
-    expect((html.match(/data-card=/g) ?? []).length).toBe(6);
+    expect((html.match(/data-card=/g) ?? []).length).toBe(7);
   });
 });

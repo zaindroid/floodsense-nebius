@@ -40,6 +40,23 @@ describe("platformLines more", () => {
     expect(out).toContain("LLM backend: unknown");
     expect(out).toContain("cost $0.0123");
   });
+  it("parses lane pricing, limits and region", () => {
+    const s = parsePlatformStatus({
+      llm_usage: {
+        lanes: {},
+        cost_usd: 0.002,
+        cost_per_answer_usd: 0.001,
+        answers: 2,
+        pricing: { fast: { model_id: "m", price_per_m_input: 0.06, price_per_m_output: 0.24, rpm_limit: 1000, country: "FI", region: "eu-north1" } },
+      },
+    })!;
+    expect(s.llmUsage!.costPerAnswerUsd).toBe(0.001);
+    expect(s.llmUsage!.pricing.fast).toMatchObject({ pricePerMInput: 0.06, rpmLimit: 1000, country: "FI", pricePerMCacheRead: null });
+  });
+  it("absent pricing and answers default safely", () => {
+    const s = parsePlatformStatus({ llm_usage: { lanes: {}, cost_usd: null } })!;
+    expect(s.llmUsage).toMatchObject({ costUsd: null, costPerAnswerUsd: null, answers: 0, pricing: {} });
+  });
   it("fetch failure is an error string", async () => {
     const r = await fetchPlatformStatus("http://127.0.0.1:1");
     expect(r.status).toBeNull();

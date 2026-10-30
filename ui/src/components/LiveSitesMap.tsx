@@ -1,6 +1,5 @@
 import L from "leaflet";
-import "leaflet/dist/leaflet.css";
-import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useMemo, useState } from "react";
 import { useConsole } from "../context/ConsoleContext";
 import { LiveHealthNote } from "./ModeSwitch";
 import { useInsurerWatch } from "../hooks/useInsurerWatch";
@@ -11,11 +10,14 @@ import { countsText, hhmm, monitorView } from "../lib/alertMonitor";
 import { statusLabel } from "../lib/origin";
 import { DEMO_BOOK_LINE } from "../lib/nearest";
 import type { ExposureJoinRow } from "../types/views";
+import { MapShell, type Bounds } from "./map/MapShell";
+import { statusPoint } from "./map/shellLogic";
 import "../styles/insurer.css";
 
-const TILE_URL = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
-const TILE_ATTRIBUTION =
-  '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors';
+const EU_VIEW: Bounds = [
+  [EU_WATCH_BOUNDS.south, EU_WATCH_BOUNDS.west],
+  [EU_WATCH_BOUNDS.north, EU_WATCH_BOUNDS.east],
+];
 
 /** The Europe live view of Sites / map: every live watch source and the insured sites layer. */
 export function LiveSitesPanel() {
@@ -76,50 +78,12 @@ export function LiveSitesPanel() {
 const NO_SITES: ExposureJoinRow[] = [];
 
 function LiveMap({ sources, sites }: { sources: WatchSource[]; sites: readonly ExposureJoinRow[] }) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const sourceLayer = useRef<L.LayerGroup | null>(null);
-  const siteLayer = useRef<L.LayerGroup | null>(null);
+  const [map, setMap] = useState<L.Map | null>(null);
+  const points3d = useMemo(() => sources.map((s) => statusPoint({ id: s.id, lat: s.lat, lon: s.lon, label: `${s.river ? `${s.river} · ${s.name}` : s.name} · ${statusView(s.kind, s.status).word}${s.live ? "" : " · not live (stale or seed)"}` }, s.status)), [sources]);
 
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-    const map = L.map(container, { zoomSnap: 0.5, attributionControl: false, scrollWheelZoom: false });
-    L.control
-      .attribution({ prefix: '<a href="https://leafletjs.com" target="_blank" rel="noopener">Leaflet</a>' })
-      .addAttribution(`${TILE_ATTRIBUTION} · Gauges: PEGELONLINE (WSV, DL-DE-Zero-2.0) · Model: Open-Meteo.com (GloFAS, CC BY 4.0) via Zetaris`)
-      .addTo(map);
-    L.tileLayer(TILE_URL, { maxZoom: 18 }).addTo(map);
-    siteLayer.current = L.layerGroup().addTo(map);
-    sourceLayer.current = L.layerGroup().addTo(map);
-    let touched = false;
-    const fit = () =>
-      map.fitBounds(
-        [
-          [EU_WATCH_BOUNDS.south, EU_WATCH_BOUNDS.west],
-          [EU_WATCH_BOUNDS.north, EU_WATCH_BOUNDS.east],
-        ],
-        { padding: [8, 8] },
-      );
-    fit();
-    const touch = () => (touched = true);
-    for (const type of ["pointerdown", "wheel", "keydown"]) container.addEventListener(type, touch, { once: true });
-    const resize = new ResizeObserver(() => {
-      map.invalidateSize();
-      if (!touched) fit();
-    });
-    resize.observe(container);
-    return () => {
-      resize.disconnect();
-      map.remove();
-      sourceLayer.current = null;
-      siteLayer.current = null;
-    };
-  }, []);
-
-  useEffect(() => {
-    const layer = sourceLayer.current;
-    if (!layer) return;
-    layer.clearLayers();
+    if (!map) return;
+    const layer = L.layerGroup().addTo(map);
     for (const s of sources) {
       const cls = `map-marker map-marker--${s.status}${s.live ? "" : " map-marker--sample"}`;
       const marker =
@@ -137,24 +101,34 @@ function LiveMap({ sources, sites }: { sources: WatchSource[]; sites: readonly E
       });
       layer.addLayer(marker);
     }
-  }, [sources]);
+    return () => void layer.remove();
+  }, [map, sources]);
 
   // Sites are many (hundreds): one small canvas-free circle each, no tooltip text beyond id and segment.
   const siteRows = useMemo(() => sites.filter((s) => Number.isFinite(s.lat) && Number.isFinite(s.lon)), [sites]);
+  const extra3d = useMemo(() => siteRows.map((r) => ({ id: r.policy_id, lat: r.lat, lon: r.lon, label: `${r.policy_id} · ${r.segment} (synthetic)` })), [siteRows]);
   useEffect(() => {
-    const layer = siteLayer.current;
-    if (!layer) return;
-    layer.clearLayers();
+    if (!map) return;
+    const layer = L.layerGroup().addTo(map);
     for (const row of siteRows) {
       const dot = L.circleMarker([row.lat, row.lon], { radius: 3, className: "exposure-site", bubblingMouseEvents: false });
       dot.bindTooltip(escapeHtml(`${row.policy_id} · ${row.segment} (synthetic)`), { direction: "top" });
       layer.addLayer(dot);
+      dot.bringToBack(); // sites stay under the gauge circles
     }
-  }, [siteRows]);
+    return () => void layer.remove();
+  }, [map, siteRows]);
 
   return (
-    <div className="gauge-map__frame">
-      <div ref={containerRef} className="leaflet-map" role="region" aria-label="Europe live watch and insured sites map" />
-    </div>
+    <MapShell
+      ariaLabel="Europe live watch and insured sites map"
+      attribution="Gauges: PEGELONLINE (WSV, DL-DE-Zero-2.0) · Model: Open-Meteo.com (GloFAS, CC BY 4.0) via Zetaris"
+      zoomSnap={0.5}
+      fit={{ bounds: EU_VIEW, padding: 8 }}
+      onMap2d={setMap}
+      points3d={points3d}
+      extra3d={extra3d}
+      columnDeg={0.08}
+    />
   );
 }

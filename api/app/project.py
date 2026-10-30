@@ -252,6 +252,31 @@ def _dropped(raw: Any) -> dict[str, Any]:
     return {"numbers_dropped": out} if out else {}
 
 
+def _project_web(body: dict[str, Any]) -> dict[str, Any] | None:
+    """Tavily call of the run (query is built from the place name) plus the Skeptic web_check. None if no call."""
+    w = body.get("web")
+    if not isinstance(w, dict) or w.get("status") not in ("ok", "empty", "unavailable"):
+        return None
+    results = [
+        {"url": i["url"], "title": str(i.get("title") or ""), "retrieved_at": w.get("retrieved_at")}
+        for i in (w.get("items") or [])
+        if isinstance(i, dict) and isinstance(i.get("url"), str)
+    ]
+    out: dict[str, Any] = {
+        "status": w["status"],
+        "query": str(w.get("query") or ""),
+        "n_results": len(results),
+        "latency_ms": int(w.get("latency_ms") or 0),
+        "cached": w.get("cached") is True,
+        "retrieved_at": w.get("retrieved_at"),
+        "results": results,
+    }
+    wc = body.get("web_check")
+    if isinstance(wc, dict) and wc.get("verdict") in ("supports", "contradicts", "neutral"):
+        out["web_check"] = {k: str(wc.get(k) or "") for k in ("claim_id", "verdict", "url", "note")}
+    return out
+
+
 def _project_judge(body: dict[str, Any]) -> dict[str, Any] | None:
     raw = body.get("judge")
     if not isinstance(raw, list) or not raw:
@@ -483,6 +508,9 @@ def project_run(body: dict[str, Any]) -> dict[str, Any] | None:
     ):
         # The calm answer (agents/floodsense_agents/plain.py): passed through as the agents built it.
         answer["plain"] = pl
+    web = _project_web(body)
+    if web is not None:
+        answer["web_context"] = web
     if isinstance(body.get("router_reason"), str) and body["router_reason"].strip():
         answer["router_reason"] = body["router_reason"].strip()
     return {

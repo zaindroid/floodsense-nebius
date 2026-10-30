@@ -196,6 +196,32 @@ class Plain(ContractModel):
     details: list[str]
 
 
+class WebResultRow(ContractModel):
+    url: str
+    title: str
+    retrieved_at: str | None = None
+
+
+class WebCheck(ContractModel):
+    claim_id: str
+    verdict: Literal["supports", "contradicts", "neutral"]
+    url: str
+    note: str = ""
+
+
+class WebContext(ContractModel):
+    """The run's Tavily search (FF_TAVILY). Web context, not an official warning."""
+
+    status: Literal["ok", "empty", "unavailable"]
+    query: str
+    n_results: int = Field(ge=0)
+    latency_ms: int = Field(ge=0)
+    cached: bool
+    retrieved_at: str | None = None
+    results: list[WebResultRow]
+    web_check: WebCheck | None = None
+
+
 class Answer(ContractModel):
     run_id: str
     question: str
@@ -208,6 +234,7 @@ class Answer(ContractModel):
     judge: Judge | None = None
     lane: Lane | None = None
     router_reason: str | None = None
+    web_context: WebContext | None = None
     forecast: Forecast | None = None
     plain: Plain | None = None
     memory_used: list[MemoryUsed] = Field(default_factory=list)

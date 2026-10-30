@@ -1,13 +1,17 @@
 import L from "leaflet";
-import "leaflet/dist/leaflet.css";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { EuWatchLoad } from "../api/euWatch";
 import { useConsole } from "../context/ConsoleContext";
 import { EU_WATCH_BOUNDS, sortSources, type SortKey, type WatchSource } from "../lib/euWatch";
 import { escapeHtml, type GaugeStatus } from "../lib/gauges";
-import { TILE_ATTRIBUTION, TILE_URL } from "./GaugeMap";
+import { MapShell, type Bounds } from "./map/MapShell";
+import { statusPoint } from "./map/shellLogic";
 import { basisLabel, statusView } from "../lib/places";
 
+const EU_VIEW: Bounds = [
+  [EU_WATCH_BOUNDS.south, EU_WATCH_BOUNDS.west],
+  [EU_WATCH_BOUNDS.north, EU_WATCH_BOUNDS.east],
+];
 const STATUS_TEXT: Record<GaugeStatus, string> = { ok: "below", near: "near", over: "above", unknown: "unknown" };
 const SORTS: { key: SortKey; label: string }[] = [
   { key: "status", label: "Risk" },
@@ -67,54 +71,17 @@ export function EuWatchLegend() {
   );
 }
 
-/** All live-watch sources on one Leaflet map. Clicking a marker pre-fills Ask FloodSense. */
+/** All live-watch sources on one map (2D Leaflet or 3D MapLibre). Clicking a marker pre-fills Ask FloodSense. */
 export function EuWatchMap({ sources }: { sources: WatchSource[] }) {
   const { openAsk } = useConsole();
-  const containerRef = useRef<HTMLDivElement>(null);
-  const layerRef = useRef<L.LayerGroup | null>(null);
+  const [map, setMap] = useState<L.Map | null>(null);
   const askRef = useRef(openAsk);
   askRef.current = openAsk;
+  const points3d = useMemo(() => sources.map((s) => statusPoint({ id: s.id, lat: s.lat, lon: s.lon, label: `${s.river ? `${s.river} · ${s.name}` : s.name} · ${statusView(s.kind, s.status).word}${s.live ? "" : " · not live (stale or seed)"}` }, s.status)), [sources]);
 
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-    const map = L.map(container, { zoomSnap: 0.5, attributionControl: false, scrollWheelZoom: false });
-    L.control
-      .attribution({ prefix: '<a href="https://leafletjs.com" target="_blank" rel="noopener">Leaflet</a>' })
-      .addAttribution(
-        `${TILE_ATTRIBUTION} · Gauges: PEGELONLINE (WSV, DL-DE-Zero-2.0) · Model: Open-Meteo.com (GloFAS, CC BY 4.0) via Zetaris`,
-      )
-      .addTo(map);
-    L.tileLayer(TILE_URL, { maxZoom: 18 }).addTo(map);
-    layerRef.current = L.layerGroup().addTo(map);
-    let touched = false;
-    const fit = () =>
-      map.fitBounds(
-        [
-          [EU_WATCH_BOUNDS.south, EU_WATCH_BOUNDS.west],
-          [EU_WATCH_BOUNDS.north, EU_WATCH_BOUNDS.east],
-        ],
-        { padding: [8, 8] },
-      );
-    fit();
-    const touch = () => (touched = true);
-    for (const type of ["pointerdown", "wheel", "keydown"]) container.addEventListener(type, touch, { once: true });
-    const resize = new ResizeObserver(() => {
-      map.invalidateSize();
-      if (!touched) fit();
-    });
-    resize.observe(container);
-    return () => {
-      resize.disconnect();
-      map.remove();
-      layerRef.current = null;
-    };
-  }, []);
-
-  useEffect(() => {
-    const layer = layerRef.current;
-    if (!layer) return;
-    layer.clearLayers();
+    if (!map) return;
+    const layer = L.layerGroup().addTo(map);
     for (const s of sources) {
       const cls = `map-marker map-marker--${s.status}${s.live ? "" : " map-marker--sample"}`;
       const marker =
@@ -135,12 +102,23 @@ export function EuWatchMap({ sources }: { sources: WatchSource[] }) {
       marker.on("click", () => ask(askRef.current, s));
       layer.addLayer(marker);
     }
-  }, [sources]);
+    return () => void layer.remove();
+  }, [map, sources]);
 
   return (
-    <div className="gauge-map__frame">
-      <div ref={containerRef} className="leaflet-map" role="region" aria-label={`Europe live watch map, ${sources.length} sources. The same places are listed below.`} />
-    </div>
+    <MapShell
+      ariaLabel={`Europe live watch map, ${sources.length} sources. The same places are listed below.`}
+      attribution="Gauges: PEGELONLINE (WSV, DL-DE-Zero-2.0) · Model: Open-Meteo.com (GloFAS, CC BY 4.0) via Zetaris"
+      zoomSnap={0.5}
+      fit={{ bounds: EU_VIEW, padding: 8 }}
+      onMap2d={setMap}
+      points3d={points3d}
+      onSelect={(id) => {
+        const s = sources.find((x) => x.id === id);
+        if (s) ask(askRef.current, s);
+      }}
+      columnDeg={0.08}
+    />
   );
 }
 

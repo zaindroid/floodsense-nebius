@@ -60,7 +60,7 @@ from fastapi.responses import HTMLResponse, JSONResponse, PlainTextResponse, Str
 from pydantic import BaseModel
 
 from floodsense_agents import __version__
-from floodsense_agents import desk, front_door, labelling, router, tower
+from floodsense_agents import desk, front_door, labelling, router, tavily, tower
 from floodsense_agents.events import ALIASES, EVENTS, HAZARD_VIEWS, hazard_schema, spec
 from floodsense_agents.models import ApprovalDecision, RunRequest
 from floodsense_agents.nightshift import GLOBAL_USAGE, check_lanes
@@ -386,6 +386,8 @@ def llm_check():
     """Live lane check: one tiny call per lane (costs a few tokens). Cached into GET /config."""
     global _last_llm_check
     _last_llm_check = check_lanes(runtime().deps.llm)
+    if settings.ff_tavily:  # one tiny search; additive, never changes the lane verdict
+        _last_llm_check["tavily"] = tavily.live_check()
     return _envelope(_last_llm_check)
 
 
@@ -411,6 +413,12 @@ def config():
             "tavily": settings.ff_tavily,
             "lanes": {"fast": settings.lane("fast"), "deep": settings.lane("deep")},
             "llm_check": _last_llm_check,
+            # Switch, key-configured boolean (never the key) and process counters.
+            "tavily_status": {
+                "enabled": settings.ff_tavily,
+                "key_configured": bool(settings.tavily_api_key),
+                **tavily.stats(),
+            },
             "llm_usage": GLOBAL_USAGE.as_dict(),
             "engines_url": settings.engines_url,
             "schema": settings.schema,
@@ -888,6 +896,10 @@ def get_view(name: str, event_id: str | None = None, source: str | None = None):
 
 def main() -> None:
     import uvicorn
+
+    from floodsense_agents import tokenfactory
+
+    tokenfactory.prewarm()  # price/limits table off the request path
 
     uvicorn.run(app, host=settings.host, port=settings.port, log_level="info")
 

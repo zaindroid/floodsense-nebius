@@ -205,6 +205,8 @@ export interface Answer {
   lane?: Exclude<Lane, "reply">;
   /** Why the router chose the lane, including any "escalated: ..." note. */
   router_reason?: string;
+  /** The run's Tavily web search; web context, not an official warning. */
+  web_context?: WebContext;
   /** Forecast lane only. */
   forecast?: Forecast;
   /** Quick and forecast lanes only. */
@@ -291,4 +293,15 @@ export interface WatchStatus {
   persisted_reason?: string | null;
   served_from: ServedFrom;
   cached_at: string | null;
+}
+
+export interface WebContext {
+  status: "ok" | "empty" | "unavailable";
+  query: string;
+  n_results: number;
+  latency_ms: number;
+  cached: boolean;
+  retrieved_at?: string | null;
+  results: { url: string; title: string; retrieved_at?: string | null }[];
+  web_check?: { claim_id: string; verdict: "supports" | "contradicts" | "neutral"; url: string; note?: string };
 }

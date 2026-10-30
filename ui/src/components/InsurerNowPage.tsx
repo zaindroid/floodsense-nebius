@@ -4,7 +4,14 @@ import { fetchEuWatch, type EuWatchLoad } from "../api/euWatch";
 import { fetchHazardNow, type HazardNowResult } from "../api/now";
 import { useConsole } from "../context/ConsoleContext";
 import { useGaugeLevels } from "../hooks/useGaugeLevels";
-import { buildSources } from "../lib/euWatch";
+import { buildSources, fromValencia, valenciaCuts } from "../lib/euWatch";
+import { worstFirst } from "../lib/places";
+import { routeHref } from "../lib/route";
+import { evidenceFor } from "./PlacesToWatch";
+import { useStackData } from "../hooks/useStackData";
+import { AgentsLive } from "./agents/AgentsLive";
+import { WebCheckCard } from "./desk/WebCheck";
+import { DeskCard, DeskHead, DeskPage, EvidenceRow, ForecastCard, HazardLead } from "./desk/DeskPage";
 import { summariseGauges } from "../lib/gauges";
 import { latestPastStamp, relativeTime, sparkSeries, summariseAll, type PointNow, type Trend } from "../lib/now";
 import { pointById } from "../lib/series";
@@ -49,12 +56,14 @@ const TREND_TEXT: Record<Trend, { arrow: string; label: string }> = {
  * Europe live watch: those gauges plus the GloFAS points of eu_watch on one map, each click pre-filling Ask.
  */
 export function InsurerNowPage() {
-  const { points, openAsk, demo, reportChecked, exposure } = useConsole();
+  const { points, openAsk, openLiveEvidence, demo, reportChecked, exposure } = useConsole();
+  const stack = useStackData();
   const [load, setLoad] = useState<Load>({ state: "loading" });
   const gauges = useGaugeLevels(0, demo);
   const lastDemo = useRef(demo);
   const gaugeSummaries = useMemo(() => summariseGauges(gauges.rows), [gauges.rows]);
   const [euWatch, setEuWatch] = useState<EuWatchLoad>({ state: "loading", rows: [], detail: "", queryId: null });
+  const [euFetchedAt, setEuFetchedAt] = useState<number | null>(null);
   const watchSources = useMemo(() => buildSources(gaugeSummaries, euWatch.rows), [gaugeSummaries, euWatch.rows]);
   const [clock, setClock] = useState(() => Date.now());
   const controller = useRef<AbortController | null>(null);
@@ -65,6 +74,7 @@ export function InsurerNowPage() {
       lastDemo.current = demo;
       setLoad({ state: "loading" });
       setEuWatch({ state: "loading", rows: [], detail: "", queryId: null });
+      setEuFetchedAt(null);
     }
     controller.current?.abort();
     const ctrl = new AbortController();
@@ -72,7 +82,9 @@ export function InsurerNowPage() {
     setLoad((prev) => (prev.state === "ready" ? prev : { state: "loading" }));
     void fetchEuWatch(ctrl.signal).then((result) => {
       // A failed refresh keeps the last good rows on screen.
-      if (!ctrl.signal.aborted) setEuWatch((prev) => (result.state === "rows" || prev.state !== "rows" ? result : prev));
+      if (ctrl.signal.aborted) return;
+      if (result.state === "rows") setEuFetchedAt(Date.now());
+      setEuWatch((prev) => (result.state === "rows" || prev.state !== "rows" ? result : prev));
     });
     fetchHazardNow(ctrl.signal)
       .then((data) => {
@@ -113,75 +125,118 @@ export function InsurerNowPage() {
     if (fetchedAt !== null) reportChecked(demo ? Date.parse(DEMO_SNAPSHOT_AT) : fetchedAt);
   }, [fetchedAt, reportChecked, demo]);
 
+  const sources = useMemo(() => {
+    const out = [...watchSources];
+    for (const summary of summaries) {
+      const p = points.find((x) => x.point_id === summary.point_id);
+      if (p) out.push(fromValencia(p, summary, valenciaCuts(summary.past)));
+    }
+    return out;
+  }, [watchSources, summaries, points]);
+  const lead = worstFirst(sources)[0] ?? null;
+  // The shared evidence helpers read the view metadata of the three live loads this page makes itself.
+  const evidence = lead
+    ? evidenceFor({ gauges, euWatch: { ...euWatch, fetchedAt: euFetchedAt }, hazard: load }, lead)
+    : null;
+  const chips = insurerChips(exposure.rows, watchSources.length);
+
   return (
-    <div className="now-page">
-      <ImpactStrip goal={GOALS.insurer} chips={insurerChips(exposure.rows, watchSources.length)} fact={FACTS.insurer} />
-      <header className="now-head">
-        <div>
-          <h2 className="now-title">Right now{stamp ? ` · ${localTime(stamp)}` : ""}</h2>
-          {load.state === "ready" && (
-            <p className="now-meta" aria-live="polite">
-              <span className="now-live-tag">{demo ? `Demo snapshot ${demoSnapshotText()}` : "Live data · Zetaris"}</span> {demo && <DemoChip />}{demo ? "" : ` Updated ${relativeTime(dataTime(load.data.cache, load.fetchedAt) ?? load.fetchedAt, clock)}`}
-              {!demo && load.data.cache?.cache === "stale" ? ` · ${staleNote(staleViews([load.data.cache]))}` : ""}
-              {load.data.queryId ? ` · Zetaris query ${load.data.queryId.slice(0, 8)}` : ""}
-              {load.data.dropped > 0 ? ` · ${load.data.dropped} rows dropped` : ""}
-              {load.data.truncated ? " · truncated" : ""}
-            </p>
-          )}
-        </div>
-        <div className="button-row">
+    <DeskPage
+      desk="insurer"
+      impact={<ImpactStrip goal={GOALS.insurer} chips={chips} fact={FACTS.insurer} />}
+      head={
+        <DeskHead
+          title={`Right now${stamp ? ` · ${localTime(stamp)}` : ""}`}
+          tag={load.state === "ready" ? <span className="desk-tag">{demo ? `Demo snapshot ${demoSnapshotText()}` : "Live data · Zetaris"}</span> : undefined}
+          updated={
+            load.state === "ready" ? (
+              <>
+                {demo && <DemoChip />}
+                {demo ? "" : ` Updated ${relativeTime(dataTime(load.data.cache, load.fetchedAt) ?? load.fetchedAt, clock)}`}
+                {!demo && load.data.cache?.cache === "stale" ? ` · ${staleNote(staleViews([load.data.cache]))}` : ""}
+                {load.data.queryId ? ` · Zetaris query ${load.data.queryId.slice(0, 8)}` : ""}
+                {load.data.dropped > 0 ? ` · ${load.data.dropped} rows dropped` : ""}
+                {load.data.truncated ? " · truncated" : ""}
+              </>
+            ) : undefined
+          }
+        >
           <button type="button" className="now-refresh" onClick={() => openAsk(next48hQuestion())}>
             Is the next 48 h safe anywhere?
           </button>
           <button type="button" className="now-refresh" onClick={refresh}>
             Refresh
           </button>
-        </div>
-      </header>
-      <section className="now-region" aria-labelledby="now-es">
-        <div className="now-region-head">
-          <h3 className="now-subtitle" id="now-es">
-            Spain · Valencia (Open-Meteo/GloFAS model)
-          </h3>
-        </div>
-        <p className="now-note">{MODEL_NOTE}. Dashed line and “forecast” values are model forecasts.</p>
-
-      {load.state === "loading" && <LoadingNote what="Valencia readings" />}
-      <SlowSourceNote pending={euWatch.state === "loading" || gauges.state === "loading"} what="A live source" />
-      {load.state === "error" && (
-        <div className="now-error" role="alert">
-          <p>Could not load the Valencia readings. The other regions below may still be shown.</p>
-          <p className="now-detail">{load.detail}</p>
-          <button type="button" className="now-refresh" onClick={refresh}>
-            Retry
-          </button>
-        </div>
-      )}
-      {load.state === "ready" && summaries.length === 0 && <p className="now-status">No live rows returned.</p>}
-      {load.state === "ready" && summaries.length > 0 && (
-        <div className="now-grid">
-          {summaries.map((summary) => (
-            <PointCard key={summary.point_id} summary={summary} name={pointById(points, summary.point_id)?.name} />
-          ))}
-        </div>
-      )}
-        <p className="now-source">{ATTRIBUTION}</p>
-      </section>
-
-      <section className="now-region" aria-labelledby="now-de">
-        <div className="now-region-head">
-          <h3 className="now-subtitle" id="now-de">
-            Germany · federal waterways (PEGELONLINE live gauges)
-          </h3>
-        </div>
-        <p className="now-note">Measured water levels. Colour and bar compare each level with the station's MHW; dashed or Stale means not a fresh live reading.</p>
-        <GaugeMap load={gauges} gauges={gaugeSummaries} />
-        <GaugeList load={gauges} gauges={gaugeSummaries} />
-        <p className="now-source">Quelle: WSV, PEGELONLINE</p>
-      </section>
-
-      <EuWatchSection sources={watchSources} model={euWatch} />
-    </div>
+        </DeskHead>
+      }
+      health={
+        <>
+          {load.state === "loading" && <LoadingNote what="Valencia readings" />}
+          <SlowSourceNote pending={euWatch.state === "loading" || gauges.state === "loading"} what="A live source" />
+          {load.state === "error" && (
+            <div className="now-error" role="alert">
+              <p>Could not load the Valencia readings. The other regions below may still be shown.</p>
+              <p className="now-detail">{load.detail}</p>
+              <button type="button" className="now-refresh" onClick={refresh}>
+                Retry
+              </button>
+            </div>
+          )}
+        </>
+      }
+      hazard={lead && evidence ? <HazardLead label="Most notable right now" source={lead} evidence={evidence} /> : undefined}
+      forecast={
+        <ForecastCard title="Spain · Valencia (Open-Meteo/GloFAS model)" note={`${MODEL_NOTE}. Dashed line and “forecast” values are model forecasts.`}>
+          {load.state === "ready" && summaries.length === 0 && <p className="now-status">No live rows returned.</p>}
+          {load.state === "ready" && summaries.length > 0 && (
+            <div className="now-grid">
+              {summaries.map((summary) => (
+                <PointCard key={summary.point_id} summary={summary} name={pointById(points, summary.point_id)?.name} />
+              ))}
+            </div>
+          )}
+          <p className="desk-source">{ATTRIBUTION}</p>
+        </ForecastCard>
+      }
+      map={
+        <>
+          <DeskCard label="Map" title="Germany · federal waterways (PEGELONLINE live gauges)">
+            <p className="note">Measured water levels. Colour and bar compare each level with the station's MHW; dashed or Stale means not a fresh live reading.</p>
+            <GaugeMap load={gauges} gauges={gaugeSummaries} />
+            <GaugeList load={gauges} gauges={gaugeSummaries} />
+            <p className="desk-source">Quelle: WSV, PEGELONLINE</p>
+          </DeskCard>
+          <EuWatchSection sources={watchSources} model={euWatch} />
+        </>
+      }
+      evidence={
+        <>
+          {evidence && <EvidenceRow evidence={evidence} onOpen={() => openLiveEvidence(evidence)} />}
+          <WebCheckCard stack={stack} desk="insurer" />
+        </>
+      }
+      agents={<AgentsLive stack={stack} compact />}
+      actions={
+        <DeskCard label="Exposure and approvals">
+          <ul className="impact-chips">
+            {chips.map((c) => (
+              <li key={c.label}>
+                <strong>{c.value ?? "no data yet"}</strong> <span className="muted small">{c.label}</span>
+              </li>
+            ))}
+          </ul>
+          <p className="note">The book is synthetic. Nothing is sent until a person approves.</p>
+          <div className="button-row">
+            <a className="button primary" href={routeHref("insurer", "approvals")}>
+              Open approvals
+            </a>
+            <a className="button ghost" href={routeHref("insurer", "portfolio")}>
+              Open portfolio
+            </a>
+          </div>
+        </DeskCard>
+      }
+    />
   );
 }
 

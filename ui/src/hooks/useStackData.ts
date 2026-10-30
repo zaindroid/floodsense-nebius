@@ -9,6 +9,7 @@ import { adoptReplay, type RecordedRun } from "../api/replay";
 import { initialLiveState, liveReducer, type LiveRunState } from "../lib/liveRun";
 import { SYSTEM_POLL_MS, type SystemStatus } from "../lib/system";
 import { traceFrames } from "../lib/stack";
+import { publishPlatform } from "../lib/platformStore";
 import { createPoller } from "../lib/stackPoll";
 
 export interface StackRun {
@@ -87,9 +88,10 @@ export function useStackData(): StackData {
     };
 
     const tick = async (): Promise<boolean> => {
-      const [p, s, past] = await Promise.all([fetchPlatformStatus(), fetchSystem(undefined, ctl.signal), fetchPastRuns(30, ctl.signal)]);
+      const [p, s, past] = await Promise.all([fetchPlatformStatus(undefined, ctl.signal), fetchSystem(undefined, ctl.signal), fetchPastRuns(30, ctl.signal)]);
       if (ctl.signal.aborted) return false;
       setPlatform({ data: p.status, error: p.error, loading: false });
+      publishPlatform(p.status);
       setSystem({ data: s.status, error: s.error, loading: false });
       setRunsError(past.ok ? null : past.detail);
       if (past.ok && !streaming) {

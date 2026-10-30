@@ -1,7 +1,7 @@
 import { useEffect, useId, useMemo, useState } from "react";
 import { fetchPastRuns } from "../api/pastRuns";
 import { fetchRunSnapshot } from "../api/liveRun";
-import { useLlmBackend } from "../hooks/useLlmBackend";
+import { useLanePricing, useLlmBackend } from "../hooks/useLlmBackend";
 import { fetchWatchStatus } from "../api/watch";
 import type { RecordedRun } from "../api/replay";
 import { DOT_TEXT, type BoxId, type DotState } from "../lib/howItWorks";
@@ -45,7 +45,8 @@ function useOpenSet() {
  */
 export function TechTrace({ run, caption, embedded }: { run: RecordedRun; caption?: string; embedded?: boolean }) {
   const backend = useLlmBackend();
-  const model = useMemo(() => buildTechTrace(run, backend), [run, backend]);
+  const pricing = useLanePricing();
+  const model = useMemo(() => buildTechTrace(run, backend, pricing), [run, backend, pricing]);
   const uid = useId();
   const [open, toggle] = useOpenSet();
   return (

@@ -722,6 +722,7 @@ async def _warm_views() -> None:
 
 @app.on_event("shutdown")
 async def _stop_prewarm() -> None:
+    cache.close()
     if _prewarm_task is not None:
         _prewarm_task.cancel()
         await asyncio.gather(_prewarm_task, return_exceptions=True)

@@ -27,7 +27,7 @@ class PlatformStatusTest(unittest.TestCase):
 
         async def agents(method, path, **kw):
             if path == "/config":
-                return 200, {"llm_backend": "nebius", "tavily": True, "data_backend": "zetaris", "lanes": {"fast": "m1", "deep": "m2"}, "nebius_api_key": "SECRET"}
+                return 200, {"llm_backend": "nebius", "tavily": True, "data_backend": "zetaris", "lanes": {"fast": "m1", "deep": "m2"}, "nebius_api_key": "SECRET", "tavily_status": {"enabled": True, "key_configured": True, "calls": 3, "cache_hits": 1, "avg_latency_ms": 900, "last_status": "ok", "last_error": None, "api_key": "SECRET"}}
             return 200, {"counts": {"sources": 9}}
 
         cache = mock.Mock()
@@ -49,7 +49,31 @@ class PlatformStatusTest(unittest.TestCase):
         self.assertEqual(body["live_sources"], 9)
         self.assertIs(body["tavily"], True)
         self.assertEqual(body["data_backend"], "zetaris")
+        self.assertEqual(body["tavily_status"]["calls"], 3)
+        self.assertIs(body["tavily_status"]["key_configured"], True)
         self.assertNotIn("SECRET", json.dumps(body))
+
+
+    def test_tavily_status_absent(self):
+        from app.platform_status import _tavily
+
+        self.assertIsNone(_tavily(None))
+        self.assertIsNone(_tavily("x"))
+
+    def test_project_web(self):
+        from app.project import _project_web
+
+        self.assertIsNone(_project_web({}))
+        w = _project_web(
+            {
+                "web": {"status": "ok", "query": "Koeln flood warning current", "latency_ms": 12, "cached": False,
+                        "retrieved_at": "2026-01-01T00:00:00Z", "items": [{"title": "T", "url": "https://e.org/a", "text": "x"}]},
+                "web_check": {"claim_id": "C-1", "verdict": "supports", "url": "https://e.org/a", "note": "n", "label": "l"},
+            }
+        )
+        self.assertEqual(w["n_results"], 1)
+        self.assertEqual(w["results"][0]["retrieved_at"], "2026-01-01T00:00:00Z")
+        self.assertEqual(w["web_check"]["verdict"], "supports")
 
 
 if __name__ == "__main__":

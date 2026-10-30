@@ -25,6 +25,7 @@ from typing import Callable, Iterable, Protocol, TypeVar
 
 import httpx
 
+from floodsense_agents import tokenfactory
 from floodsense_agents.settings import settings
 
 log = logging.getLogger("floodsense.nightshift")
@@ -212,9 +213,18 @@ def default_gate() -> CallGate:
     with _gate_lock:
         if _gate is None:
             if settings.llm_backend == "nebius":
-                # Token Factory limits are not verified; NEBIUS_* override these defaults.
+                # A quarter of the published per-model rpm (Lightning and Super-VL
+                # list 1000), capped at 300; NEBIUS_* override.
+                rpm = 300.0
+                lims = [
+                    i["rpm"]
+                    for lane in ("fast", "deep")
+                    if (i := tokenfactory.info(settings.lane(lane))) and i.get("rpm")
+                ]
+                if lims:
+                    rpm = min(rpm, min(lims) / 4)
                 _gate = CallGate(
-                    int(_env_num("NEBIUS_MAX_CONCURRENCY", 4)), _env_num("NEBIUS_RPM", 60)
+                    int(_env_num("NEBIUS_MAX_CONCURRENCY", 8)), _env_num("NEBIUS_RPM", rpm)
                 )
             else:
                 _gate = CallGate(
@@ -236,8 +246,14 @@ class UsageMeter:
         with self._lock:
             r = self._rows.setdefault(
                 (lane, model),
-                {"calls": 0, "prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0, "latency_ms": 0},
+                {"calls": 0, "prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0, "latency_ms": 0, "cached_tokens": 0},
             )
+            # Cached prompt tokens only if the API reports them; never guessed.
+            if not self._counted and run_meter.get() is self:
+                # One answer per run meter (resume reuses it), only once it made a model call.
+                self._counted = True
+                GLOBAL_USAGE.note_answer()
+            r["cached_tokens"] += int((u.get("prompt_tokens_details") or {}).get("cached_tokens") or 0)
             r["calls"] += 1
             r["latency_ms"] += latency_ms
             for k in ("prompt_tokens", "completion_tokens"):
@@ -246,33 +262,85 @@ class UsageMeter:
                 u.get("completion_tokens") or 0
             )
 
+    _counted = False
+    answers = 0  # answers (runs) metered; cost per answer = cost / answers
+
+    def note_answer(self) -> None:
+        with self._lock:
+            self.answers += 1
+
+    @staticmethod
+    def _row_cost(model: str, r: dict, pin: float | None, pout: float | None) -> float | None:
+        if pin is not None and pout is not None:  # explicit env override wins
+            return (r["prompt_tokens"] * pin + r["completion_tokens"] * pout) / 1e6
+        return tokenfactory.cost_usd(
+            tokenfactory.info(model), r["prompt_tokens"], r["completion_tokens"], r["cached_tokens"]
+        )
+
     def as_dict(self) -> dict:
-        """{lanes: {lane: {...}}, models: [...], total: {...}, cost_usd, price_note}."""
+        """{lanes, models, total, cost_usd, answers, cost_per_answer_usd, price_note, pricing}."""
         pin, pout = _price("NEBIUS_PRICE_PER_M_INPUT"), _price("NEBIUS_PRICE_PER_M_OUTPUT")
-        priced = pin is not None and pout is not None
         with self._lock:
             rows = {k: dict(v) for k, v in self._rows.items()}
-        keys = ("calls", "prompt_tokens", "completion_tokens", "total_tokens", "latency_ms")
+            answers = self.answers
+        keys = ("calls", "prompt_tokens", "completion_tokens", "total_tokens", "latency_ms", "cached_tokens")
         lanes: dict[str, dict] = {}
         models = []
         total = dict.fromkeys(keys, 0)
+        costs: dict[str, float] = {}
+        bad: set[str] = set()  # lanes ("" = total) with an unpriced model: cost stays null, never understated
         for (lane, model), r in sorted(rows.items()):
-            models.append({"lane": lane, "model_id": model, **r})
-            for tgt in (lanes.setdefault(lane, dict.fromkeys(keys, 0)), total):
+            c = self._row_cost(model, r, pin, pout)
+            models.append({"lane": lane, "model_id": model, **r, "cost_usd": None if c is None else round(c, 6)})
+            for name, tgt in ((lane, lanes.setdefault(lane, dict.fromkeys(keys, 0))), ("", total)):
                 for k in keys:
                     tgt[k] += r[k]
-        for t in (*lanes.values(), total):
+                if c is None:
+                    bad.add(name)
+                else:
+                    costs[name] = costs.get(name, 0.0) + c
+        for name, t in (*lanes.items(), ("", total)):
             t["avg_latency_ms"] = round(t["latency_ms"] / t["calls"]) if t["calls"] else None
-        cost = None
-        if priced:
-            cost = round((total["prompt_tokens"] * pin + total["completion_tokens"] * pout) / 1e6, 6)
+            t["cost_usd"] = round(costs[name], 6) if name in costs and name not in bad else None
+        cost = total["cost_usd"]
+        if cost is None:
+            note = "price not configured"
+        elif pin is not None and pout is not None:
+            note = "estimate from NEBIUS_PRICE_PER_M_INPUT/OUTPUT"
+        else:
+            note = "Token Factory list price"
         return {
             "lanes": lanes,
             "models": models,
             "total": total,
             "cost_usd": cost,
-            "price_note": "estimate from NEBIUS_PRICE_PER_M_INPUT/OUTPUT" if priced else "price not configured",
+            "answers": answers,
+            "cost_per_answer_usd": round(cost / answers, 6) if cost is not None and answers else None,
+            "price_note": note,
+            "pricing": lane_pricing(),
         }
+
+
+def lane_pricing() -> dict:
+    """Per lane: model id, USD per 1M tokens, rpm/tpm limit, region and country (live model list)."""
+    out: dict[str, dict] = {}
+    for lane in ("fast", "deep"):
+        i = tokenfactory.info(settings.lane(lane))
+        if not i:
+            continue
+        per_m = lambda v: None if v is None else round(v * 1e6, 6)  # noqa: E731
+        reg = i["regions"][0] if i["regions"] else {}
+        out[lane] = {
+            "model_id": i["model_id"],
+            "price_per_m_input": per_m(i["prompt"]),
+            "price_per_m_output": per_m(i["completion"]),
+            "price_per_m_cache_read": per_m(i["cache_read"]),
+            "rpm_limit": i["rpm"],
+            "tpm_limit": i["tpm"],
+            "region": reg.get("name"),
+            "country": reg.get("country"),
+        }
+    return out
 
 
 def _price(name: str) -> float | None:

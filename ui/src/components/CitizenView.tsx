@@ -59,6 +59,8 @@ import { evidenceFor, metaFor, PlaceRow, PlacesToWatch, sourceTitle, StatusChip,
 import { EuWatchLegend, EuWatchMap } from "./EuWatch";
 import { LoadingNote, SlowSourceNote } from "./Loading";
 import { LiveHealthNote } from "./ModeSwitch";
+import { AgentsLive } from "./agents/AgentsLive";
+import { forecastLine } from "../lib/deskForecast";
 
 const WHY_CLAIMS = 3;
 const MAX_MATCHES = 60;
@@ -444,6 +446,7 @@ export function CitizenOverview() {
   const ctx = useCitizenPlace();
   const { place } = ctx;
   const past = desk.mode === "past";
+  const fline = place?.source ? forecastLine(place.source, ctx.live.valencia) : null;
   return (
     <div className="view">
       <div className="view__intro">
@@ -464,6 +467,7 @@ export function CitizenOverview() {
           </header>
           <div className="card__body">
             <RiskCard ctx={ctx} />
+            {!past && (fline ? <p className="note">{fline}</p> : place && <p className="note">We are watching this place; a detailed outlook is not available here yet.</p>)}
             <PlacePicker {...ctx} />
             {place?.source && (
               <PlacesToWatch live={ctx.live} limit={3} start={2} exclude={place.id} title="Elsewhere in our watch" />
@@ -500,6 +504,7 @@ export function CitizenOverview() {
           </div>
         </section>
         <PastFloods />
+        {!past && <AgentsLive compact plain />}
       </div>
     </div>
   );

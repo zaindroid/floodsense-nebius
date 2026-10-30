@@ -1,13 +1,17 @@
 import L from "leaflet";
-import "leaflet/dist/leaflet.css";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { escapeHtml, GAUGE_BOUNDS, gaugesLabel, isLiveGauge, type GaugeStatus, type GaugeSummary } from "../lib/gauges";
 import type { GaugeState } from "../hooks/useGaugeLevels";
 import { formatHour } from "../lib/format";
 import { statusLabel } from "../lib/origin";
 
-export const TILE_URL = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
-export const TILE_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors';
+import { MapShell, type Bounds } from "./map/MapShell";
+import { statusPoint } from "./map/shellLogic";
+
+const GAUGE_VIEW: Bounds = [
+  [GAUGE_BOUNDS.south, GAUGE_BOUNDS.west],
+  [GAUGE_BOUNDS.north, GAUGE_BOUNDS.east],
+];
 
 const LEGEND: { status: GaugeStatus; label: string }[] = [
   { status: "ok", label: "Below MHW" },
@@ -51,49 +55,19 @@ const LOAD_CHIP: Record<string, string> = {
 
 /** River-gauge map. Markers come only from the gauge_levels view. */
 export function GaugeMap({ load, gauges }: { load: GaugeState; gauges: GaugeSummary[] }) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const layerRef = useRef<L.LayerGroup | null>(null);
+  const [map, setMap] = useState<L.Map | null>(null);
   const placed = useMemo(() => gauges.filter((g) => g.lat !== null && g.lon !== null), [gauges]);
+  const points3d = useMemo(
+    () =>
+      placed.map((g) =>
+        statusPoint({ id: `${g.station}-${g.water}`, lat: g.lat as number, lon: g.lon as number, label: `${g.station} (${g.water}): ${Math.round(g.levelCm)} cm · ${gaugeBadge(g).text}${g.status === "unknown" ? " · no MHW threshold" : ""}` }, g.status),
+      ),
+    [placed],
+  );
 
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-    const map = L.map(container, { zoomSnap: 1, attributionControl: false, scrollWheelZoom: false });
-    L.control
-      .attribution({ prefix: '<a href="https://leafletjs.com" target="_blank" rel="noopener">Leaflet</a>' })
-      .addAttribution(`${TILE_ATTRIBUTION} · Gauges: PEGELONLINE (WSV, DL-DE-Zero-2.0) via Zetaris`)
-      .addTo(map);
-    L.tileLayer(TILE_URL, { maxZoom: 18 }).addTo(map);
-    layerRef.current = L.layerGroup().addTo(map);
-    let touched = false;
-    const fit = () =>
-      map.fitBounds(
-        [
-          [GAUGE_BOUNDS.south, GAUGE_BOUNDS.west],
-          [GAUGE_BOUNDS.north, GAUGE_BOUNDS.east],
-        ],
-        { padding: [12, 12] },
-      );
-    fit();
-    // Once the user zooms or drags, a resize keeps their view.
-    const touch = () => (touched = true);
-    for (const type of ["pointerdown", "wheel", "keydown"]) container.addEventListener(type, touch, { once: true });
-    const resize = new ResizeObserver(() => {
-      map.invalidateSize();
-      if (!touched) fit();
-    });
-    resize.observe(container);
-    return () => {
-      resize.disconnect();
-      map.remove();
-      layerRef.current = null;
-    };
-  }, []);
-
-  useEffect(() => {
-    const layer = layerRef.current;
-    if (!layer) return;
-    layer.clearLayers();
+    if (!map) return;
+    const layer = L.layerGroup().addTo(map);
     for (const g of placed) {
       const live = isLiveGauge(g);
       const circle = L.circleMarker([g.lat as number, g.lon as number], {
@@ -105,7 +79,8 @@ export function GaugeMap({ load, gauges }: { load: GaugeState; gauges: GaugeSumm
       circle.bindTooltip(escapeHtml(tip), { direction: "top", offset: [0, -6] });
       layer.addLayer(circle);
     }
-  }, [placed]);
+    return () => void layer.remove();
+  }, [map, placed]);
 
   const unplaced = gauges.length - placed.length;
   const label = gaugesLabel(gauges);
@@ -121,10 +96,16 @@ export function GaugeMap({ load, gauges }: { load: GaugeState; gauges: GaugeSumm
         <MapLegend showNotLive={gauges.some((g) => !isLiveGauge(g))} />
         <span className={`chip ${chip.cls}`}>{chip.text}</span>
       </div>
-      <div className="gauge-map__frame">
-        <div ref={containerRef} className="leaflet-map" role="region" aria-label="River gauges" />
+      <MapShell
+        ariaLabel="River gauges"
+        attribution="Gauges: PEGELONLINE (WSV, DL-DE-Zero-2.0) via Zetaris"
+        fit={{ bounds: GAUGE_VIEW, padding: 12 }}
+        onMap2d={setMap}
+        points3d={points3d}
+        columnDeg={0.06}
+      >
         {load.state !== "rows" && load.state !== "loading" && <p className="gauge-map__empty">No live gauge readings yet.</p>}
-      </div>
+      </MapShell>
       {unplaced > 0 && (
         <p className="note">
           {unplaced} {unplaced === 1 ? "gauge has" : "gauges have"} no known position and {unplaced === 1 ? "is" : "are"} listed

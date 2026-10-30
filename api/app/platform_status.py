@@ -11,6 +11,21 @@ from typing import Any
 
 
 
+def _tavily(t: Any) -> dict[str, Any] | None:
+    if not isinstance(t, dict):
+        return None
+    return {
+        "enabled": t.get("enabled") is True,
+        "key_configured": t.get("key_configured") is True,
+        "calls": int(t.get("calls") or 0),
+        "cache_hits": int(t.get("cache_hits") or 0),
+        "avg_latency_ms": t.get("avg_latency_ms") if isinstance(t.get("avg_latency_ms"), int) else None,
+        "last_status": t.get("last_status") if t.get("last_status") in ("ok", "empty", "unavailable") else None,
+        "last_error": str(t["last_error"])[:80] if t.get("last_error") else None,
+        "last_at": t.get("last_at"),
+    }
+
+
 async def build_platform_status(*, cache, limiter, counters, agents_json, lookup_timeout) -> dict[str, Any]:
     async def get(path: str) -> dict[str, Any]:
         code, data = await agents_json("GET", path, timeout=lookup_timeout)
@@ -26,6 +41,8 @@ async def build_platform_status(*, cache, limiter, counters, agents_json, lookup
         "lanes": {k: str(v) for k, v in (cfg.get("lanes") or {}).items()},
         "data_backend": cfg.get("data_backend") or "zetaris",
         "tavily": cfg.get("tavily") is True,
+        # Additive: switch, key-configured boolean (never the key) and agents-process counters.
+        "tavily_status": _tavily(cfg.get("tavily_status")),
         "latency": counters.latency_stats(),
         # Additive: last POST /llm/check on the agents (null until run) and token usage since agents start.
         "llm_check": cfg.get("llm_check"),

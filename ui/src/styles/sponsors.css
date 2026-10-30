@@ -1,0 +1,25 @@
+/* Sponsor strip, desk Web check, stack sponsor parts. Tokens from global.css (light and dark). Model-derived content is amber, never red. */
+.sponsor-strip { display: flex; flex-wrap: wrap; gap: 0.35rem; list-style: none; margin: 0; padding: 0.3rem 1rem; max-width: var(--page, 1200px); margin-inline: auto; }
+.sponsor-chip { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.15rem 0.55rem; border: 1px solid var(--line, var(--border)); border-radius: 999px; font-size: 0.72rem; color: var(--ink); text-decoration: none; background: var(--bg-sunken, var(--surface-2)); }
+.sponsor-chip:hover, .sponsor-chip:focus-visible { border-color: var(--brand-border, currentColor); }
+.sponsor-detail { color: var(--muted); font-variant-numeric: tabular-nums; }
+.sponsor-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); flex: none; }
+.sponsor-chip--on .sponsor-dot { background: var(--ok-ink); }
+.sponsor-chip--off .sponsor-dot { background: transparent; box-shadow: inset 0 0 0 1.5px var(--muted); }
+.sponsor-chip--unavailable .sponsor-dot { background: var(--warn-ink); }
+
+@media (max-width: 640px) { .sponsor-strip { flex-wrap: nowrap; overflow-x: auto; max-width: 100%; box-sizing: border-box; scrollbar-width: thin; } .sponsor-chip { white-space: nowrap; } }
+.webcheck-links { margin: 0.3rem 0; padding-left: 1.1rem; font-size: 0.88rem; overflow-wrap: anywhere; }
+.webcheck-verdict { font-weight: 650; }
+.webcheck-verdict--conflicts { color: var(--warn-ink); }
+
+.web-cite-icon { vertical-align: -2px; margin-right: 0.25rem; color: var(--warn-ink); }
+
+.stk-region { display: inline-block; margin-left: 0.4rem; padding: 0.05rem 0.4rem; border: 1px solid var(--line); border-radius: 999px; font-size: 0.66rem; font-weight: 700; color: var(--muted); }
+.stk-why { margin: 0; padding-left: 1.1rem; display: grid; gap: 0.25rem; font-size: 0.88rem; }
+.stk-search { display: inline-flex; gap: 3px; align-items: center; margin-left: 0.4rem; vertical-align: middle; }
+.stk-search i { width: 5px; height: 5px; border-radius: 50%; background: var(--brand-ink, currentColor); opacity: 0.25; animation: stk-search 1.2s ease-in-out infinite; }
+.stk-search i:nth-child(2) { animation-delay: 0.2s; }
+.stk-search i:nth-child(3) { animation-delay: 0.4s; }
+@keyframes stk-search { 0%, 100% { opacity: 0.25; transform: translateY(0); } 50% { opacity: 1; transform: translateY(-3px); } }
+@media (prefers-reduced-motion: reduce) { .stk-search i { animation: none; opacity: 0.7; } }

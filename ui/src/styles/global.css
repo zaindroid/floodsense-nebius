@@ -1172,3 +1172,19 @@ a.button.primary { color: #f4fffc; }
 .impact-goal { margin: 0.25rem 0 0.5rem; font-weight: 600; }
 .impact-chips { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; list-style: none; margin: 0; padding: 0; }
 .impact-why { margin: 0.5rem 0 0; }
+
+/* Desk skeleton (components/desk/DeskPage.tsx): one section order, spacing and card style for the three desks. */
+.desk { display: flex; flex-direction: column; gap: 0.75rem; min-width: 0; }
+.desk--operator { max-width: 62rem; }
+.desk__slot { display: flex; flex-direction: column; gap: 0.75rem; min-width: 0; }
+.desk-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.75rem; flex-wrap: wrap; }
+.desk-title { margin: 0; font-size: 1.25rem; }
+.desk-meta, .desk-source { margin: 0.2rem 0 0; color: var(--muted); font-size: 0.85rem; }
+.desk-tag { display: inline-block; padding: 0.05rem 0.45rem; border-radius: 999px; background: var(--ok-soft); color: var(--ok); font-weight: 600; margin-right: 0.35rem; }
+.desk-card { padding: 1rem 1.15rem; display: grid; gap: 0.5rem; align-content: start; }
+.desk-card > * { margin-top: 0; margin-bottom: 0; }
+.desk-card__title { margin: 0; font-size: 1.1rem; overflow-wrap: anywhere; }
+.desk-card__title--label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 600; }
+
+/* Map shell: 2D / 3D toggle row above the map */
+.map-mode { display: flex; align-items: center; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.4rem; }

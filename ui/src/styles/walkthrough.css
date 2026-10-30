@@ -1,0 +1,410 @@
+/* Run walkthrough overlay. Reads the global tokens, so both themes follow. */
+
+.wt-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: rgb(10 20 34 / 62%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+.wt {
+  --wt-ink: var(--text, #13233a);
+  --wt-muted: var(--muted, #5b6b80);
+  --wt-line: var(--border, #e1e7ef);
+  --wt-accent: var(--brand, #0b5cad);
+  --wt-ok: var(--ok-ink, #1f6b41);
+  --wt-warn: var(--warn-ink, #7a4b00);
+  --wt-danger: var(--danger-ink, #b0202f);
+  display: flex;
+  flex-direction: column;
+  width: min(68rem, 100%);
+  max-height: 92vh;
+  background: var(--surface);
+  color: var(--wt-ink);
+  border: 1px solid var(--wt-line);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.wt-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem 1.1rem;
+  border-bottom: 1px solid var(--wt-line);
+}
+.wt-head h2 {
+  margin: 0.1rem 0 0;
+  font-size: 1.1rem;
+}
+.wt-sub {
+  margin: 0.25rem 0 0;
+  font-size: 0.78rem;
+  color: var(--wt-muted);
+  font-family: var(--mono, monospace);
+}
+
+.wt-body {
+  display: grid;
+  grid-template-columns: 13.5rem minmax(0, 1fr);
+  gap: 1.1rem;
+  padding: 1rem 1.1rem;
+  overflow: auto;
+}
+
+/* --- the graph, as a spine ------------------------------------------- */
+
+.wt-spine {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+.wt-spine::before {
+  content: "";
+  position: absolute;
+  left: 0.3rem;
+  top: 0.6rem;
+  bottom: 0.6rem;
+  width: 2px;
+  background: var(--wt-line);
+}
+.wt-node {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.3rem 0 0.3rem 1.3rem;
+  font-size: 0.86rem;
+  color: var(--wt-muted);
+}
+.wt-dot {
+  position: absolute;
+  left: 0;
+  top: 0.55rem;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  border: 2px solid var(--wt-line);
+  background: var(--surface);
+}
+.wt-node.is-visited {
+  color: var(--wt-ink);
+}
+.wt-node.is-visited .wt-dot {
+  border-color: var(--wt-ok);
+  background: var(--wt-ok);
+}
+.wt-node.is-current {
+  color: var(--wt-accent);
+  font-weight: 700;
+}
+.wt-node.is-current .wt-dot {
+  border-color: var(--wt-accent);
+  background: var(--wt-accent);
+  box-shadow: 0 0 0 4px var(--brand-soft, #e6f0fb);
+}
+.wt-node.is-returning .wt-dot {
+  border-color: var(--wt-warn);
+  background: var(--warn-soft, #fdf3d6);
+}
+.wt-runs {
+  font-size: 0.72rem;
+  font-family: var(--mono, monospace);
+  color: var(--wt-muted);
+}
+
+/* --- what the beat did ----------------------------------------------- */
+
+.wt-detail {
+  min-width: 0;
+  min-height: 19rem;
+  animation: wt-in 260ms ease-out both;
+}
+.wt-beat-no {
+  margin: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--wt-muted);
+}
+.wt-beat-head {
+  margin: 0.15rem 0 0;
+  font-size: 1.05rem;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.wt-kind {
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.12rem 0.45rem;
+  border-radius: 999px;
+  border: 1px solid var(--wt-line);
+  color: var(--wt-muted);
+}
+.wt-kind-work {
+  color: var(--wt-accent);
+  border-color: var(--brand-border, #c8dcf3);
+  background: var(--brand-soft, #e6f0fb);
+}
+.wt-kind-loop {
+  color: var(--wt-warn);
+  border-color: var(--sample-border, #f0cf6b);
+  background: var(--warn-soft, #fdf3d6);
+}
+.wt-kind-gate {
+  color: var(--wt-ok);
+  border-color: var(--live-border, #bfe3cd);
+  background: var(--ok-soft, #e5f4eb);
+}
+.wt-said {
+  margin: 0.5rem 0 0.2rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  max-width: 62ch;
+}
+.wt-beat-meta {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--wt-muted);
+  font-family: var(--mono, monospace);
+}
+.wt-loop-note {
+  margin: 0.6rem 0 0;
+  padding: 0.45rem 0.6rem;
+  border-left: 3px solid var(--wt-warn);
+  background: var(--warn-soft, #fdf3d6);
+  color: var(--wt-warn);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.86rem;
+  max-width: 62ch;
+}
+
+.wt-block {
+  margin-top: 0.85rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--wt-line);
+}
+.wt-ids,
+.wt-hyps {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0.35rem 0 0.25rem;
+  padding: 0;
+}
+.wt-id {
+  font-family: var(--mono, monospace);
+  font-size: 0.74rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 6px;
+  background: var(--zetaris-bg, #efe9fb);
+  border: 1px solid var(--zetaris-border, #d8ccf5);
+  color: var(--zetaris-ink, #5a3aa8);
+}
+.wt-claims {
+  list-style: none;
+  margin: 0.4rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+.wt-claims li {
+  font-size: 0.86rem;
+  line-height: 1.45;
+  max-width: 68ch;
+}
+.wt-claim-id {
+  font-family: var(--mono, monospace);
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 0.08rem 0.35rem;
+  border-radius: 5px;
+  background: var(--bg-sunken, #e9eef5);
+  margin-right: 0.3rem;
+}
+.wt-verdict {
+  margin: 0.3rem 0;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+.wt-verdict.is-pass {
+  color: var(--wt-ok);
+}
+.wt-verdict.is-flag {
+  color: var(--wt-warn);
+}
+.wt-judge-claim {
+  margin: 0.25rem 0;
+  font-size: 0.84rem;
+  line-height: 1.45;
+  max-width: 68ch;
+}
+.wt-hyp {
+  font-size: 0.78rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--wt-line);
+}
+.wt-hyp-supported {
+  color: var(--wt-ok);
+  background: var(--ok-soft, #e5f4eb);
+  border-color: var(--live-border, #bfe3cd);
+}
+.wt-hyp-not_supported {
+  color: var(--wt-danger);
+  background: var(--danger-soft, #fbe3e6);
+  border-color: var(--danger-border, #efb7be);
+  text-decoration: line-through;
+}
+.wt-hyp-proposed {
+  color: var(--wt-muted);
+  background: var(--bg-sunken, #e9eef5);
+}
+
+/* --- transport, scrubber and the running tally ----------------------- */
+
+.wt-foot {
+  border-top: 1px solid var(--wt-line);
+  padding: 0.7rem 1.1rem 0.85rem;
+  background: var(--surface-2, #f7f9fc);
+}
+.wt-transport {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.wt-scrub {
+  list-style: none;
+  display: flex;
+  gap: 2px;
+  margin: 0.7rem 0 0;
+  padding: 0;
+}
+.wt-scrub li {
+  flex: 1 1 0;
+  min-width: 0;
+}
+.wt-tick {
+  display: block;
+  width: 100%;
+  height: 0.65rem;
+  padding: 0;
+  border: 0;
+  border-radius: 2px;
+  cursor: pointer;
+  background: var(--wt-line);
+}
+.wt-tick.is-past {
+  background: var(--brand-border, #c8dcf3);
+}
+.wt-tick-loop {
+  background: var(--sample-border, #f0cf6b);
+}
+.wt-tick-gate.is-past,
+.wt-tick-gate {
+  background: var(--live-border, #bfe3cd);
+}
+.wt-tick.is-at {
+  background: var(--wt-accent);
+  height: 0.95rem;
+  margin-top: -0.15rem;
+}
+.wt-tick:hover {
+  outline: 1px solid var(--wt-accent);
+}
+
+.wt-ledger {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.1rem;
+  margin: 0.7rem 0 0;
+}
+.wt-tally {
+  display: flex;
+  align-items: baseline;
+  gap: 0.3rem;
+}
+.wt-tally dt {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--wt-muted);
+}
+.wt-tally dd {
+  margin: 0;
+  font-weight: 700;
+  font-size: 0.95rem;
+  font-variant-numeric: tabular-nums;
+}
+.wt-tally.is-zero dd {
+  color: var(--wt-muted);
+  font-weight: 400;
+}
+.wt-board-line {
+  margin: 0.5rem 0 0;
+  font-family: var(--mono, monospace);
+  font-size: 0.76rem;
+}
+
+@keyframes wt-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (max-width: 46rem) {
+  .wt-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .wt-spine {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 0.9rem;
+  }
+  .wt-spine::before {
+    display: none;
+  }
+  .wt-node {
+    padding-left: 1.1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wt-detail {
+    animation: none;
+  }
+}
+
+/* The control that opens it, under the pipeline card. */
+.wt-open {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.8rem;
+  margin-top: 0.7rem;
+}
+.wt-open .note {
+  flex: 1 1 18rem;
+  margin: 0;
+}
+.wt-escalation {
+  margin: 0.3rem 0 0;
+  font-size: 0.8rem;
+  color: var(--warn-ink, #7a4b00);
+}

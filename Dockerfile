@@ -1,6 +1,6 @@
 # FloodSense EU for the Nebius hackathon, as one container: the built UI, the
 # API proxy, the agents graph and the engines sidecar, mirrored from the
-# monorepo's main with PR #120 on top. serve/ is this repository's own: the
+# monorepo's main. serve/ is this repository's own: the
 # judge login and the /nebius page that starts and stops the Nebius VM copy.
 
 # 1. the UI bundle. VITE_* is inlined at build time, so the API base has to
@@ -55,7 +55,7 @@ COPY start.sh /start.sh
 RUN chmod +x /start.sh
 
 # Rewritten on every sync by .github/workflows/sync-from-monorepo.yml.
-ENV GIT_SHA=81e0252300dc890f0df45fbee8d9399e0adb80e1 BUILT_AT=2026-10-30T02:21:09Z SOURCE_REF=main+pr132+pr131+pr134
+ENV GIT_SHA=22dbd89805278ab927a12dea4560931dcd7142de BUILT_AT=2026-10-30T09:16:27Z SOURCE_REF=main
 
 # 8080 is the only port Coolify's healthcheck targets. The other three
 # services stay on loopback: nothing inside here is reachable from outside

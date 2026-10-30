@@ -62,6 +62,8 @@ STATE_KEYS = (
     "scope",
     "mode",
     "live_findings",
+    "web",
+    "web_check",
     "model_ids",
     "error",
     "lane",

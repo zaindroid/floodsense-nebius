@@ -5,19 +5,26 @@ import { evidenceForSource, type LiveEvidence, type ViewMeta } from "../lib/live
 import { basisLabel, calmSentence, plainOf, timeWord, worstFirst, type StatusView } from "../lib/places";
 import { LiveSourceBadge } from "./LiveSources";
 
+/** The three live views a source can come from; useLiveWatch and the insurer page both satisfy it. */
+export interface ViewLoads {
+  gauges: object;
+  euWatch: { queryId: string | null; executedAt?: string | null; fetchedAt?: number | null };
+  hazard: { state: string; data?: { queryId: string | null; executedAt?: string | null }; fetchedAt?: number };
+}
+
 /** Query id and fetch time of the view behind one source kind. */
-export function metaFor(live: Pick<LiveWatch, "gauges" | "euWatch" | "hazard">, kind: WatchSource["kind"]): ViewMeta {
+export function metaFor(live: ViewLoads, kind: WatchSource["kind"]): ViewMeta {
   if (kind === "gauge") {
     const g = live.gauges as { queryId?: string | null; executedAt?: string | null; fetchedAt?: number };
     return { queryId: g.queryId ?? null, executedAt: g.executedAt ?? null, fetchedAt: g.fetchedAt ?? null };
   }
   if (kind === "model") return { queryId: live.euWatch.queryId, executedAt: live.euWatch.executedAt, fetchedAt: live.euWatch.fetchedAt };
-  return live.hazard.state === "ready"
-    ? { queryId: live.hazard.data.queryId, executedAt: live.hazard.data.executedAt, fetchedAt: live.hazard.fetchedAt }
+  return live.hazard.state === "ready" && live.hazard.data
+    ? { queryId: live.hazard.data.queryId, executedAt: live.hazard.data.executedAt, fetchedAt: live.hazard.fetchedAt ?? null }
     : { queryId: null };
 }
 
-export function evidenceFor(live: Pick<LiveWatch, "gauges" | "euWatch" | "hazard">, s: WatchSource): LiveEvidence {
+export function evidenceFor(live: ViewLoads, s: WatchSource): LiveEvidence {
   return evidenceForSource(s, metaFor(live, s.kind));
 }
 

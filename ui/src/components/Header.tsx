@@ -3,6 +3,7 @@ import { useConsole } from "../context/ConsoleContext";
 import { useDismiss } from "../hooks/useDismiss";
 import { headerSubtitle } from "../lib/events";
 import { ModeSwitch } from "./ModeSwitch";
+import { SponsorStrip } from "./SponsorStrip";
 import { useLiveWatch } from "../hooks/useLiveWatch";
 import { plainOf, worstFirst } from "../lib/places";
 import { applyTheme, readTheme, type ThemeName } from "../lib/theme";
@@ -154,6 +155,7 @@ export function Header() {
           </div>
         </div>
       </div>
+      <SponsorStrip />
       <ModeSwitch />
     </header>
   );

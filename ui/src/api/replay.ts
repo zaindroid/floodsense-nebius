@@ -1,6 +1,8 @@
 import { apiBaseUrl, apiTimeoutMs } from "./config";
 import { adoptMemoryUsed, adoptPlaybook, type MemoryUsed, type PlaybookItem } from "../lib/hitl";
 import { adoptPlain, type PlainAnswer } from "../lib/calmAnswer";
+import { webContextOf } from "../lib/sponsors";
+import type { WebContext } from "../types/contract";
 
 /** One citation from a recorded run. Layer (c) carries a document passage. */
 export interface ReplayCitation {
@@ -116,6 +118,8 @@ export interface RecordedRun {
   plain?: PlainAnswer | null;
   /** The question this run answered (body.request.question), when stated. */
   question?: string | null;
+  /** The run's Tavily web call (body.web / answer.web_context); null when the run made none. */
+  web?: WebContext | null;
 }
 
 const str = (value: unknown): string | null => (typeof value === "string" && value.length > 0 ? value : null);
@@ -234,6 +238,7 @@ export function adoptRunBody(run: Record<string, unknown>, runId: string): Recor
     playbook: adoptPlaybook(run.playbook),
     plain: adoptPlain(run.plain),
     question: str(rec(run.request)?.question),
+    web: webContextOf(run),
   };
 }
 

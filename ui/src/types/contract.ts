@@ -20,4 +20,5 @@ export type {
   JudgeClaim,
   PlaybookAction,
   ServedFrom,
+  WebContext,
 } from "../../../contracts/typescript/index";

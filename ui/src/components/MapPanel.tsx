@@ -1,5 +1,4 @@
 import L from "leaflet";
-import "leaflet/dist/leaflet.css";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { useConsole } from "../context/ConsoleContext";
 import { BAND_ELEVATED_M3S, BAND_TYPICAL_M3S, SIMULATED_ALERT_M3S } from "../config/scenario";
@@ -19,10 +18,8 @@ import {
 } from "../lib/events";
 import type { ExposureJoinRow } from "../types/views";
 import { LiveSitesPanel } from "./LiveSitesMap";
-
-const TILE_URL = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
-const TILE_ATTRIBUTION =
-  '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors';
+import { MapShell } from "./map/MapShell";
+import { bandPoint } from "./map/shellLogic";
 
 const AHR_ROWS = ahrDischarge();
 const AHR_DATES = datesOf(AHR_ROWS);
@@ -189,48 +186,21 @@ function EventMap({
   onSelect: (pointId: string) => void;
   exposure: ExposureJoinRow[];
 }) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const mapRef = useRef<L.Map | null>(null);
-  const pointsLayer = useRef<L.LayerGroup | null>(null);
-  const exposureLayer = useRef<L.LayerGroup | null>(null);
+  const [map, setMap] = useState<L.Map | null>(null);
   const selectRef = useRef(onSelect);
   selectRef.current = onSelect;
-
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-    const map = L.map(container, { zoomSnap: 1, attributionControl: false, scrollWheelZoom: false });
-    L.control
-      .attribution({ prefix: '<a href="https://leafletjs.com" target="_blank" rel="noopener">Leaflet</a>' })
-      .addAttribution(`${TILE_ATTRIBUTION} · Discharge: GloFAS via Open-Meteo (CC BY 4.0)`)
-      .addTo(map);
-    L.tileLayer(TILE_URL, { maxZoom: 18 }).addTo(map);
-    exposureLayer.current = L.layerGroup().addTo(map);
-    pointsLayer.current = L.layerGroup().addTo(map);
-    mapRef.current = map;
-    const resize = new ResizeObserver(() => map.invalidateSize());
-    resize.observe(container);
-    return () => {
-      resize.disconnect();
-      map.remove();
-      mapRef.current = null;
-      pointsLayer.current = null;
-      exposureLayer.current = null;
-    };
-  }, []);
+  const markers = useRef(new Map<string, L.Marker>());
 
   // Fit to the event's points whenever the event (or its point list) changes.
   useEffect(() => {
     const bounds = boundsOf(points);
-    if (mapRef.current && bounds) mapRef.current.fitBounds(bounds, { padding: [40, 40], maxZoom: 13 });
-  }, [eventId, points]);
+    if (map && bounds) map.fitBounds(bounds, { padding: [40, 40], maxZoom: 13 });
+  }, [map, eventId, points]);
 
   // Markers are built once per point list, so a click (which changes the selection) keeps its popup open.
-  const markers = useRef(new Map<string, L.Marker>());
   useEffect(() => {
-    const layer = pointsLayer.current;
-    if (!layer) return;
-    layer.clearLayers();
+    if (!map) return;
+    const layer = L.layerGroup().addTo(map);
     markers.current.clear();
     for (const point of points) {
       const marker = L.marker([point.lat, point.lon], {
@@ -249,7 +219,11 @@ function EventMap({
       layer.addLayer(marker);
       markers.current.set(point.point_id, marker);
     }
-  }, [points]);
+    return () => {
+      layer.remove();
+      markers.current.clear();
+    };
+  }, [map, points]);
 
   // Values and selection only restyle the existing markers.
   useEffect(() => {
@@ -286,22 +260,41 @@ function EventMap({
       marker.getTooltip()?.getElement()?.classList.toggle("is-selected", selected);
       marker.setPopupContent(escapeHtml(text));
     }
-  }, [points, values, date, selectedId]);
+  }, [map, points, values, date, selectedId]);
 
   useEffect(() => {
-    const layer = exposureLayer.current;
-    if (!layer) return;
-    layer.clearLayers();
+    if (!map) return;
+    const layer = L.layerGroup().addTo(map);
     for (const row of exposure) {
       const dot = L.circleMarker([row.lat, row.lon], { radius: 3, className: "exposure-site", bubblingMouseEvents: false });
       dot.bindTooltip(escapeHtml(`${row.policy_id} · ${row.segment}`), { direction: "top" });
       layer.addLayer(dot);
     }
-  }, [exposure]);
+    return () => void layer.remove();
+  }, [map, exposure]);
+
+  const points3d = useMemo(
+    () =>
+      points.map((p) => {
+        const m3s = values.get(p.point_id) ?? null;
+        return bandPoint({ id: p.point_id, lat: p.lat, lon: p.lon, label: pointPopupText(p, m3s, formatDay(date)) }, m3s === null ? null : dischargeBand(m3s));
+      }),
+    [points, values, date],
+  );
+  const extra3d = useMemo(() => exposure.map((r) => ({ id: r.policy_id, lat: r.lat, lon: r.lon, label: `${r.policy_id} · ${r.segment}` })), [exposure]);
+  const fit3d = useMemo(() => boundsOf(points), [points]);
 
   return (
-    <div className="gauge-map__frame">
-      <div ref={containerRef} className="leaflet-map" role="region" aria-label={`Map of ${EVENT_META[eventId].region} points`} />
-    </div>
+    <MapShell
+      ariaLabel={`Map of ${EVENT_META[eventId].region} points`}
+      attribution="Discharge: GloFAS via Open-Meteo (CC BY 4.0)"
+      onMap2d={setMap}
+      fit3d={fit3d}
+      points3d={points3d}
+      extra3d={extra3d}
+      selectedId={selectedId}
+      onSelect={onSelect}
+      columnDeg={0.0015}
+    />
   );
 }

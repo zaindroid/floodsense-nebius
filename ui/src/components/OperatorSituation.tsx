@@ -1,4 +1,7 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useStackData } from "../hooks/useStackData";
+import { AgentsLive } from "./agents/AgentsLive";
+import { WebCheckCard } from "./desk/WebCheck";
 import { loadForecast, type ForecastLoad } from "../api/operatorForecast";
 import { useConsole } from "../context/ConsoleContext";
 import { useLiveWatch } from "../hooks/useLiveWatch";
@@ -24,18 +27,18 @@ import {
   screeningView,
   splitForecastClaims,
   coverageOf,
-  readingTime,
   type CallScript,
   type Coverage,
   type Lang,
   type ScriptLine,
   type ScriptSrc,
 } from "../lib/operatorDesk";
-import { basisLabel, calmSentence, countryName, headlineCounts, headlineText, plainOf } from "../lib/places";
+import { basisLabel, countryName, headlineCounts, headlineText, plainOf } from "../lib/places";
 import { numberRunReferences } from "../lib/references";
 import { routeHref } from "../lib/route";
 import { evidenceFor, StatusChip, timeText } from "./PlacesToWatch";
 import { LiveSourceBadge } from "./LiveSources";
+import { DeskCard, DeskHead, DeskPage, EvidenceRow, ForecastCard, HazardLead, type DeskSlots } from "./desk/DeskPage";
 import { RefMarks } from "./RefMarks";
 import { fetchPastRuns } from "../api/pastRuns";
 import { FACTS, GOALS, operatorChips, pendingLabel } from "../lib/impact";
@@ -133,113 +136,124 @@ export function OperatorSituation() {
   const langs = languagesFor(focus?.country ?? "DE");
   const activeLang: Lang = langs.includes(lang) ? lang : "en";
 
-  return (
-    <div className="op-page now-page">
-      <ImpactStrip goal={GOALS.operator} chips={operatorChips(live.sources, demo ? null : pending)} fact={FACTS.operator} />
-      <header className="now-head">
-        <div>
-          <p className="eyebrow">Civil protection</p>
-          <h2 className="now-title">Situation board</h2>
-          <p className="now-meta">
-            <span className="now-live-tag">Live data · Zetaris</span>
-            {live.updatedAt ? ` Updated ${relativeTime(live.updatedAt, clock)}` : ""}
-          </p>
-        </div>
+  const stack = useStackData();
+  const shell: DeskSlots = {
+    agents: <AgentsLive stack={stack} compact />,
+    impact: <ImpactStrip goal={GOALS.operator} chips={operatorChips(live.sources, demo ? null : pending)} fact={FACTS.operator} />,
+    head: (
+      <DeskHead
+        eyebrow="Civil protection"
+        title="Situation board"
+        tag={<span className="desk-tag">Live data · Zetaris</span>}
+        updated={live.updatedAt ? ` Updated ${relativeTime(live.updatedAt, clock)}` : ""}
+      >
         <button type="button" className="now-refresh" onClick={live.refresh}>
           Refresh
         </button>
-      </header>
-
-      {!group || !focus ? (
-        <p className="now-status" role="status">
-          {loading
-            ? "Loading the watched places…"
-            : "No watched place could be read: the live views did not answer. Nothing is shown in its place. Try Refresh in a few minutes."}
-        </p>
-      ) : (
-        <>
-          <section className="card op-picker" aria-label="Choose a country and river">
-            <label className="field">
-              Country
-              <select
-                value={country}
-                onChange={(event) => {
-                  const next = groups.find((g) => g.country === event.target.value);
-                  setGroupKey(next?.key ?? null);
-                  setPickedId(null);
-                }}
-              >
-                {countries.map((c) => (
-                  <option key={c} value={c}>
-                    {countryName(c)}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="field">
-              River or area
-              <select
-                value={group.key}
-                onChange={(event) => {
-                  setGroupKey(event.target.value);
-                  setPickedId(null);
-                }}
-              >
-                {countryGroups.map((g) => (
-                  <option key={g.key} value={g.key}>
-                    {g.label}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <p className={`note op-picker__counts${coverage.partial ? " op-partial" : ""}`} role={coverage.partial ? "alert" : undefined}>
-              {coverage.partial && <strong>Partial data. </strong>}
-              {coverage.text} {coverage.loaded > 0 ? `Of those: ${headlineText(headlineCounts(live.sources))}.` : ""}
-            </p>
-          </section>
-
-          <section className="card" aria-labelledby="op-river">
-            <p className="section-label">Status on the river</p>
-            <h3 id="op-river" className="op-h">
-              {group.river} · {countryName(group.country)}
-            </h3>
-            <p className="note">{orderLine(group)}</p>
-            {sameRiverElsewhere(groups, group).length > 0 && (
-              <p className="note">The {group.river} is also watched in {sameRiverElsewhere(groups, group).join(", ")}.</p>
-            )}
-            <ol className="op-river-list" aria-label={`${group.river} places, ${group.ordered === "km" ? "upstream to downstream" : "watch-list order"}`}>
-              {group.sources.map((s, i) => (
-                <RiverRow
-                  key={s.id}
-                  s={s}
-                  n={i + 1}
-                  selected={s.id === focus.id}
-                  last={i === group.sources.length - 1}
-                  evidence={evidenceFor(live, s)}
-                  onPick={() => setPickedId(s.id)}
-                />
-              ))}
-            </ol>
-          </section>
-
-          <FocusBrief
-            s={focus}
-            group={group}
-            outlook={outlook}
-            onRefresh={refresh}
-            lang={activeLang}
-            langs={langs}
-            onLang={setLang}
-            evidence={evidenceFor(live, focus)}
-            coverage={coverage}
-          />
-        </>
-      )}
-      <p className="now-source">
+      </DeskHead>
+    ),
+    footer: (
+      <p className="desk-source">
         Quelle: WSV, PEGELONLINE (DL-DE-Zero-2.0) · Weather data by Open-Meteo.com (GloFAS, CC BY 4.0) · via Zetaris. Model-based screening, not an
         official warning.
       </p>
-    </div>
+    ),
+  };
+
+  if (!group || !focus)
+    return (
+      <DeskPage
+        desk="operator"
+        {...shell}
+        evidence={<WebCheckCard stack={stack} desk="operator" />}
+        health={
+          <p className="now-status" role="status">
+            {loading
+              ? "Loading the watched places…"
+              : "No watched place could be read: the live views did not answer. Nothing is shown in its place. Try Refresh in a few minutes."}
+          </p>
+        }
+      />
+    );
+
+  const health = (
+    <>
+      <section className="card desk-card op-picker" aria-label="Choose a country and river">
+        <label className="field">
+          Country
+          <select
+            value={country}
+            onChange={(event) => {
+              const next = groups.find((g) => g.country === event.target.value);
+              setGroupKey(next?.key ?? null);
+              setPickedId(null);
+            }}
+          >
+            {countries.map((c) => (
+              <option key={c} value={c}>
+                {countryName(c)}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="field">
+          River or area
+          <select
+            value={group.key}
+            onChange={(event) => {
+              setGroupKey(event.target.value);
+              setPickedId(null);
+            }}
+          >
+            {countryGroups.map((g) => (
+              <option key={g.key} value={g.key}>
+                {g.label}
+              </option>
+            ))}
+          </select>
+        </label>
+        <p className={`note op-picker__counts${coverage.partial ? " op-partial" : ""}`} role={coverage.partial ? "alert" : undefined}>
+          {coverage.partial && <strong>Partial data. </strong>}
+          {coverage.text} {coverage.loaded > 0 ? `Of those: ${headlineText(headlineCounts(live.sources))}.` : ""}
+        </p>
+      </section>
+
+      <DeskCard label="Status on the river" title={`${group.river} · ${countryName(group.country)}`}>
+        <p className="note">{orderLine(group)}</p>
+        {sameRiverElsewhere(groups, group).length > 0 && (
+          <p className="note">The {group.river} is also watched in {sameRiverElsewhere(groups, group).join(", ")}.</p>
+        )}
+        <ol className="op-river-list" aria-label={`${group.river} places, ${group.ordered === "km" ? "upstream to downstream" : "watch-list order"}`}>
+          {group.sources.map((s, i) => (
+            <RiverRow
+              key={s.id}
+              s={s}
+              n={i + 1}
+              selected={s.id === focus.id}
+              last={i === group.sources.length - 1}
+              evidence={evidenceFor(live, s)}
+              onPick={() => setPickedId(s.id)}
+            />
+          ))}
+        </ol>
+      </DeskCard>
+    </>
+  );
+
+  return (
+    <FocusBrief
+      shell={{ ...shell, health }}
+      web={<WebCheckCard stack={stack} desk="operator" />}
+      s={focus}
+      group={group}
+      outlook={outlook}
+      onRefresh={refresh}
+      lang={activeLang}
+      langs={langs}
+      onLang={setLang}
+      evidence={evidenceFor(live, focus)}
+      coverage={coverage}
+    />
   );
 }
 
@@ -282,6 +296,8 @@ function RiverRow({
 }
 
 function FocusBrief({
+  shell,
+  web,
   s,
   group,
   outlook,
@@ -292,6 +308,8 @@ function FocusBrief({
   evidence,
   coverage,
 }: {
+  shell: DeskSlots;
+  web: ReactNode;
   coverage: Coverage;
   s: WatchSource;
   group: ReturnType<typeof buildRiverGroups>[number];
@@ -303,6 +321,7 @@ function FocusBrief({
   evidence: ReturnType<typeof evidenceFor>;
 }) {
   const view = plainOf(s);
+  const { openLiveEvidence } = useConsole();
   const script = useMemo(() => buildCallScript(s, lang), [s, lang]);
   const measured = timeText(s.kind, s.measuredAt);
 
@@ -334,113 +353,97 @@ function FocusBrief({
   };
 
   return (
-    <>
-      <section className="card op-focus" aria-labelledby="op-focus-title">
-        <p className="section-label">Brief for</p>
-        <h3 id="op-focus-title" className="op-h">
-          {s.river ? `${s.river} · ${s.name}` : s.name} <span className="muted small">{countryName(s.country)}</span>
-        </h3>
-        <p>
-          <StatusChip view={view} large />
-        </p>
-        {s.live ? (
-          <p>
-            {calmSentence(s.kind, s.status, s.river, s.name)} <LiveSourceBadge n={1} evidence={evidence} />
-          </p>
-        ) : (
-          <p className="op-partial note" role="alert">
-            This reading is from {readingTime(s.measuredAt)} and may be out of date. Do not read it out as the current situation.{" "}
-            <LiveSourceBadge n={1} evidence={evidence} />
-          </p>
-        )}
-        <p className="note">
-          {measured} · {basisLabel(s.kind)} · {s.live ? "live" : "not live (stale or seed)"}
-        </p>
-        <div className="button-row op-actions">
-          <button type="button" className="button primary" onClick={() => void copyBrief()}>
-            Copy brief
-          </button>
-          <span className="note" role="status" aria-live="polite">
-            {copied ?? "Plain text: time, sources and query ids."}
-          </span>
-        </div>
-      </section>
-
-      <section className="card" aria-labelledby="op-outlook">
-        <div className="op-head">
-          <div>
-            <p className="section-label">Next 48 hours</p>
-            <h3 id="op-outlook" className="op-h">
-              Outlook
-            </h3>
-          </div>
-          <button type="button" className="button ghost" onClick={onRefresh} disabled={outlook.state === "loading"}>
-            {outlook.state === "loading" ? "Checking…" : "Check again"}
-          </button>
-        </div>
-        {outlook.state === "idle" || outlook.state === "loading" ? (
-          <p className="note" role="status">
-            Reading the forecast lane for {s.name}… (deterministic, no model call, about two seconds)
-          </p>
-        ) : outlook.state === "unavailable" ? (
-          <p className="note" role="status">
-            The outlook is not available: {outlook.message}
-          </p>
-        ) : (
-          <>
-            <p>
-              <StatusChip view={screeningView(outlook.brief.status, outlook.brief.statusLabel)} /> <span className="muted small">FloodSense screening, not an official warning</span>
+    <DeskPage
+      desk="operator"
+      {...shell}
+      hazard={<HazardLead label="Brief for" title={s.river ? `${s.river} · ${s.name}` : s.name} source={s} evidence={evidence} />}
+      forecast={
+        <ForecastCard
+          title="Outlook"
+          head={
+            <button type="button" className="button ghost" onClick={onRefresh} disabled={outlook.state === "loading"}>
+              {outlook.state === "loading" ? "Checking…" : "Check again"}
+            </button>
+          }
+          note="FloodSense screening, not an official warning. A model."
+        >
+          {outlook.state === "idle" || outlook.state === "loading" ? (
+            <p className="note" role="status">
+              Reading the forecast lane for {s.name}… (deterministic, no model call, about two seconds)
             </p>
-            <p>{outlook.brief.lead}</p>
-            <ul className="op-claims">
-              {(split?.outlook ?? []).map((c) => (
-                <li key={c.id}>
-                  {c.text} {refs && <RefMarks nums={numbered(c.id)} refs={refs.refs} />}
-                </li>
-              ))}
-            </ul>
-            {outlook.brief.gaps.map((gap) => (
-              <p key={gap} className="note">
-                Gap: {gap}
+          ) : outlook.state === "unavailable" ? (
+            <p className="note" role="status">
+              The outlook is not available: {outlook.message}
+            </p>
+          ) : (
+            <>
+              <p>
+                <StatusChip view={screeningView(outlook.brief.status, outlook.brief.statusLabel)} />
               </p>
-            ))}
-            {outlook.brief.screening && <p className="note">{outlook.brief.screening}</p>}
-            <p className="note">
-              Run {outlook.brief.runId}
-              {outlook.brief.servedFrom ? ` · ${outlook.brief.servedFrom === "live" ? "live" : `${outlook.brief.servedFrom}, not live`}` : ""}
-              {outlook.brief.attribution ? ` · ${outlook.brief.attribution}` : ""}
-            </p>
-          </>
-        )}
-      </section>
-
-      <section className="card" aria-labelledby="op-history">
-        <p className="section-label">What has happened here before</p>
-        <h3 id="op-history" className="op-h">
-          The past, with its source
-        </h3>
-        {outlook.state !== "ready" ? (
-          <p className="note">{outlook.state === "unavailable" ? "Not available while the outlook is not." : "Loading…"}</p>
-        ) : (split?.history.length ?? 0) === 0 ? (
-          <p className="note">No earlier event is stored for this place.</p>
-        ) : (
-          <ul className="op-claims">
-            {split?.history.map((h) => (
-              <li key={h.claim.id}>
-                <span className="eyebrow">{h.heading}</span>
-                <br />
-                {h.claim.text.length > 320 ? `${h.claim.text.slice(0, 320)}…` : h.claim.text} {refs && <RefMarks nums={numbered(h.claim.id)} refs={refs.refs} />}
-              </li>
-            ))}
-          </ul>
-        )}
-        <p className="note">This is what happened, not a prediction for today.</p>
-      </section>
-
-      <CallScriptCard s={s} script={script} lang={lang} langs={langs} onLang={onLang} evidence={evidence} measured={measured} />
-
-      <EscalateCard s={s} status={view.word} />
-    </>
+              <p>{outlook.brief.lead}</p>
+              <ul className="op-claims">
+                {(split?.outlook ?? []).map((c) => (
+                  <li key={c.id}>
+                    {c.text} {refs && <RefMarks nums={numbered(c.id)} refs={refs.refs} />}
+                  </li>
+                ))}
+              </ul>
+              {outlook.brief.gaps.map((gap) => (
+                <p key={gap} className="note">
+                  Gap: {gap}
+                </p>
+              ))}
+              {outlook.brief.screening && <p className="note">{outlook.brief.screening}</p>}
+              <p className="note">
+                Run {outlook.brief.runId}
+                {outlook.brief.servedFrom ? ` · ${outlook.brief.servedFrom === "live" ? "live" : `${outlook.brief.servedFrom}, not live`}` : ""}
+                {outlook.brief.attribution ? ` · ${outlook.brief.attribution}` : ""}
+              </p>
+            </>
+          )}
+        </ForecastCard>
+      }
+      evidence={
+        <>
+          <EvidenceRow evidence={evidence} onOpen={() => openLiveEvidence(evidence)} />
+          {web}
+          <DeskCard label="What has happened here before" title="The past, with its source">
+            {outlook.state !== "ready" ? (
+              <p className="note">{outlook.state === "unavailable" ? "Not available while the outlook is not." : "Loading…"}</p>
+            ) : (split?.history.length ?? 0) === 0 ? (
+              <p className="note">No earlier event is stored for this place.</p>
+            ) : (
+              <ul className="op-claims">
+                {split?.history.map((h) => (
+                  <li key={h.claim.id}>
+                    <span className="eyebrow">{h.heading}</span>
+                    <br />
+                    {h.claim.text.length > 320 ? `${h.claim.text.slice(0, 320)}…` : h.claim.text} {refs && <RefMarks nums={numbered(h.claim.id)} refs={refs.refs} />}
+                  </li>
+                ))}
+              </ul>
+            )}
+            <p className="note">This is what happened, not a prediction for today.</p>
+          </DeskCard>
+        </>
+      }
+      actions={
+        <>
+          <DeskCard label="Brief">
+            <div className="button-row op-actions">
+              <button type="button" className="button primary" onClick={() => void copyBrief()}>
+                Copy brief
+              </button>
+              <span className="note" role="status" aria-live="polite">
+                {copied ?? "Plain text: time, sources and query ids."}
+              </span>
+            </div>
+          </DeskCard>
+          <CallScriptCard s={s} script={script} lang={lang} langs={langs} onLang={onLang} evidence={evidence} measured={measured} />
+          <EscalateCard s={s} status={view.word} />
+        </>
+      }
+    />
   );
 }
 
@@ -532,10 +535,10 @@ function CallScriptCard({
 }) {
   const sources = scriptSources(s, evidence, measured);
   return (
-    <section className="card op-script" aria-labelledby="op-script-title">
+    <section className="card desk-card op-script" aria-labelledby="op-script-title">
       <div className="op-head">
         <div>
-          <p className="section-label">For the hotline</p>
+          <p className="eyebrow">For the hotline</p>
           <h3 id="op-script-title" className="op-h">
             Call script
           </h3>
@@ -627,8 +630,8 @@ function EscalateCard({ s, status }: { s: WatchSource; status: string }) {
     }
   };
   return (
-    <section className="card" aria-labelledby="op-escalate">
-      <p className="section-label">Need more than a screening?</p>
+    <section className="card desk-card" aria-labelledby="op-escalate">
+      <p className="eyebrow">Need more than a screening?</p>
       <h3 id="op-escalate" className="op-h">
         Escalate to agents
       </h3>

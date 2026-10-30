@@ -7,6 +7,8 @@
  * answers both lanes, so this label does not assign it to fast or deep.
  * Lightning is not shown as meterless/fast.
  */
+import type { LanePricing } from "../api/platform";
+
 const ANSWERED_BY: Record<string, string> = {
   "nvidia/nemotron-3.5-super-vl-120b-a12b": "answered by Nemotron 3.5 Super VL 120B A12B",
   "nvidia/nemotron-3.5-lightning-30b-a3b": "answered by Nemotron 3.5 Lightning 30B A3B",
@@ -29,6 +31,24 @@ export function subscribeLlmBackend(l: () => void): () => void {
   listeners.add(l);
   return () => void listeners.delete(l);
 }
+
+let lanePricing: Record<string, LanePricing> | null = null;
+/** Per-lane Token Factory pricing from GET /platform/status (llm_usage.pricing); null = not known. Same listeners as the backend. */
+export function setLanePricing(p: Record<string, LanePricing> | null | undefined): void {
+  if (!p || Object.keys(p).length === 0 || JSON.stringify(p) === JSON.stringify(lanePricing)) return;
+  lanePricing = p;
+  listeners.forEach((l) => l());
+}
+/** "EU (Finland)" / "US" from a lane's pricing region. Anything else is shown as stated; unknown is null. Never implies EU-only. */
+export function regionBadge(p: Pick<LanePricing, "region" | "country"> | null | undefined): string | null {
+  const region = (p?.region ?? "").trim();
+  const country = (p?.country ?? "").trim();
+  const blob = `${region} ${country}`.toLowerCase();
+  if (/finland|\bfi\b|eu-north/.test(blob)) return "EU (Finland)";
+  if (/\bus\b|usa|united states|us-central|us-east|us-west/.test(blob)) return "US";
+  return region || country || null;
+}
+export const getLanePricing = (): Record<string, LanePricing> | null => lanePricing;
 
 /**
  * Provider label for a model. Only the run's own stated provider names one; a recorded run without it stays

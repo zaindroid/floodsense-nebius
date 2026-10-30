@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { SafeLink } from "./SafeLink";
+import "../styles/sponsors.css";
 import { LiveEvidenceView } from "./LiveSources";
 import { useConsole } from "../context/ConsoleContext";
 import { useDismiss } from "../hooks/useDismiss";
@@ -309,8 +310,13 @@ export function WebCitations({ answer }: { answer: Answer }) {
         {items.map(({ n, citation }) => (
           <li key={citation.citation_id}>
             <p className="menu-title">
-              [{n}] {citation.title}
+              <svg className="web-cite-icon" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+                <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" strokeWidth="1.8" />
+                <path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18" fill="none" stroke="currentColor" strokeWidth="1.8" />
+              </svg>
+              <span className="sr-only">Web: </span>[{n}] {citation.title}
             </p>
+            <p className="note">{WEB_LABEL}.</p>
             <p className="note">
               <SafeLink href={citation.source_url}>{citation.source_url}</SafeLink>
               {retrievedAt(citation) ? ` · retrieved ${retrievedAt(citation)}` : ""}

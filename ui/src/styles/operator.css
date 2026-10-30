@@ -1,6 +1,4 @@
 /* Civil protection desk: Situation board, call script. Only the tokens at the top of global.css are used. */
-.op-page { max-width: 62rem; }
-.op-page .card { min-width: 0; }
 .op-h { margin: 0.15rem 0 0.35rem; font-size: 1.1rem; overflow-wrap: anywhere; }
 .op-h4 { margin: 1rem 0 0.35rem; font-size: 0.95rem; }
 .op-h4--ok { color: var(--ok-ink); }

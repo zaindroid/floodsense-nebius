@@ -1,5 +1,7 @@
 import type { PlatformStatus } from "../../api/platform";
 import { modelDisplay } from "../../lib/techTrace";
+import { perM, regionBadge, usd } from "../../lib/sponsors";
+import "../../styles/sponsors.css";
 import type { DataKind, UsageView } from "../../lib/stack";
 import { CountUp, DataBadge, Empty, StackCard, ms } from "./StackBits";
 
@@ -67,6 +69,8 @@ export function ModelsCard({
           const pu = processUsage?.lanes[lane] ?? null;
           const modelId = u?.modelIds[0] ?? platform?.lanes[lane] ?? platform?.llmCheck?.lanes[lane]?.modelId ?? null;
           const lat = platform?.latency[lane];
+          const price = platform?.llmUsage?.pricing?.[lane] ?? null;
+          const region = regionBadge(price);
           const modelFromRun = !!u?.modelIds[0];
           const countKind: DataKind = u ? runKind : pu ? "live" : "none";
           const calls = u?.calls ?? pu?.calls ?? null;
@@ -82,6 +86,14 @@ export function ModelsCard({
                 {modelId ?? ""} {modelId && <DataBadge kind={modelFromRun ? runKind : "live"} />}
               </p>
               <p className="stk-note">{LANE_NOTE[lane] ?? "Extra lane"}</p>
+              {price && (
+                <p className="stk-note" data-pricing={lane}>
+                  {perM(price.pricePerMInput)} in / {perM(price.pricePerMOutput)} out per 1M tokens
+                  {price.rpmLimit !== null && <> · {price.rpmLimit} req/min</>}
+                  {price.tpmLimit !== null && <> · {price.tpmLimit.toLocaleString("en")} tokens/min</>}
+                  {region && <span className="stk-region" title="Region from the official model list">{region}</span>}
+                </p>
+              )}
               <p className="stk-note">
                 Counters: <DataBadge kind={countKind} />
               </p>
@@ -110,10 +122,16 @@ export function ModelsCard({
       {usage ? (
         <p className="stk-note">
           Counters are this run's model calls ({usage.totalCalls} calls, {usage.totalTokens.toLocaleString("en")} tokens
-          {usage.costUsd === null ? ", price not configured" : `, about $${usage.costUsd}`}).
+          {usage.costUsd === null ? ", price not configured" : `, run cost ${usd(usage.costUsd)}`}).
+          {platform?.llmUsage?.costPerAnswerUsd != null && <> Cost per answer so far: {usd(platform.llmUsage.costPerAnswerUsd)} over {platform.llmUsage.answers} answers.</>}
         </p>
       ) : processUsage ? (
-        <p className="stk-note">Counters are all calls since the agents process started (the shown run carries no usage).</p>
+        <p className="stk-note">
+          Counters are all calls since the agents process started (the shown run carries no usage).
+          {processUsage.costUsd !== null && <> Cost so far {usd(processUsage.costUsd)}</>}
+          {processUsage.costPerAnswerUsd !== null && <>, {usd(processUsage.costPerAnswerUsd)} per answer over {processUsage.answers} answers</>}
+          {processUsage.costUsd !== null && "."}
+        </p>
       ) : (
         <Empty>No token counters yet. They appear once a run has called a model.</Empty>
       )}

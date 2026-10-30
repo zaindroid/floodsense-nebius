@@ -273,6 +273,45 @@
         "seeded": { "type": "boolean" }
       }
     },
+    "web_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "The run's Tavily web search (FF_TAVILY): web context, never an official warning. query is built from the place name and fixed search words.",
+      "required": ["status", "query", "n_results", "latency_ms", "cached", "results"],
+      "properties": {
+        "status": { "enum": ["ok", "empty", "unavailable"] },
+        "query": { "type": "string" },
+        "n_results": { "type": "integer", "minimum": 0 },
+        "latency_ms": { "type": "integer", "minimum": 0 },
+        "cached": { "type": "boolean" },
+        "retrieved_at": { "type": ["string", "null"] },
+        "results": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["url", "title"],
+            "properties": {
+              "url": { "type": "string" },
+              "title": { "type": "string" },
+              "retrieved_at": { "type": ["string", "null"] }
+            }
+          }
+        },
+        "web_check": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Skeptic: one alert-timing claim against the web results.",
+          "required": ["claim_id", "verdict", "url"],
+          "properties": {
+            "claim_id": { "type": "string" },
+            "verdict": { "enum": ["supports", "contradicts", "neutral"] },
+            "url": { "type": "string" },
+            "note": { "type": "string" }
+          }
+        }
+      }
+    },
     "answer_fields": {
       "type": "object",
       "additionalProperties": false,
@@ -311,6 +350,7 @@
         },
         "forecast": { "$ref": "#/$defs/forecast" },
         "plain": { "$ref": "#/$defs/plain" },
+        "web_context": { "$ref": "#/$defs/web_context" },
         "router_reason": {
           "type": "string",
           "description": "Why the router chose the lane, and any escalation (\"escalated: ...\")."

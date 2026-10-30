@@ -1,6 +1,7 @@
+import type { LanePricing } from "../api/platform";
 import type { RecordedRun } from "../api/replay";
 import type { MemoryUsed } from "./hitl";
-import { NEBIUS_NAME, providerLabel } from "./lanes";
+import { NEBIUS_NAME, providerLabel, regionBadge } from "./lanes";
 import { formatLatency, parseBoard } from "./pipeline";
 
 /**
@@ -182,23 +183,26 @@ export const RECORDED_NOTE = "Recorded run: replayed from cache, not run just no
 const isRecorded = (run: Pick<RecordedRun, "servedFrom">): boolean => run.servedFrom !== "live";
 
 /** Usage rows from run.usage. Absent usage is only reported when the run made model calls; a deterministic run adds nothing. */
-function usageDetails(run: RecordedRun, hadModelCalls: boolean): { before: TileDetail[]; after: TileDetail[] } {
+function usageDetails(run: RecordedRun, hadModelCalls: boolean, pricing?: Record<string, LanePricing> | null): { before: TileDetail[]; after: TileDetail[] } {
   const u = run.usage;
   if (!u) return { before: hadModelCalls ? [{ label: "Usage", value: "Not recorded for this answer (cached, replayed or older run)" }] : [], after: [] };
   if (u.calls === 0) return { before: [], after: [{ label: "Usage", value: "No model call in this answer" }] };
   return {
     before: [],
     after: [
-      ...u.models.map((m) => ({ label: `${m.lane} lane · ${m.modelId}`, value: `${plural(m.calls, "call")} · ${m.totalTokens} tokens` })),
+      ...u.models.map((m) => {
+        const region = regionBadge(pricing?.[m.lane]);
+        return { label: `${m.lane} lane · ${m.modelId}`, value: `${plural(m.calls, "call")} · ${m.totalTokens} tokens${region ? ` · region ${region}` : ""}` };
+      }),
       { label: "This run", value: `${plural(u.calls, "model call")} · ${u.totalTokens} tokens${u.avgLatencyMs != null ? ` · avg ${formatLatency(u.avgLatencyMs)}` : ""}` },
       { label: "Cost", value: u.costUsd == null ? "price not configured" : `$${u.costUsd.toFixed(4)} (${u.priceNote})` },
     ],
   };
 }
 
-function nightshiftTile(run: RecordedRun, backend?: string | null): Tile {
+function nightshiftTile(run: RecordedRun, backend?: string | null, pricing?: Record<string, LanePricing> | null): Tile {
   const t = nightshiftBase(run);
-  const u = usageDetails(run, modelUse(run).models.length > 0);
+  const u = usageDetails(run, modelUse(run).models.length > 0, pricing);
   // Keep the "Time in model-assisted steps" row last among the trace rows; unrecorded-usage note goes before it.
   const i = t.details.findIndex((d) => d.label.startsWith("Time in model"));
   const details = [...t.details];
@@ -345,13 +349,22 @@ function worldTile(run: RecordedRun): Tile {
 function tavilyTile(run: RecordedRun): Tile {
   const calls = run.trace.filter((s) => s.node === "tavily");
   const base = { id: "tavily" as const, name: "Tavily web context", glossary: GLOSSARY.tavily };
-  if (!calls.length) return { ...base, used: false, headline: "Off · no web call in this run", details: [] };
+  const web = run.web ?? null;
+  if (!calls.length && !web) return { ...base, used: false, headline: "Off · no web call in this run", details: [] };
   const last = calls[calls.length - 1];
-  const details: TileDetail[] = [{ label: "Calls", value: String(calls.length) }, { label: "Call", value: last.summary }];
+  const details: TileDetail[] = calls.length ? [{ label: "Calls", value: String(calls.length) }, { label: "Call", value: last.summary }] : [];
+  if (web) {
+    details.push(
+      { label: "Status", value: web.status },
+      { label: "Results", value: String(web.n_results) },
+      { label: "Latency", value: web.latency_ms > 0 ? `${web.latency_ms} ms` : "n/a" },
+      { label: "Cached", value: web.cached ? "yes" : "no" },
+    );
+  }
   const check = run.trace.map((s) => /web_check (supports|contradicts|neutral) (\S+) (\S+)/.exec(s.summary)).find(Boolean);
   if (check) details.push({ label: "Skeptic web check", value: `${check[1]} ${check[2]}, ${check[3]}` });
-  const down = /unavailable/i.test(last.summary);
-  return { ...base, used: !down, headline: down ? "Unavailable" : `On · ${plural(calls.length, "call")}`, details };
+  const down = web ? web.status === "unavailable" : /unavailable/i.test(last.summary);
+  return { ...base, used: !down, headline: down ? "Unavailable" : `On · ${plural(Math.max(calls.length, 1), "call")}`, details };
 }
 
 /* ---------- Router + Judge ---------- */
@@ -402,10 +415,10 @@ export function pickRunRow<T extends { runId: string; status: string; eventId: s
 }
 
 /** Pure: everything the TechTrace panel draws. */
-export function buildTechTrace(run: RecordedRun, backend?: string | null): TechTraceModel {
+export function buildTechTrace(run: RecordedRun, backend?: string | null, pricing?: Record<string, LanePricing> | null): TechTraceModel {
   return {
     routerLine: routerLine(run),
     judgeLine: judgeLine(run),
-    tiles: [zetarisTile(run), nightshiftTile(run, backend), hmemTile(run), worldTile(run), tavilyTile(run)],
+    tiles: [zetarisTile(run), nightshiftTile(run, backend, pricing), hmemTile(run), worldTile(run), tavilyTile(run)],
   };
 }

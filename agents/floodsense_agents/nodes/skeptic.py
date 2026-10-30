@@ -235,18 +235,27 @@ def _checks_for(h: Hypothesis, state: FloodState) -> list[tuple[str, str, tuple[
                 # stopped at its peak) and no fall is observed, so the reference is t1,
                 # the clock. No discharge row at all: t1 as well. Daily 00:00 rows are not
                 # read here; only hourly hazard_timeline rows with a discharge value count.
-                # Passes iff first rain <= reference. Placeholders in text order:
-                #   rain window (t0, t1), CASE fallback t1, peak window (t0, t1),
-                #   latest window (t0, t1), COALESCE fallback t1.
-                f"SELECT MIN(r.ts_utc) AS first_rain FROM {s}.hazard_timeline r WHERE "
-                f"r.point_id IN ({rain_pts}) AND r.rain_mm > 0 AND r.ts_utc BETWEEN ? AND ? "
+                # Passes iff first rain <= reference.
+                #
+                # The window CTE is what names the view, once. Zetaris resolves a
+                # SCHEMASTORE VIEW a single time per statement: naming hazard_timeline
+                # again -- joined, in a subquery, or under UNION -- fails the whole
+                # statement with MISSING_ATTRIBUTES, so the three times a reference
+                # needs are read from `w` instead. The CTE also carries the clocked
+                # window for all three, so each one no longer repeats it.
+                # Placeholders in text order: window (t0, t1), CASE fallback t1,
+                # COALESCE fallback t1.
+                f"WITH w AS (SELECT point_id, ts_utc, rain_mm, discharge_m3s FROM "
+                f"{s}.hazard_timeline WHERE ts_utc BETWEEN ? AND ?) "
+                f"SELECT MIN(r.ts_utc) AS first_rain FROM w r WHERE "
+                f"r.point_id IN ({rain_pts}) AND r.rain_mm > 0 "
                 f"HAVING MIN(r.ts_utc) <= COALESCE((SELECT CASE WHEN p.ts_utc < l.last_ts THEN "
-                f"p.ts_utc ELSE ? END FROM (SELECT ts_utc FROM {s}.hazard_timeline WHERE "
-                f"point_id IN ({river_pts}) AND discharge_m3s IS NOT NULL AND ts_utc BETWEEN ? AND ? "
+                f"p.ts_utc ELSE ? END FROM (SELECT ts_utc FROM w WHERE "
+                f"point_id IN ({river_pts}) AND discharge_m3s IS NOT NULL "
                 f"ORDER BY discharge_m3s DESC, ts_utc ASC LIMIT 1) p, (SELECT MAX(ts_utc) AS last_ts "
-                f"FROM {s}.hazard_timeline WHERE point_id IN ({river_pts}) AND discharge_m3s IS NOT "
-                f"NULL AND ts_utc BETWEEN ? AND ?) l), ?)",
-                clock + (t1,) + clock + clock + (t1,),
+                f"FROM w WHERE point_id IN ({river_pts}) AND discharge_m3s IS NOT "
+                f"NULL) l), ?)",
+                clock + (t1,) + (t1,),
             ),
         ]
     if h.link == "catchment->river":
@@ -355,6 +364,24 @@ def _web_prompt(claim: dict, items: list[dict]) -> str:
     return f"CLAIM {claim['claim_id']}: {claim['text']}\n{rows}"
 
 
+_AHR = ("ahr", "ahrtal", "ahrweiler", "altenahr")
+
+
+def _fold(s: str) -> str:
+    import unicodedata
+
+    return unicodedata.normalize("NFKD", s).encode("ascii", "ignore").decode().lower()
+
+
+def _names_place(place: str, text: str) -> bool:
+    """Whole-word, case/diacritic-insensitive. Unknown (empty) place never matches."""
+    p = _fold(place).strip()
+    if not p:
+        return False
+    names = _AHR if p in _AHR else (p,)
+    return any(re.search(rf"(?<![a-z0-9]){re.escape(n)}(?![a-z0-9])", _fold(text)) for n in names)
+
+
 def _web_check(deps: Deps, state: FloodState) -> dict | None:
     """Does web context support or contradict ONE alert-timing/status claim? Silent when off.
 
@@ -377,9 +404,17 @@ def _web_check(deps: Deps, state: FloodState) -> dict | None:
     url = str(js.get("url") or "")
     if js.get("verdict") not in ("supports", "contradicts", "neutral") or url not in {i["url"] for i in items}:
         return None
+    verdict = js["verdict"]
+    from floodsense_agents.tavily import web_place
+
+    place = web_place(state).lower()
+    page = next(i for i in items if i["url"] == url)
+    # Conservative: a page that never names the place cannot support or contradict a claim about it.
+    if verdict != "neutral" and not _names_place(place, f'{page.get("title", "")} {page.get("text", "")}'):
+        verdict = "neutral"
     return {
         "claim_id": claim["claim_id"],
-        "verdict": js["verdict"],
+        "verdict": verdict,
         "url": url,
         "note": str(js.get("note") or "")[:160],
         "label": "Web context, not an official warning",

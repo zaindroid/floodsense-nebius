@@ -31,6 +31,7 @@ import {
 } from "../lib/controlTower";
 import { headlineCounts } from "../lib/places";
 import { setAwaitingRunId } from "../lib/lastRun";
+import { AgentsLive } from "./agents/AgentsLive";
 import { EuWatchLegend, EuWatchMap } from "./EuWatch";
 import { LiveSourceBadge } from "./LiveSources";
 import { SwitchToLive } from "./ModeSwitch";
@@ -195,6 +196,10 @@ function ControlTowerBody() {
           {readOnly ? "" : " Press Scan now to run one scan by hand."}
         </p>
       )}
+
+      <section aria-label="Watch the agents" className="ct-agents">
+        <AgentsLive watch={{ events: ct.events, open: ct.streaming }} />
+      </section>
 
       <div className="ct-grid">
         <section className="card ct-map" aria-labelledby="ct-map-title">

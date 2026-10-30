@@ -1,0 +1,38 @@
+/* <AgentsLive/>: the animated agent pool. Uses the stack.css tokens; all motion stops under prefers-reduced-motion. */
+.agl-head { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
+.agl-head .stk-title { margin: 0; }
+.agl-cache { font-size: 0.72rem; font-weight: 600; padding: 0.15rem 0.5rem; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
+.agl-cache--cache { background: var(--cached-bg); color: var(--cached-ink); }
+.agl-cache--live { background: var(--ok-soft); color: var(--ok); border-color: var(--live-border); }
+.agl-replay { margin: 0.5rem 0; padding: 0.45rem 0.7rem; border-radius: 10px; border: 1px solid var(--line); background: var(--cached-bg); color: var(--cached-ink); font-size: 0.84rem; }
+.agl-pool { list-style: none; margin: 0.7rem 0; padding: 0; display: flex; flex-wrap: wrap; align-items: stretch; gap: 0.35rem; }
+.agl-node { display: flex; flex-direction: column; gap: 0.15rem; min-width: 104px; flex: 1 1 104px; padding: 0.45rem 0.55rem; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); opacity: 0.55; transition: opacity 0.3s, border-color 0.3s, background 0.3s, transform 0.3s; }
+.agl-node--done { opacity: 1; border-color: var(--live-border); }
+.agl-node--active { opacity: 1; border-color: var(--accent); background: var(--accent-soft); transform: translateY(-2px); animation: stk-pulse 1.2s ease-in-out infinite; }
+.agl-state { font-size: 0.76rem; color: var(--muted); }
+.agl-node--active .agl-state::after { content: ""; display: inline-block; width: 0.4em; height: 0.4em; margin-left: 0.4em; border-radius: 50%; background: var(--accent); animation: agl-blink 1s steps(2) infinite; }
+.agl-tool { align-self: flex-start; font-size: 0.7rem; padding: 0.1rem 0.4rem; border-radius: 6px; border: 1px solid var(--zetaris-border); background: var(--zetaris-bg); color: var(--zetaris-ink); animation: agl-pop 0.35s ease-out; }
+.agl-wire { position: relative; list-style: none; flex: none; align-self: center; width: 18px; height: 2px; background: var(--line); }
+.agl-wire i { display: none; }
+.agl-wire--on { background: var(--accent); }
+.agl-wire--on i { display: block; position: absolute; top: -3px; left: 0; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); animation: agl-run 0.9s ease-in-out infinite; }
+.agl-loops, .agl-rate { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 0.6rem; margin: 0.4rem 0; }
+.agl-handoff { animation: agl-pop 0.35s ease-out; }
+.agl-slots { display: inline-flex; gap: 0.3rem; }
+.agl-slot { width: 16px; height: 16px; }
+.agl-wait { font-size: 0.82rem; font-weight: 700; color: var(--warn); font-variant-numeric: tabular-nums; }
+.agl-lanes, .agl-watch { list-style: none; margin: 0.3rem 0; padding: 0; display: grid; gap: 0.35rem; }
+.agl-lanes li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.2rem 0.6rem; }
+.agl-watch li { font-size: 0.86rem; }
+.agl-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--line); }
+.agl-dot.is-on { background: var(--ok); animation: agl-blink 1.4s steps(2) infinite; }
+.agl--compact .agl-pool { margin: 0.4rem 0; }
+.agl--compact .agl-node { min-width: 84px; flex-basis: 84px; padding: 0.3rem 0.45rem; }
+@keyframes agl-run { from { left: 0; } to { left: calc(100% - 8px); } }
+@keyframes agl-pop { from { opacity: 0; transform: scale(0.85); } }
+@keyframes agl-blink { 50% { opacity: 0.25; } }
+@media (prefers-reduced-motion: reduce) {
+  .agl-node, .agl-node--active, .agl-tool, .agl-handoff, .agl-wire--on i, .agl-dot.is-on, .agl-node--active .agl-state::after { animation: none; transition: none; transform: none; }
+  .agl-wire--on i { left: 50%; margin-left: -4px; }
+}
+.ct-agents { min-width: 0; }
