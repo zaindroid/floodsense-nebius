@@ -1,7 +1,7 @@
 """The one app this container serves.
 
 Mounts the team's API under /api, the Nebius VM controls under /nebius and
-the built UI at /. The four endpoints the platform asks for live here,
+the role-based UI (main's ui-merged) at /app/. The four endpoints the platform asks for live here,
 because they describe the container rather than any one service inside it.
 """
 
@@ -21,7 +21,7 @@ from serve.login import Login
 from serve.stream import app as stream_app
 
 AGENTS_URL = os.environ.get("AGENTS_URL", "http://127.0.0.1:8100").rstrip("/")
-DIST = Path(os.environ.get("UI_DIST", "/srv/ui")).resolve()
+MERGED = Path(os.environ.get("UI_MERGED", "/srv/ui-merged")).resolve()
 
 app = FastAPI(title="FloodSense EU — console", version=api_app.version)
 app.add_middleware(Login)
@@ -93,14 +93,15 @@ def app_slash() -> RedirectResponse:
     return RedirectResponse("/app/")
 
 
-@app.get("/app/", include_in_schema=False)
-def app_page() -> FileResponse:
-    # The built UI routes on the hash and loads /assets and /api by absolute
-    # path, so its index works unchanged from here.
-    return FileResponse(DIST / "index.html", headers={"cache-control": "no-store"})
+class NoStore(StaticFiles):
+    """The role UI's files are not fingerprinted, and the CDN raises no-cache to hours."""
+
+    async def get_response(self, path, scope):
+        response = await super().get_response(path, scope)
+        response.headers["cache-control"] = "no-store"
+        return response
 
 
-if DIST.is_dir():
-    # html=True serves index.html for a bare directory. The console routes on
-    # the hash, so there is no history fallback to arrange.
-    app.mount("/", StaticFiles(directory=DIST, html=True), name="ui")
+if MERGED.is_dir():
+    # Hash routing and relative paths, so the folder works as it is under /app/.
+    app.mount("/app", NoStore(directory=MERGED, html=True), name="app")

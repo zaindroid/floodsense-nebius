@@ -1,32 +1,9 @@
-# FloodSense EU for the Nebius hackathon, as one container: the built UI, the
-# API proxy, the agents graph and the engines sidecar, mirrored from the
-# monorepo's main. serve/ is this repository's own: the
+# FloodSense EU for the Nebius hackathon, as one container: the role-based UI
+# (main's ui-merged, plain files), the API proxy, the agents graph and the
+# engines sidecar, mirrored from the monorepo's main. serve/ is this repository's own: the
 # judge login and the /nebius page that starts and stops the Nebius VM copy.
 
-# 1. the UI bundle. VITE_* is inlined at build time, so the API base has to
-# be decided here: /api, which this container serves itself.
-FROM node:20-alpine AS ui
-WORKDIR /build
-COPY ui/package.json ui/package-lock.json ./ui/
-RUN cd ui && npm ci
-# The console's types come from contracts/, three levels up from ui/src, so
-# the two have to stay siblings for the typecheck in `npm run build`.
-COPY contracts/ ./contracts/
-COPY ui/ ./ui/
-WORKDIR /build/ui
-ENV VITE_API_URL=/api
-# The 1500 ms default is tuned for an API in the same process. Ours reads a
-# warm snapshot in about a millisecond, but the first load after a deploy can
-# arrive before the snapshot does, and a desk on fixtures is worse than a desk
-# that waited. The documented override exists for exactly this.
-ENV VITE_API_TIMEOUT_MS=6000
-# VITE_REPLAY_RUN_ID is deliberately unset. The Review page now picks the
-# newest run that passed the Judge for the chosen mode and event; a
-# configured id wins over that and would freeze the page on one old run.
-# The empty-summary bug that the old pin worked around was fixed in #53.
-RUN npm run build
-
-# 2. the engines run TypeScript directly and have no runtime dependencies,
+# 1. the engines run TypeScript directly and have no runtime dependencies,
 # so the node binary alone is the whole of what they need.
 FROM node:22.18-bookworm-slim AS node
 
@@ -50,7 +27,8 @@ COPY engines/package.json engines/NOTICE /engines/
 COPY engines/src /engines/src
 COPY engines/vendor /engines/vendor
 COPY serve ./serve
-COPY --from=ui /build/ui/dist ./ui
+# The role-based UI with the 3D map: plain files from main's ui-merged/web, no build.
+COPY ui-merged/web ./ui-merged
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
 
@@ -66,7 +44,7 @@ ENV PORT=8080 \
     AGENTS_URL=http://127.0.0.1:8100 \
     AGENTS_HOST=127.0.0.1 \
     AGENTS_PORT=8100 \
-    UI_DIST=/srv/ui \
+    UI_MERGED=/srv/ui-merged \
     ENGINES_URL=http://127.0.0.1:8300 \
     ENGINES_HOST=127.0.0.1 \
     ENGINES_PORT=8300 \

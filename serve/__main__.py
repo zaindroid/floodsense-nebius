@@ -1,4 +1,4 @@
-"""Serve the console: the built UI at /, the API under /api."""
+"""Serve the demo: the entry page at /, the role UI at /app/, the API under /api."""
 
 from __future__ import annotations
 

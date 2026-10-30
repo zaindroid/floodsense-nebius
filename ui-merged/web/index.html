@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FloodSense EU</title>
+  <meta name="description" content="Flood alerts across Europe from AI agents that cite every number. A person makes the call.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234aa3ff' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M2 15c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2'/%3E%3Cpath d='M2 20c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2'/%3E%3Cpath d='M12 3v7'/%3E%3Cpath d='M9 7l3 3 3-3'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@500;600;650&display=swap">
+  <link rel="stylesheet" href="app.css">
+  <script>
+    // Set the theme before the first paint, so the page never flashes the other one.
+    document.documentElement.dataset.theme = localStorage.getItem("fs.theme")
+      || (matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+  </script>
+</head>
+<body>
+  <header class="bar">
+    <div class="bar-in">
+      <a class="brand" href="#/" id="brand">FloodSense EU</a>
+      <nav class="nav" aria-label="Main">
+        <a href="#/">Overview</a>
+        <a href="#/watch">Watch</a>
+        <a href="#/ask">Ask</a>
+        <a href="#/decide">Decide</a>
+      </nav>
+      <div class="tools">
+        <div class="roles" role="group" aria-label="I am a" id="roles"></div>
+        <button class="theme" id="theme" type="button"></button>
+      </div>
+    </div>
+  </header>
+  <main id="view" tabindex="-1"></main>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
