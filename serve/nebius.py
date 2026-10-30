@@ -22,7 +22,7 @@ from pathlib import Path
 
 import httpx
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, RedirectResponse
 
 log = logging.getLogger("serve.nebius")
 
@@ -167,6 +167,13 @@ async def start() -> dict:
     if AUTO_STOP_MIN > 0:
         _stop_at = time.time() + AUTO_STOP_MIN * 60
     return {"requested": state in ("STOPPED", "ERROR"), "was": state, "stops_at": _iso(_stop_at)}
+
+
+@app.get("/start")
+async def start_and_return() -> RedirectResponse:
+    """The entry page links here: the browser asks for the login, then comes back."""
+    await start()
+    return RedirectResponse("/", status_code=303)
 
 
 @app.post("/api/stop")

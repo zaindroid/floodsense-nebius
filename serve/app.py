@@ -12,7 +12,7 @@ from pathlib import Path
 
 import httpx
 from fastapi import FastAPI
-from fastapi.responses import JSONResponse, RedirectResponse
+from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.main import app as api_app  # api/app/main.py, mirrored from main
@@ -77,10 +77,27 @@ app.mount("/api", api_app)
 app.mount("/nebius", nebius.app)
 
 
+@app.get("/", include_in_schema=False)
+def entry() -> FileResponse:
+    # The front door: the two ways to try the demo. The app itself is at /app/.
+    return FileResponse(nebius.PAGE, headers={"cache-control": "no-store"})
+
+
 @app.get("/nebius", include_in_schema=False)
 def nebius_page() -> RedirectResponse:
-    # The mount only matches /nebius/...; the bare address is what people type.
-    return RedirectResponse("/nebius/")
+    return RedirectResponse("/")
+
+
+@app.get("/app", include_in_schema=False)
+def app_slash() -> RedirectResponse:
+    return RedirectResponse("/app/")
+
+
+@app.get("/app/", include_in_schema=False)
+def app_page() -> FileResponse:
+    # The built UI routes on the hash and loads /assets and /api by absolute
+    # path, so its index works unchanged from here.
+    return FileResponse(DIST / "index.html", headers={"cache-control": "no-store"})
 
 
 if DIST.is_dir():

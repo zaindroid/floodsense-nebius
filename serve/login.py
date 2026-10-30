@@ -13,7 +13,9 @@ import base64
 import hmac
 import os
 
-OPEN_PATHS = {"/health", "/ready", "/version"}
+# The entry page and the VM's status are public so anyone arriving sees them;
+# the app, its API and the VM controls stay behind the login.
+OPEN_PATHS = {"/health", "/ready", "/version", "/", "/nebius", "/nebius/", "/nebius/api/status"}
 
 
 class Login:

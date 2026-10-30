@@ -3,89 +3,128 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Try FloodSense EU</title>
+<title>FloodSense EU</title>
+<meta name="description" content="Flood answers you can check. Try the demo on our server or on Nebius AI Cloud.">
 <style>
   :root {
-    color-scheme: light dark;
-    --page: #f3f6fa; --surface: #ffffff; --line: #dfe6ef; --ink: #13233a; --soft: #55657a;
-    --brand: #0b5cad; --brand-ink: #083f78; --water: #3b8fd9; --water-deep: #1f6fb8;
-    --ok: #1f6b41; --ok-wash: #e5f4eb; --wash: #e9f2fc; --danger: #b0202f;
+    --night: #061a2d; --deep: #0a2440; --ink: #eef5fc; --soft: #93abc4; --line: rgb(147 171 196 / 22%);
+    --water: #4aa3ff; --rain: #6fb3ff; --alert: #ff8a6b;
+    --card: #0d2a47; --card-line: rgb(147 171 196 / 26%);
     --nebius-lime: #e0ff4f; --nebius-lime-press: #cde83c; --nebius-ink: #0b1220;
     font-family: "Inter", "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
   }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --page: #0f1824; --surface: #162131; --line: #2b3a50; --ink: #e6edf6; --soft: #9fb0c4;
-      --brand: #4c9be8; --brand-ink: #a9d0f7; --water: #4c9be8; --water-deep: #2f7fd0;
-      --ok: #6fcf97; --ok-wash: #173226; --wash: #1a2c44; --danger: #ff8a96;
-    }
-  }
   * { box-sizing: border-box; }
-  body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: var(--page); color: var(--ink);
-         -webkit-font-smoothing: antialiased; padding: 2rem 1.25rem; }
-  main { width: min(52rem, 100%); }
-  .mark { display: flex; align-items: center; justify-content: center; gap: .5rem; font-weight: 700; color: var(--brand); margin: 0 0 1.75rem; }
-  .mark svg { width: 1.4rem; height: 1.4rem; }
+  html, body { height: 100%; }
+  body { margin: 0; background: radial-gradient(120% 90% at 50% 0%, var(--deep), var(--night) 70%); color: var(--ink);
+         -webkit-font-smoothing: antialiased; overflow-x: hidden; }
 
-  .windows { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
-  @media (max-width: 40rem) { .windows { grid-template-columns: 1fr; } }
-  .window { background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 2rem 1.75rem 1.75rem;
-            display: flex; flex-direction: column; align-items: flex-start; gap: .9rem; min-height: 15.5rem; }
-  .window h1 { font-size: 1.35rem; letter-spacing: -.01em; margin: 0; }
+  /* The hydrograph behind everything: rain hanging from the top, the river rising to its peak. */
+  .hydro { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  .hydro .rain rect { fill: var(--rain); opacity: .09; }
+  .hydro .alert { stroke: var(--alert); stroke-opacity: .28; stroke-width: 1.5; stroke-dasharray: 8 10; vector-effect: non-scaling-stroke; }
+  .hydro .area { fill: url(#flow); opacity: 0; animation: appear 1.4s 1.6s ease-out forwards; }
+  .hydro .river { fill: none; stroke: var(--water); stroke-opacity: .7; stroke-width: 2.5; vector-effect: non-scaling-stroke;
+                  stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw 2.6s .2s cubic-bezier(.4, 0, .2, 1) forwards; }
+  .hydro .peak { fill: var(--water); opacity: 0; animation: appear .6s 2.6s ease-out forwards; }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+  @keyframes appear { to { opacity: 1; } }
+
+  main { position: relative; min-height: 100%; display: grid; place-items: center; padding: 3rem 1.25rem; }
+  .stage { width: min(54rem, 100%); text-align: center; }
+  .mark { display: inline-flex; align-items: center; gap: .55rem; font-weight: 700; letter-spacing: .01em; color: var(--ink); margin: 0 0 1.4rem; }
+  .mark svg { width: 1.6rem; height: 1.6rem; color: var(--water); }
+  h1 { font-size: clamp(2.3rem, 6vw, 4rem); line-height: 1.04; letter-spacing: -.035em; font-weight: 800; margin: 0 0 1rem; }
+  .line { color: var(--soft); font-size: clamp(1rem, 1.6vw, 1.12rem); margin: 0 0 2.6rem; }
+
+  .windows { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; text-align: left;
+             opacity: 0; transform: translateY(10px); animation: rise .8s 1.1s ease-out forwards; }
+  @keyframes rise { to { opacity: 1; transform: none; } }
+  @media (max-width: 42rem) { .windows { grid-template-columns: 1fr; } }
+  .window { background: var(--card); border: 1px solid var(--card-line); border-radius: 22px; padding: 1.7rem 1.6rem 1.6rem;
+            display: flex; flex-direction: column; gap: .8rem; min-height: 15rem; box-shadow: 0 24px 60px -30px rgb(0 0 0 / 60%); }
+  .window h2 { font-size: 1.3rem; letter-spacing: -.01em; margin: 0; }
   .sub { margin: 0; color: var(--soft); font-size: .95rem; }
-  .window .btn { margin-top: auto; }
+  .window .btn { margin-top: auto; align-self: flex-start; }
+  .tag { display: inline-flex; align-self: flex-start; font-size: .78rem; font-weight: 600; padding: .3rem .7rem; border-radius: 8px;
+         background: rgb(74 163 255 / 14%); color: #9ccaff; }
 
-  .nebius { border: 2px solid var(--nebius-ink); }
-  @media (prefers-color-scheme: dark) { .nebius { border-color: var(--nebius-lime); } }
-  .badge { display: inline-flex; align-items: center; gap: .45rem; font-size: .8rem; font-weight: 700; padding: .3rem .7rem;
-           border-radius: 8px; background: var(--nebius-ink); color: var(--nebius-lime); }
-  .badge::before { content: ""; width: .5rem; height: .5rem; border-radius: 2px; background: var(--nebius-lime); }
-  .pill { display: inline-flex; align-items: center; gap: .4rem; font-size: .8rem; font-weight: 600; padding: .3rem .7rem;
-          border-radius: 999px; background: var(--wash); color: var(--brand-ink); }
-  .pill::before { content: ""; width: .45rem; height: .45rem; border-radius: 50%; background: currentColor; }
-  .pill.ok { background: var(--ok-wash); color: var(--ok); }
+  .nebius { background: var(--nebius-ink); border: 1.5px solid var(--nebius-lime); }
   .head { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
+  .badge { display: inline-flex; align-items: center; gap: .45rem; font-size: .78rem; font-weight: 700; padding: .3rem .7rem;
+           border-radius: 8px; background: var(--nebius-lime); color: var(--nebius-ink); }
+  .pill { display: inline-flex; align-items: center; gap: .4rem; font-size: .78rem; font-weight: 600; padding: .3rem .7rem;
+          border-radius: 999px; background: rgb(255 255 255 / 8%); color: var(--soft); }
+  .pill::before { content: ""; width: .45rem; height: .45rem; border-radius: 50%; background: currentColor; }
+  .pill.busy::before { animation: pulse 1.1s ease-in-out infinite; }
+  .pill.ok { background: rgb(111 207 151 / 14%); color: #8fe0b0; }
+  @keyframes pulse { 50% { opacity: .25; } }
+  .level { width: 100%; height: .5rem; border-radius: 999px; background: rgb(255 255 255 / 8%); overflow: hidden; }
+  .level span { display: block; height: 100%; width: 0%; border-radius: inherit; background: var(--nebius-lime); transition: width 1.2s ease-in-out; }
 
-  /* The VM's state as a water level. */
-  .level { width: 100%; height: .6rem; border-radius: 999px; background: var(--wash); overflow: hidden; }
-  .level span { display: block; height: 100%; width: 0%; border-radius: inherit;
-                background: linear-gradient(to right, var(--water-deep), var(--water)); transition: width 1.2s ease-in-out; }
-  @media (prefers-reduced-motion: reduce) { .level span { transition: none; } }
-
-  .btn { font: inherit; font-size: 1rem; font-weight: 600; border-radius: 999px; padding: .75rem 1.5rem; cursor: pointer;
-         text-decoration: none; border: 1.5px solid transparent; display: inline-flex; align-items: center; justify-content: center; }
-  .btn.primary { background: var(--brand); color: #fff; }
-  .btn.primary:hover { background: var(--brand-ink); }
+  .btn { font: inherit; font-size: 1rem; font-weight: 650; border-radius: 999px; padding: .78rem 1.5rem; cursor: pointer;
+         text-decoration: none; border: 1.5px solid transparent; display: inline-flex; align-items: center; }
+  .btn.primary { background: var(--water); color: #04213d; }
+  .btn.primary:hover { background: #7cbcff; }
   .btn.nb { background: var(--nebius-lime); color: var(--nebius-ink); }
-  .btn.nb:hover:not(:disabled) { background: var(--nebius-lime-press); border-color: var(--nebius-ink); }
-  .btn:disabled { opacity: .6; cursor: progress; }
-  .btn:focus-visible { outline: 3px solid var(--water); outline-offset: 2px; }
-  .err { margin: 0; font-size: .85rem; color: var(--danger); }
+  .btn.nb:hover { background: var(--nebius-lime-press); }
+  .btn:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+  .err { margin: 0; font-size: .85rem; color: #ffb3a3; min-height: 1em; }
   .hidden { display: none !important; }
+
+  .foot { margin: 2.4rem 0 0; font-size: .82rem; color: var(--soft); opacity: 0; animation: appear .8s 1.6s ease-out forwards; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hydro .river { stroke-dashoffset: 0; animation: none; }
+    .hydro .area, .hydro .peak, .foot { opacity: 1; animation: none; }
+    .windows { opacity: 1; transform: none; animation: none; }
+    .pill.busy::before { animation: none; }
+    .level span { transition: none; }
+  }
 </style>
 </head>
 <body>
+<svg class="hydro" viewBox="0 0 1440 900" preserveAspectRatio="none" aria-hidden="true">
+  <defs>
+    <linearGradient id="flow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4aa3ff" stop-opacity=".28"/>
+      <stop offset="1" stop-color="#4aa3ff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <g class="rain"><rect x="5.0" y="0" width="14.0" height="19.0" rx="3"/><rect x="29.0" y="0" width="14.0" height="24.0" rx="3"/><rect x="53.0" y="0" width="14.0" height="17.7" rx="3"/><rect x="77.0" y="0" width="14.0" height="14.4" rx="3"/><rect x="101.0" y="0" width="14.0" height="21.5" rx="3"/><rect x="125.0" y="0" width="14.0" height="23.0" rx="3"/><rect x="149.0" y="0" width="14.0" height="15.7" rx="3"/><rect x="173.0" y="0" width="14.0" height="16.3" rx="3"/><rect x="197.0" y="0" width="14.0" height="24.3" rx="3"/><rect x="221.0" y="0" width="14.0" height="23.2" rx="3"/><rect x="245.0" y="0" width="14.0" height="19.0" rx="3"/><rect x="269.0" y="0" width="14.0" height="27.8" rx="3"/><rect x="293.0" y="0" width="14.0" height="41.9" rx="3"/><rect x="317.0" y="0" width="14.0" height="49.8" rx="3"/><rect x="341.0" y="0" width="14.0" height="65.6" rx="3"/><rect x="365.0" y="0" width="14.0" height="99.9" rx="3"/><rect x="389.0" y="0" width="14.0" height="137.2" rx="3"/><rect x="413.0" y="0" width="14.0" height="169.3" rx="3"/><rect x="437.0" y="0" width="14.0" height="208.4" rx="3"/><rect x="461.0" y="0" width="14.0" height="250.7" rx="3"/><rect x="485.0" y="0" width="14.0" height="273.2" rx="3"/><rect x="509.0" y="0" width="14.0" height="274.5" rx="3"/><rect x="533.0" y="0" width="14.0" height="269.6" rx="3"/><rect x="557.0" y="0" width="14.0" height="254.4" rx="3"/><rect x="581.0" y="0" width="14.0" height="222.6" rx="3"/><rect x="605.0" y="0" width="14.0" height="196.3" rx="3"/><rect x="629.0" y="0" width="14.0" height="194.7" rx="3"/><rect x="653.0" y="0" width="14.0" height="197.7" rx="3"/><rect x="677.0" y="0" width="14.0" height="178.2" rx="3"/><rect x="701.0" y="0" width="14.0" height="141.1" rx="3"/><rect x="725.0" y="0" width="14.0" height="101.1" rx="3"/><rect x="749.0" y="0" width="14.0" height="60.8" rx="3"/><rect x="773.0" y="0" width="14.0" height="29.9" rx="3"/><rect x="797.0" y="0" width="14.0" height="21.8" rx="3"/><rect x="821.0" y="0" width="14.0" height="25.3" rx="3"/><rect x="845.0" y="0" width="14.0" height="20.4" rx="3"/><rect x="869.0" y="0" width="14.0" height="14.2" rx="3"/><rect x="893.0" y="0" width="14.0" height="19.4" rx="3"/><rect x="917.0" y="0" width="14.0" height="23.9" rx="3"/><rect x="941.0" y="0" width="14.0" height="17.4" rx="3"/><rect x="965.0" y="0" width="14.0" height="14.5" rx="3"/><rect x="989.0" y="0" width="14.0" height="21.8" rx="3"/><rect x="1013.0" y="0" width="14.0" height="22.8" rx="3"/><rect x="1037.0" y="0" width="14.0" height="15.3" rx="3"/><rect x="1061.0" y="0" width="14.0" height="16.2" rx="3"/><rect x="1085.0" y="0" width="14.0" height="23.5" rx="3"/><rect x="1109.0" y="0" width="14.0" height="20.7" rx="3"/><rect x="1133.0" y="0" width="14.0" height="14.1" rx="3"/><rect x="1157.0" y="0" width="14.0" height="18.6" rx="3"/><rect x="1181.0" y="0" width="14.0" height="24.0" rx="3"/><rect x="1205.0" y="0" width="14.0" height="18.1" rx="3"/><rect x="1229.0" y="0" width="14.0" height="14.2" rx="3"/><rect x="1253.0" y="0" width="14.0" height="21.1" rx="3"/><rect x="1277.0" y="0" width="14.0" height="23.2" rx="3"/><rect x="1301.0" y="0" width="14.0" height="15.8" rx="3"/><rect x="1325.0" y="0" width="14.0" height="15.6" rx="3"/><rect x="1349.0" y="0" width="14.0" height="23.1" rx="3"/><rect x="1373.0" y="0" width="14.0" height="21.4" rx="3"/><rect x="1397.0" y="0" width="14.0" height="14.3" rx="3"/><rect x="1421.0" y="0" width="14.0" height="17.9" rx="3"/></g>
+  <line class="alert" x1="0" y1="540.0" x2="1440" y2="540.0"/>
+  <path class="area" d="M0.0,794.0 L6.0,794.0 L12.0,794.0 L18.0,794.0 L24.0,794.0 L30.0,794.0 L36.0,794.0 L42.0,794.0 L48.0,794.0 L54.0,794.0 L60.0,794.0 L66.0,794.0 L72.0,794.0 L78.0,794.0 L84.0,794.0 L90.0,794.0 L96.0,794.0 L102.0,794.0 L108.0,794.0 L114.0,794.0 L120.0,794.0 L126.0,794.0 L132.0,794.0 L138.0,794.0 L144.0,794.0 L150.0,794.0 L156.0,794.0 L162.0,794.0 L168.0,794.0 L174.0,794.0 L180.0,794.0 L186.0,794.0 L192.0,794.0 L198.0,794.0 L204.0,794.0 L210.0,794.0 L216.0,794.0 L222.0,794.0 L228.0,794.0 L234.0,794.0 L240.0,794.0 L246.0,794.0 L252.0,794.0 L258.0,794.0 L264.0,794.0 L270.0,794.0 L276.0,794.0 L282.0,794.0 L288.0,794.0 L294.0,794.0 L300.0,794.0 L306.0,794.0 L312.0,794.0 L318.0,794.0 L324.0,794.0 L330.0,794.0 L336.0,794.0 L342.0,794.0 L348.0,794.0 L354.0,794.0 L360.0,794.0 L366.0,794.0 L372.0,794.0 L378.0,794.0 L384.0,794.0 L390.0,794.0 L396.0,794.0 L402.0,794.0 L408.0,794.0 L414.0,794.0 L420.0,794.0 L426.0,794.0 L432.0,794.0 L438.0,794.0 L444.0,794.0 L450.0,794.0 L456.0,794.0 L462.0,794.0 L468.0,794.0 L474.0,794.0 L480.0,794.0 L486.0,794.0 L492.0,794.0 L498.0,794.0 L504.0,794.0 L510.0,794.0 L516.0,794.0 L522.0,794.0 L528.0,794.0 L534.0,793.9 L540.0,793.9 L546.0,793.9 L552.0,793.9 L558.0,793.8 L564.0,793.7 L570.0,793.6 L576.0,793.5 L582.0,793.3 L588.0,793.0 L594.0,792.7 L600.0,792.2 L606.0,791.6 L612.0,790.9 L618.0,789.9 L624.0,788.7 L630.0,787.2 L636.0,785.3 L642.0,783.0 L648.0,780.2 L654.0,776.7 L660.0,772.6 L666.0,767.6 L672.0,761.7 L678.0,754.7 L684.0,746.6 L690.0,737.2 L696.0,726.4 L702.0,714.2 L708.0,700.4 L714.0,685.0 L720.0,668.0 L726.0,649.3 L732.0,629.0 L738.0,607.2 L744.0,584.1 L750.0,559.7 L756.0,534.3 L762.0,508.3 L768.0,481.8 L774.0,455.3 L780.0,429.1 L786.0,403.7 L792.0,379.5 L798.0,356.9 L804.0,336.3 L810.0,318.1 L816.0,302.7 L822.0,290.3 L828.0,281.3 L834.0,275.8 L840.0,274.0 L846.0,274.3 L852.0,275.2 L858.0,276.6 L864.0,278.7 L870.0,281.3 L876.0,284.5 L882.0,288.2 L888.0,292.5 L894.0,297.3 L900.0,302.7 L906.0,308.5 L912.0,314.8 L918.0,321.5 L924.0,328.7 L930.0,336.3 L936.0,344.2 L942.0,352.6 L948.0,361.3 L954.0,370.2 L960.0,379.5 L966.0,389.0 L972.0,398.8 L978.0,408.7 L984.0,418.9 L990.0,429.1 L996.0,439.5 L1002.0,450.0 L1008.0,460.6 L1014.0,471.2 L1020.0,481.8 L1026.0,492.4 L1032.0,503.0 L1038.0,513.5 L1044.0,524.0 L1050.0,534.3 L1056.0,544.6 L1062.0,554.7 L1068.0,564.7 L1074.0,574.4 L1080.0,584.1 L1086.0,593.5 L1092.0,602.7 L1098.0,611.7 L1104.0,620.5 L1110.0,629.0 L1116.0,637.3 L1122.0,645.4 L1128.0,653.1 L1134.0,660.7 L1140.0,668.0 L1146.0,675.0 L1152.0,681.7 L1158.0,688.2 L1164.0,694.4 L1170.0,700.4 L1176.0,706.1 L1182.0,711.6 L1188.0,716.8 L1194.0,721.7 L1200.0,726.4 L1206.0,730.9 L1212.0,735.2 L1218.0,739.2 L1224.0,743.0 L1230.0,746.6 L1236.0,750.0 L1242.0,753.2 L1248.0,756.2 L1254.0,759.0 L1260.0,761.7 L1266.0,764.2 L1272.0,766.5 L1278.0,768.6 L1284.0,770.7 L1290.0,772.6 L1296.0,774.3 L1302.0,776.0 L1308.0,777.5 L1314.0,778.9 L1320.0,780.2 L1326.0,781.4 L1332.0,782.5 L1338.0,783.5 L1344.0,784.5 L1350.0,785.3 L1356.0,786.1 L1362.0,786.9 L1368.0,787.6 L1374.0,788.2 L1380.0,788.7 L1386.0,789.2 L1392.0,789.7 L1398.0,790.1 L1404.0,790.5 L1410.0,790.9 L1416.0,791.2 L1422.0,791.5 L1428.0,791.8 L1434.0,792.0 L1440.0,792.2 L1440,900 L0,900 Z"/>
+  <path class="river" d="M0.0,794.0 L6.0,794.0 L12.0,794.0 L18.0,794.0 L24.0,794.0 L30.0,794.0 L36.0,794.0 L42.0,794.0 L48.0,794.0 L54.0,794.0 L60.0,794.0 L66.0,794.0 L72.0,794.0 L78.0,794.0 L84.0,794.0 L90.0,794.0 L96.0,794.0 L102.0,794.0 L108.0,794.0 L114.0,794.0 L120.0,794.0 L126.0,794.0 L132.0,794.0 L138.0,794.0 L144.0,794.0 L150.0,794.0 L156.0,794.0 L162.0,794.0 L168.0,794.0 L174.0,794.0 L180.0,794.0 L186.0,794.0 L192.0,794.0 L198.0,794.0 L204.0,794.0 L210.0,794.0 L216.0,794.0 L222.0,794.0 L228.0,794.0 L234.0,794.0 L240.0,794.0 L246.0,794.0 L252.0,794.0 L258.0,794.0 L264.0,794.0 L270.0,794.0 L276.0,794.0 L282.0,794.0 L288.0,794.0 L294.0,794.0 L300.0,794.0 L306.0,794.0 L312.0,794.0 L318.0,794.0 L324.0,794.0 L330.0,794.0 L336.0,794.0 L342.0,794.0 L348.0,794.0 L354.0,794.0 L360.0,794.0 L366.0,794.0 L372.0,794.0 L378.0,794.0 L384.0,794.0 L390.0,794.0 L396.0,794.0 L402.0,794.0 L408.0,794.0 L414.0,794.0 L420.0,794.0 L426.0,794.0 L432.0,794.0 L438.0,794.0 L444.0,794.0 L450.0,794.0 L456.0,794.0 L462.0,794.0 L468.0,794.0 L474.0,794.0 L480.0,794.0 L486.0,794.0 L492.0,794.0 L498.0,794.0 L504.0,794.0 L510.0,794.0 L516.0,794.0 L522.0,794.0 L528.0,794.0 L534.0,793.9 L540.0,793.9 L546.0,793.9 L552.0,793.9 L558.0,793.8 L564.0,793.7 L570.0,793.6 L576.0,793.5 L582.0,793.3 L588.0,793.0 L594.0,792.7 L600.0,792.2 L606.0,791.6 L612.0,790.9 L618.0,789.9 L624.0,788.7 L630.0,787.2 L636.0,785.3 L642.0,783.0 L648.0,780.2 L654.0,776.7 L660.0,772.6 L666.0,767.6 L672.0,761.7 L678.0,754.7 L684.0,746.6 L690.0,737.2 L696.0,726.4 L702.0,714.2 L708.0,700.4 L714.0,685.0 L720.0,668.0 L726.0,649.3 L732.0,629.0 L738.0,607.2 L744.0,584.1 L750.0,559.7 L756.0,534.3 L762.0,508.3 L768.0,481.8 L774.0,455.3 L780.0,429.1 L786.0,403.7 L792.0,379.5 L798.0,356.9 L804.0,336.3 L810.0,318.1 L816.0,302.7 L822.0,290.3 L828.0,281.3 L834.0,275.8 L840.0,274.0 L846.0,274.3 L852.0,275.2 L858.0,276.6 L864.0,278.7 L870.0,281.3 L876.0,284.5 L882.0,288.2 L888.0,292.5 L894.0,297.3 L900.0,302.7 L906.0,308.5 L912.0,314.8 L918.0,321.5 L924.0,328.7 L930.0,336.3 L936.0,344.2 L942.0,352.6 L948.0,361.3 L954.0,370.2 L960.0,379.5 L966.0,389.0 L972.0,398.8 L978.0,408.7 L984.0,418.9 L990.0,429.1 L996.0,439.5 L1002.0,450.0 L1008.0,460.6 L1014.0,471.2 L1020.0,481.8 L1026.0,492.4 L1032.0,503.0 L1038.0,513.5 L1044.0,524.0 L1050.0,534.3 L1056.0,544.6 L1062.0,554.7 L1068.0,564.7 L1074.0,574.4 L1080.0,584.1 L1086.0,593.5 L1092.0,602.7 L1098.0,611.7 L1104.0,620.5 L1110.0,629.0 L1116.0,637.3 L1122.0,645.4 L1128.0,653.1 L1134.0,660.7 L1140.0,668.0 L1146.0,675.0 L1152.0,681.7 L1158.0,688.2 L1164.0,694.4 L1170.0,700.4 L1176.0,706.1 L1182.0,711.6 L1188.0,716.8 L1194.0,721.7 L1200.0,726.4 L1206.0,730.9 L1212.0,735.2 L1218.0,739.2 L1224.0,743.0 L1230.0,746.6 L1236.0,750.0 L1242.0,753.2 L1248.0,756.2 L1254.0,759.0 L1260.0,761.7 L1266.0,764.2 L1272.0,766.5 L1278.0,768.6 L1284.0,770.7 L1290.0,772.6 L1296.0,774.3 L1302.0,776.0 L1308.0,777.5 L1314.0,778.9 L1320.0,780.2 L1326.0,781.4 L1332.0,782.5 L1338.0,783.5 L1344.0,784.5 L1350.0,785.3 L1356.0,786.1 L1362.0,786.9 L1368.0,787.6 L1374.0,788.2 L1380.0,788.7 L1386.0,789.2 L1392.0,789.7 L1398.0,790.1 L1404.0,790.5 L1410.0,790.9 L1416.0,791.2 L1422.0,791.5 L1428.0,791.8 L1434.0,792.0 L1440.0,792.2" pathLength="1"/>
+  <circle class="peak" cx="840.0" cy="274.0" r="6"/>
+</svg>
 <main>
-  <p class="mark">
-    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 15c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2"/><path d="M2 20c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2"/><path d="M12 3v7"/><path d="M9 7l3 3 3-3"/></svg>
-    FloodSense EU
-  </p>
-  <div class="windows">
-    <section class="window" aria-labelledby="own-title">
-      <h1 id="own-title">Private server</h1>
-      <p class="sub">Opens instantly</p>
-      <a class="btn primary" href="/">Open demo</a>
-    </section>
+  <div class="stage">
+    <p class="mark">
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 15c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2"/><path d="M2 20c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2"/><path d="M12 3v7"/><path d="M9 7l3 3 3-3"/></svg>
+      FloodSense EU
+    </p>
+    <h1>Flood answers you can check.</h1>
+    <p class="line">Live river data, cited evidence, a human approves.</p>
 
-    <section class="window nebius" aria-labelledby="nb-title">
-      <div class="head"><span class="badge">Nebius AI Cloud</span><span id="pill" class="pill" role="status" aria-live="polite">Checking</span></div>
-      <h1 id="nb-title">Nebius Cloud</h1>
-      <p id="sub" class="sub">Wakes in about a minute</p>
-      <div class="level" aria-hidden="true"><span id="level"></span></div>
-      <button id="start" class="btn nb hidden" type="button">Start on Nebius</button>
-      <a id="open" class="btn nb hidden" href="#" target="_blank" rel="noopener">Open on Nebius</a>
-      <p id="err" class="err" role="alert"></p>
-    </section>
+    <div class="windows">
+      <section class="window" aria-labelledby="own-title">
+        <span class="tag">Instant</span>
+        <h2 id="own-title">Private server</h2>
+        <p class="sub">Always on, opens right away</p>
+        <a class="btn primary" href="/app/">Open demo</a>
+      </section>
+
+      <section class="window nebius" aria-labelledby="nb-title">
+        <div class="head"><span class="badge">Nebius AI Cloud</span><span id="pill" class="pill" role="status" aria-live="polite">Checking</span></div>
+        <h2 id="nb-title">Nebius Cloud</h2>
+        <p id="sub" class="sub">Wakes in about a minute</p>
+        <div class="level" aria-hidden="true"><span id="level"></span></div>
+        <a id="start" class="btn nb hidden" href="/nebius/start">Start on Nebius</a>
+        <a id="open" class="btn nb hidden" href="#" target="_blank" rel="noopener">Open on Nebius</a>
+        <p id="err" class="err" role="alert"></p>
+      </section>
+    </div>
+
+    <p class="foot">Every model call runs on NVIDIA Nemotron through Nebius Token Factory.</p>
   </div>
 </main>
 <script>
@@ -97,14 +136,14 @@
     const busy = ["STARTING", "STOPPING"].includes(s.state) || (s.state === "RUNNING" && !s.ready);
     const label = !s.configured ? "Offline" : s.ready ? "Ready" : s.state === "STOPPED" ? "Asleep"
       : s.state === "STARTING" ? "Waking" : s.state === "RUNNING" ? "Starting app" : s.state === "STOPPING" ? "Going to sleep" : "Unavailable";
-    const level = s.ready ? 100 : s.state === "RUNNING" ? 72 : s.state === "STARTING" ? 38 : 6;
     $("pill").textContent = label;
-    $("pill").className = "pill" + (s.ready ? " ok" : "");
-    $("level").style.width = level + "%";
-    $("sub").textContent = s.ready ? (s.stops_at ? `Sleeps at ${at(s.stops_at)}` : "Running") : busy ? "Getting ready" : "Wakes in about a minute";
+    $("pill").className = "pill" + (s.ready ? " ok" : busy ? " busy" : "");
+    $("level").style.width = (s.ready ? 100 : s.state === "RUNNING" ? 72 : s.state === "STARTING" ? 38 : 4) + "%";
+    $("sub").textContent = s.ready ? (s.stops_at ? `Running until ${at(s.stops_at)}` : "Running") : busy ? "Getting ready" : "Wakes in about a minute";
     $("start").classList.toggle("hidden", !(s.configured && ["STOPPED", "ERROR"].includes(s.state)));
     $("open").classList.toggle("hidden", !s.ready);
     if (s.demo_url) $("open").href = s.demo_url;
+    $("err").textContent = "";
     clearTimeout(timer);
     timer = setTimeout(refresh, busy ? 4000 : 30000);
   }
@@ -113,18 +152,8 @@
     try {
       const r = await fetch("/nebius/api/status", { cache: "no-store" });
       show(await r.json());
-      $("err").textContent = "";
     } catch { $("err").textContent = "Status unavailable right now."; timer = setTimeout(refresh, 10000); }
   }
-
-  $("start").onclick = async (e) => {
-    const b = e.currentTarget; b.disabled = true; $("err").textContent = "";
-    try {
-      const r = await fetch("/nebius/api/start", { method: "POST" });
-      if (!r.ok) $("err").textContent = "Could not start it. Try again in a moment.";
-    } catch { $("err").textContent = "Could not start it. Try again in a moment."; }
-    b.disabled = false; refresh();
-  };
   refresh();
 </script>
 </body>

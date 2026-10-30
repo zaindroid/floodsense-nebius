@@ -30,6 +30,9 @@ class LoginTest(unittest.TestCase):
 
         inner = FastAPI()
         inner.get("/health")(lambda: {"ok": True})
+        inner.get("/")(lambda: {"ok": True})
+        inner.get("/nebius/api/status")(lambda: {"ok": True})
+        inner.post("/nebius/api/start")(lambda: {"ok": True})
         inner.get("/thing")(lambda: {"ok": True})
         self.c = TestClient(Login(inner))
 
@@ -43,6 +46,11 @@ class LoginTest(unittest.TestCase):
 
     def test_platform_checks_stay_open(self) -> None:
         self.assertEqual(self.c.get("/health").status_code, 200)
+
+    def test_the_entry_page_and_vm_status_are_public_but_starting_is_not(self) -> None:
+        self.assertEqual(self.c.get("/").status_code, 200)
+        self.assertEqual(self.c.get("/nebius/api/status").status_code, 200)
+        self.assertEqual(self.c.post("/nebius/api/start").status_code, 401)
 
     def test_a_malformed_login_is_refused_not_a_crash(self) -> None:
         for header in ("Basic !!!not-base64", "Bearer x", "Basic " + base64.b64encode("jüdge:pässwort".encode()).decode()):
@@ -131,6 +139,13 @@ class ControlsTest(unittest.TestCase):
         self.assertTrue(r["requested"])
         self.assertEqual(vm.calls, ["start"])
         self.assertIsNotNone(r["stops_at"])
+
+    def test_the_start_link_starts_the_vm_and_returns_to_the_entry_page(self) -> None:
+        n, vm, c = self._wired("STOPPED")
+        r = c.get("/start", follow_redirects=False)
+        self.assertEqual(r.status_code, 303)
+        self.assertEqual(r.headers["location"], "/")
+        self.assertEqual(vm.calls, ["start"])
 
     def test_start_on_a_running_vm_does_not_start_it_again(self) -> None:
         n, vm, c = self._wired("RUNNING")
