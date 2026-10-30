@@ -12,6 +12,7 @@ than failing, so the page can ship before the key exists.
 from __future__ import annotations
 
 import asyncio
+import base64
 import logging
 import os
 import tempfile
@@ -52,7 +53,10 @@ def _credentials() -> dict[str, str] | None:
         return {"credentials_file_name": _secret_file("credentials.json", whole)}
     sa = os.environ.get("NEBIUS_SA_ID", "").strip()
     key_id = os.environ.get("NEBIUS_SA_PUBLIC_KEY_ID", "").strip()
-    pem = os.environ.get("NEBIUS_SA_PRIVATE_KEY", "").strip()
+    # Base64 survives the platform's env store, which escapes backslashes and
+    # so turned a "\n"-joined PEM into one that no longer parses.
+    b64 = os.environ.get("NEBIUS_SA_PRIVATE_KEY_B64", "").strip()
+    pem = base64.b64decode(b64).decode() if b64 else os.environ.get("NEBIUS_SA_PRIVATE_KEY", "").strip()
     if sa and key_id and pem:
         return {
             "service_account_id": sa,
@@ -65,9 +69,8 @@ def _credentials() -> dict[str, str] | None:
 def _secret_file(name: str, content: str) -> str:
     """The SDK reads keys from files; keep the copy readable by this process only."""
     path = Path(tempfile.gettempdir()) / f"nebius-{name}"
-    if not path.exists():
-        path.touch(mode=0o600)
-        path.write_text(content)
+    path.touch(mode=0o600)
+    path.write_text(content)  # always the current value, never a stale one
     return str(path)
 
 

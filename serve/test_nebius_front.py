@@ -86,6 +86,18 @@ def load(configured: bool):
     return n
 
 
+class CredentialsTest(unittest.TestCase):
+    def test_a_base64_key_reaches_the_sdk_intact(self) -> None:
+        pem = "-----BEGIN PRIVATE KEY-----\nAAAA+/==\nBBBB\n-----END PRIVATE KEY-----"
+        env = {"NEBIUS_SA_ID": "sa", "NEBIUS_SA_PUBLIC_KEY_ID": "pk", "NEBIUS_SA_PRIVATE_KEY_B64": base64.b64encode(pem.encode()).decode()}
+        with mock.patch.dict(os.environ, env):
+            os.environ.pop("NEBIUS_SA_CREDENTIALS", None)
+            import serve.nebius as n
+
+            creds = importlib.reload(n)._credentials()
+        self.assertEqual(Path(creds["service_account_private_key_file_name"]).read_text(), pem + "\n")
+
+
 class ControlsTest(unittest.TestCase):
     def test_unconfigured_controls_say_so(self) -> None:
         n = load(configured=False)
