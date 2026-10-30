@@ -288,3 +288,45 @@ describe("techTrace: Tavily tile", () => {
     expect(tile(run, "tavily").headline).toBe("Unavailable");
   });
 });
+
+describe("Token Factory tile", () => {
+  const usage = {
+    models: [{ lane: "fast", model_id: "nvidia/nemotron-3-nano-30b", calls: 2, total_tokens: 900 }],
+    total: { calls: 2, total_tokens: 900, avg_latency_ms: 800 },
+    cost_usd: null,
+    price_note: "price not configured",
+  };
+  const llm = (over: Record<string, unknown>) => body({ lane: "full", trace: [step(1, "investigator", "fast", "nvidia/nemotron-3-nano-30b", 500, "x")], ...over });
+  const nt = (r: RecordedRun, b?: string) => buildTechTrace(r, b).tiles.find((t) => t.id === "nightshift")!;
+  it("nebius with usage", () => {
+    const t = nt(llm({ usage }), "nebius");
+    expect(t.name).toBe("Nebius Token Factory");
+    const text = JSON.stringify(t.details);
+    expect(text).toContain("nvidia/nemotron-3-nano-30b");
+    expect(text).toContain("900 tokens");
+    expect(text).toContain("price not configured");
+  });
+  it("no usage is honest", () => {
+    expect(JSON.stringify(nt(llm({}), "nebius").details)).toContain("Not recorded for this answer");
+  });
+  it("nightshift keeps its name", () => {
+    expect(nt(llm({ usage }), "nightshift").name).toBe("Meterless Nightshift");
+  });
+});
+
+describe("Token Factory tile: usage states", () => {
+  const nt = (r: RecordedRun) => buildTechTrace(r, "nebius").tiles.find((t) => t.id === "nightshift")!;
+  it("deterministic run with calls=0 says no model call", () => {
+    const t = nt(body({ lane: "quick", usage: { models: [], total: { calls: 0, total_tokens: 0 }, cost_usd: null } }));
+    expect(JSON.stringify(t.details)).toContain("No model call in this answer");
+    expect(JSON.stringify(t.details)).not.toContain("Not recorded");
+  });
+  it("deterministic run without usage adds no usage row", () => {
+    expect(JSON.stringify(nt(body({ lane: "quick" })).details)).not.toContain("Usage");
+  });
+  it("cost is formatted", () => {
+    const usage = { models: [{ lane: "fast", model_id: "m", calls: 1, total_tokens: 5 }], total: { calls: 1, total_tokens: 5 }, cost_usd: 0.0123, price_note: "estimate" };
+    const r = body({ lane: "full", usage, trace: [step(1, "investigator", "fast", "m", 5, "x")] });
+    expect(JSON.stringify(nt(r).details)).toContain("$0.0123");
+  });
+});

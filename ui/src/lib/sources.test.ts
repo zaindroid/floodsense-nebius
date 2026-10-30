@@ -44,14 +44,14 @@ describe("grounded sources", () => {
 
 describe("model chip", () => {
   it("names the model and the Nightshift lane", () => {
-    expect(modelChip("nvidia/nemotron-3.5-lightning-30b-a3b", "fast")).toBe("Nemotron 3.5 Lightning 30B · Nightshift fast lane");
-    expect(modelChip("deterministic,nvidia/nemotron-3.5-lightning-30b-a3b", "deep")).toBe(
+    expect(modelChip("nvidia/nemotron-3.5-lightning-30b-a3b", "fast", "nightshift")).toBe("Nemotron 3.5 Lightning 30B · Nightshift fast lane");
+    expect(modelChip("deterministic,nvidia/nemotron-3.5-lightning-30b-a3b", "deep", "nightshift")).toBe(
       "Nemotron 3.5 Lightning 30B · Nightshift deep lane",
     );
     expect(modelChip(null, "sql")).toBe("SQL · Zetaris");
     expect(modelChip("deterministic", "none")).toBe("rules");
     expect(modelChip("other-model-x", "fast")).toBe("other-model-x");
-    expect(runModelLine(run.trace.map((s) => s.modelId ?? ""))).toBe("Nemotron 3.5 Lightning 30B via Nightshift");
+    expect(runModelLine(run.trace.map((s) => s.modelId ?? ""), "nightshift")).toBe("Nemotron 3.5 Lightning 30B via Nightshift");
   });
 });
 

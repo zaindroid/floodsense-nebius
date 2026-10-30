@@ -4,7 +4,7 @@ import answer from "../fixtures/answer.json";
 import sampleRun from "../fixtures/run_f16733274f1c.json";
 import { adoptRunBody } from "../api/replay";
 import type { Answer } from "../types/contract";
-import { drawerFields, numberAnswerReferences, numberRunReferences, refById, referenceAnchor } from "./references";
+import { isStructuredRow, drawerFields, numberAnswerReferences, numberRunReferences, refById, referenceAnchor } from "./references";
 
 const doc = (id: string, page = 4): ReplayCitation => ({
   id,
@@ -91,5 +91,13 @@ describe("reference numbering", () => {
     const set = numberRunReferences(run!.claims, { scope: "rag", layers: ["c"] });
     const passages = run!.claims.flatMap((c) => c.citations.filter((x) => x.layer === "c"));
     for (const p of passages) expect(refById(set, p.id)).not.toBeNull();
+  });
+});
+
+describe("structured rows", () => {
+  it("a Zetaris citation without a quote is a data row", () => {
+    expect(isStructuredRow({ kind: "zetaris", quote: null })).toBe(true);
+    expect(isStructuredRow({ kind: "zetaris", quote: "x" })).toBe(false);
+    expect(isStructuredRow({ kind: "document", quote: null })).toBe(false);
   });
 });

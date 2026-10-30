@@ -19,6 +19,7 @@ sys.path.insert(0, str(ROOT / "agents"))
 os.environ.setdefault("CHECKPOINTER", "memory")
 os.environ.setdefault("ZETARIS_MODE", "fake")
 os.environ.setdefault("LLM_MODE", "fake")
+os.environ.setdefault("LLM_BACKEND", "nightshift")
 
 from jsonschema import Draft202012Validator  # noqa: E402
 from jsonschema.exceptions import ValidationError  # noqa: E402
@@ -362,7 +363,7 @@ class ProjectionHonestyTest(unittest.TestCase):
             "fake-deep",
             "fake-fast",
             "meterless/auto",
-            "nvidia/nemotron-3-super-120b-a12b",
+            "nvidia/not-a-real-model",
         )
         for model_id in outside:
             body = _minimal_run()

@@ -16,6 +16,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 os.environ.setdefault("CHECKPOINTER", "memory")
 os.environ.setdefault("ZETARIS_MODE", "fake")
 os.environ.setdefault("LLM_MODE", "fake")
+os.environ.setdefault("LLM_BACKEND", "nightshift")
 
 from pydantic import ValidationError  # noqa: E402
 

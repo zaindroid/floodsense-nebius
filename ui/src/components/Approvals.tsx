@@ -40,7 +40,6 @@ import {
   type ReviewEvidence,
 } from "../lib/hitl";
 import { isOperatorRunKey, operatorActionChip } from "../lib/operatorDesk";
-import { traceProvider } from "../lib/modelChip";
 import { RefMarks } from "./RefMarks";
 import "../styles/hitl.css";
 import "../styles/insurer.css";
@@ -57,8 +56,9 @@ export interface QueueSource {
   evidence: ReviewEvidence;
   /** From the approval body; empty for the packed example. */
   modelIds?: string[];
-  provider?: string | null;
   eventId?: string | null;
+  /** Exposure policy total from the approval body (exact, unlike the 20-row asset sample). */
+  policies?: number | null;
 }
 
 const rec = (v: unknown): Record<string, unknown> | null => (v && typeof v === "object" && !Array.isArray(v) ? (v as Record<string, unknown>) : null);
@@ -77,8 +77,8 @@ export function queueFromApproval(runId: string, body: Record<string, unknown>):
     note: null,
     evidence: reviewEvidence(body),
     modelIds: Array.isArray(body.model_ids) ? body.model_ids.filter((m): m is string => typeof m === "string") : [],
-    provider: traceProvider(body.trace),
     eventId: typeof body.event_id === "string" ? body.event_id : null,
+    policies: typeof rec(body.exposure)?.policies === "number" ? (rec(body.exposure)!.policies as number) : null,
   };
 }
 
@@ -299,7 +299,6 @@ export function Approvals({ operator = false }: { operator?: boolean } = {}) {
     runId: showingLive ? source.runId : null,
     row: selectedRow,
     modelIds: source.modelIds ?? [],
-    provider: source.provider,
     judgeScore: source.judgeScore,
     judgePasses: source.judgePasses,
     eventId: source.eventId,
@@ -314,8 +313,8 @@ export function Approvals({ operator = false }: { operator?: boolean } = {}) {
       <nav className="apv-queue card" aria-label={operator ? "Runs from the Civil protection desk awaiting approval" : "Runs awaiting approval"}>
         <div className="apv-queue__head">
           <p className="section-label">Awaiting approval</p>
-          <span className="apv-count" aria-label={`${awaitingCount} runs awaiting approval`}>
-            {awaitingCount}
+          <span className="apv-count" aria-label={past ? `${awaitingCount} runs awaiting approval` : "Loading runs"}>
+            {past ? awaitingCount : "…"}
           </span>
         </div>
         {past && !past.ok && <p className="note">Run list unavailable ({past.detail}). Only runs started in this tab are listed.</p>}
@@ -324,7 +323,12 @@ export function Approvals({ operator = false }: { operator?: boolean } = {}) {
             Checking {curated.pendingIds.length} {curated.pendingIds.length === 1 ? "run" : "runs"} for actions to approve…
           </p>
         )}
-        {queue.length === 0 && curated.pendingIds.length === 0 ? (
+        {!past && (
+          <p className="note" role="status">
+            Loading runs…
+          </p>
+        )}
+        {past && queue.length === 0 && curated.pendingIds.length === 0 ? (
           <p className="apv-empty note">
             {operator
               ? "No run from the Civil protection desk is waiting for a decision. Use Escalate to agents on the Situation board; the run lands here once the agents finish."
@@ -590,7 +594,7 @@ function ActionCard({
         <strong>{item.title}</strong>
         <span className="muted small">
           {item.targetRegion ?? "Region not stated"}
-          {operator ? "" : ` · ${sitesLine(item.affectedSiteCount, source.eventId)}`}
+          {operator ? "" : ` · ${sitesLine(item.affectedSiteCount, source.eventId, source.policies)}`}
           {item.horizonH !== null ? ` · ${item.horizonH} h` : ""}
         </span>
         <JudgeBadge score={source.judgeScore} passes={source.judgePasses} />

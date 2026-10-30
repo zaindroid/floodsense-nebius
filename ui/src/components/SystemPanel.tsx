@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
+import { fetchPlatformStatus, type PlatformStatus } from "../api/platform";
 import { fetchSystem } from "../api/system";
+import { useLlmBackend } from "../hooks/useLlmBackend";
+import { NEBIUS_NAME, setLlmBackend } from "../lib/lanes";
 import { SEEDED_MEMORY_CHIP, seededMemoryNote } from "../lib/hitl";
 import {
   SYSTEM_POLL_MS,
@@ -17,6 +20,7 @@ export function SystemPanel() {
   const [status, setStatus] = useState<SystemStatus | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [checkedAt, setCheckedAt] = useState<Date | null>(null);
+  const [platform, setPlatform] = useState<{ status: PlatformStatus | null; error: string | null } | null>(null);
 
   useEffect(() => {
     // One request at a time: the next poll is scheduled only after this one settles,
@@ -24,7 +28,17 @@ export function SystemPanel() {
     const controller = new AbortController();
     let timer: number | undefined;
     const tick = async () => {
-      const got = await fetchSystem(undefined, controller.signal);
+      const [gotR, platR] = await Promise.allSettled([fetchSystem(undefined, controller.signal), fetchPlatformStatus()]);
+      if (controller.signal.aborted) return;
+      if (platR.status === "fulfilled") {
+        setPlatform(platR.value);
+        if (platR.value.status?.llmBackend) setLlmBackend(platR.value.status.llmBackend); // feeds the shared store; a failed poll never clears it
+      }
+      if (gotR.status !== "fulfilled") {
+        timer = window.setTimeout(() => void tick(), SYSTEM_POLL_MS);
+        return;
+      }
+      const got = gotR.value;
       if (controller.signal.aborted || got.aborted) return;
       if (got.status) setStatus(got.status);
       setError(got.error);
@@ -38,7 +52,7 @@ export function SystemPanel() {
     };
   }, []);
 
-  return <SystemCards status={status} error={error} checkedAt={checkedAt} />;
+  return <SystemCards status={status} error={error} checkedAt={checkedAt} platform={platform} />;
 }
 
 /** The four cards. Pure, so tests render it without a network. */
@@ -46,10 +60,12 @@ export function SystemCards({
   status,
   error,
   checkedAt,
+  platform = null,
 }: {
   status: SystemStatus | null;
   error: string | null;
   checkedAt: Date | null;
+  platform?: { status: PlatformStatus | null; error: string | null } | null;
 }) {
   return (
     <div className="page-stack system-page">
@@ -68,6 +84,7 @@ export function SystemCards({
           {status ? ". Showing the last answer." : ""}
         </p>
       )}
+      <PlatformStrip platform={platform} />
       <div className="system-grid">
         <MemoryCard status={status} />
         <CacheCard status={status} />
@@ -171,6 +188,7 @@ function RateCard({ status }: { status: SystemStatus | null }) {
 
 function ModelsCard({ status }: { status: SystemStatus | null }) {
   const mo = status?.models;
+  const backend = useLlmBackend();
   const e = status?.engines;
   const w = status?.world;
   const rag = status?.rag;
@@ -182,7 +200,7 @@ function ModelsCard({ status }: { status: SystemStatus | null }) {
   return (
     <section className="card system-card" aria-label="Models and engines">
       <p className="section-label">Models &amp; engines</p>
-      <h2>{mo?.ok ? "Nightshift" : "Models"}</h2>
+      <h2>{mo?.ok && backend === "nightshift" ? "Nightshift" : mo?.ok && backend === "nebius" ? NEBIUS_NAME : "Models"}</h2>
       <p className="note">Which language models answer, and whether the memory and World Model engines are up.</p>
       {mo?.ok ? (
         <ul className="system-list">
@@ -210,6 +228,51 @@ function ModelsCard({ status }: { status: SystemStatus | null }) {
         Document search (RAG): {rag?.enabled == null ? "–" : rag.enabled ? "on" : "off"}
         {rag && rag.documents !== null ? ` · ${rag.documents} documents, ${countText(rag.passages)} passages` : " · counts not exposed"}
       </p>
+    </section>
+  );
+}
+
+const ms = (n: number | null | undefined): string => (n == null ? "–" : `${Math.round(n)} ms`);
+
+/** Pure: the Platform strip's lines from GET /platform/status. Null fields read "–" or "not run yet", never a guess. */
+export function platformLines(p: PlatformStatus): string[] {
+  const lanes = Object.entries(p.lanes).map(([k, id]) => `${k}: ${id}`).join(", ") || "lanes not reported";
+  const lat = Object.entries(p.latency).map(([k, l]) => `${k} p50 ${ms(l.p50Ms)} / p95 ${ms(l.p95Ms)} (${l.n} calls)`).join("; ") || "no model calls yet";
+  const c = p.cache;
+  const r = p.rateLimit;
+  const chk = p.llmCheck
+    ? `${p.llmCheck.ok ? "ok" : "failed"}: ${Object.entries(p.llmCheck.lanes).map(([k, l]) => `${k} ${l.ok ? "ok" : "failed"} ${l.modelId ?? "no model id"} ${ms(l.latencyMs)}`).join(", ")}`
+    : "not run yet";
+  const u = p.llmUsage;
+  const use = u
+    ? `${Object.entries(u.lanes).map(([k, l]) => `${k} ${l.calls} calls, ${l.totalTokens} tokens`).join("; ") || "no calls yet"} · cost ${u.costUsd == null ? "price not configured" : `$${u.costUsd.toFixed(4)}`}`
+    : "not reported";
+  return [
+    `LLM backend: ${p.llmBackend ?? "unknown"} (${lanes})`,
+    `Data backend: ${p.dataBackend} · Tavily ${p.tavily ? "on" : "off"}`,
+    `Latency: ${lat}`,
+    `Cache hit rate: ${c.hitRate == null ? "–" : `${Math.round(c.hitRate * 100)}%`} (${c.hits} hits, ${c.misses} misses)`,
+    `Rate limit: ${r.inFlight}/${r.maxConcurrent} in flight · 429s ${r.recent429} recent, ${r.total429} total`,
+    `LLM check: ${chk}`,
+    `LLM usage: ${use}`,
+  ];
+}
+
+function PlatformStrip({ platform }: { platform: { status: PlatformStatus | null; error: string | null } | null }) {
+  return (
+    <section className="card system-card" aria-label="Platform">
+      <p className="section-label">Platform</p>
+      {!platform && <p className="note">Checking…</p>}
+      {platform?.error && <p className="note">{platform.error}</p>}
+      {platform?.status && (
+        <ul className="system-list">
+          {platformLines(platform.status).map((l) => (
+            <li key={l}>
+              <p className="system-text">{l}</p>
+            </li>
+          ))}
+        </ul>
+      )}
     </section>
   );
 }

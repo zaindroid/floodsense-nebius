@@ -53,7 +53,7 @@ export function ReviewColumn() {
       <ServingLine inline />
       
       <p className="note">
-        Skeptic notes and Judge scores are fixtures for this screen. They are not a Nightshift call, and they do not
+        Skeptic notes and Judge scores are fixtures for this screen. They are not a model call, and they do not
         choose a model lane. The human still decides. Nothing here is sent.
       </p>
       <p className="status-line">
@@ -143,7 +143,7 @@ export function ReviewColumn() {
               </div>
               <p className="note">
                 Display only. The contract stores model_id. A routing name is shown as stored. A concrete
-                Nightshift id says which model answered, and does not assign a lane. This screen did not call a
+                model id says which model answered, and does not assign a lane. This screen did not call a
                 model.
               </p>
             </div>

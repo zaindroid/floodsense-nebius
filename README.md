@@ -3,7 +3,7 @@
 The deploy mirror of [FloodSenseEU-Hackathon-Monorepo](https://github.com/GenAI-Open-Agent-Hackathon/FloodSenseEU-Hackathon-Monorepo)
 for the Nebius entry, served at **https://floodsense-nebius.zaindroid.me**.
 
-Everything except `serve/` comes from the monorepo's `main` (currently with PR #120 on top, which
+Everything except `serve/` comes from the monorepo's `main` (currently with PRs #132 and #131 on top, which
 names the model provider in the UI). Every model call goes to **NVIDIA Nemotron on Nebius Token
 Factory**; the data comes from Zetaris.
 

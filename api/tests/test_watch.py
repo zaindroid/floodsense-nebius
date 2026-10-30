@@ -16,6 +16,7 @@ sys.path.insert(0, str(HERE.parent / "agents"))
 os.environ.setdefault("CHECKPOINTER", "memory")
 os.environ.setdefault("ZETARIS_MODE", "fake")
 os.environ.setdefault("LLM_MODE", "fake")
+os.environ.setdefault("LLM_BACKEND", "nightshift")
 
 import httpx  # noqa: E402
 from fastapi.testclient import TestClient  # noqa: E402

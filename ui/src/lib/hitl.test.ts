@@ -93,6 +93,7 @@ describe("approval card logic", () => {
     expect(sitesLine(3)).toBe("3 insured sites in the affected area");
     expect(sitesLine(1)).toBe("1 insured site in the affected area");
     expect(sitesLine(null)).toBe("Site count not reported by the Exposure step");
+    expect(sitesLine(null, "EMSR773", 91)).toBe("91 insured policies in the affected area");
     expect(sitesLine(0, "EMSR773")).toBe("0 insured sites in the affected area");
     expect(sitesLine(0, "LIVE-EU")).toBe("0 insured sites · the demo book covers Valencia only");
     expect(draftLabel(true)).toBe("Draft message (sent only after approval)");

@@ -1167,3 +1167,8 @@ a.button.primary { color: #f4fffc; }
 @media (max-width: 760px) {
   .system-grid { grid-template-columns: minmax(0, 1fr); }
 }
+
+.impact-strip { margin: 0 0 1rem; }
+.impact-goal { margin: 0.25rem 0 0.5rem; font-weight: 600; }
+.impact-chips { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; list-style: none; margin: 0; padding: 0; }
+.impact-why { margin: 0.5rem 0 0; }

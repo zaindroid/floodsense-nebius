@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { runBadge } from "../api/ask";
 import { fetchPastRuns } from "../api/pastRuns";
 import { useConsole } from "../context/ConsoleContext";
-import { completedFullRuns, eventLabel, preferJudgePass } from "../lib/approvalQueue";
+import { completedFullRuns, eventLabel, type QueueRow } from "../lib/approvalQueue";
 import { adoptRunBody, fetchRecordedRun, replayRunId, type RecordedRun } from "../api/replay";
 import sampleRun from "../fixtures/run_f16733274f1c.json";
 import { AgentPipeline } from "./AgentPipeline";
@@ -12,6 +12,7 @@ import { ReviewColumn } from "./ReviewColumn";
 import { plainLanguage } from "../lib/plain";
 import { routeHref } from "../lib/route";
 
+/** Id of the bundled recording (fixtures/run_f16733274f1c.json). The API may list the same id; Review never picks it as a "real" run. */
 export const SAMPLE_RUN_ID = "f16733274f1c";
 
 /** The bundled recorded run (f16733274f1c, one revise and one repair round). Always a replay. */
@@ -19,72 +20,81 @@ export function sampleRecordedRun(): RecordedRun | null {
   return adoptRunBody(sampleRun as unknown as Record<string, unknown>, SAMPLE_RUN_ID);
 }
 
-export type Source = { kind: "bundled" } | { kind: "newest"; id: string; label: string; question: string | null } | { kind: "none"; label: string } | { kind: "configured"; id: string } | { kind: "failed"; id: string } | { kind: "loading"; id: string };
+export type Source = { kind: "bundled" } | { kind: "newest"; id: string; label: string; question: string | null } | { kind: "none"; label: string } | { kind: "looking"; label: string } | { kind: "configured"; id: string } | { kind: "failed"; id: string } | { kind: "loading"; id: string };
 
 /** Pure: the note under the header for where the run came from. Null for a configured run that loaded. */
 export function causalChainNote(source: Source): string | null {
   switch (source.kind) {
     case "newest":
       return `Newest completed full run for ${source.label}${source.question ? `: “${source.question}”` : ""} (${source.id}).`;
+    case "looking":
+      return `Looking for the newest completed full run for ${source.label}…`;
     case "none":
-      return `No completed full-lane run for ${source.label} yet. Showing the bundled recording of run ${SAMPLE_RUN_ID} instead, a Valencia 2024 example. Not live.`;
+      return `Sample, not a real run: No completed full-lane run for ${source.label} yet. Showing the bundled recording of run ${SAMPLE_RUN_ID} instead, a Valencia 2024 example. Not live.`;
     case "bundled":
       return `Bundled recording of run ${SAMPLE_RUN_ID}, shipped with the UI. Not this session's run, not live.`;
     case "failed":
-      return `Could not load recorded run ${source.id} (VITE_REPLAY_RUN_ID). Showing the bundled recording of run ${SAMPLE_RUN_ID} instead. Not live.`;
+      return `Could not load run ${source.id}. Showing the bundled recording of run ${SAMPLE_RUN_ID} instead, a sample and not a real run. Not live.`;
     case "loading":
       return `Loading recorded run ${source.id}… showing the bundled recording of run ${SAMPLE_RUN_ID} until then.`;
     case "configured":
-      return null;
+      return `Pinned recording ${source.id} (VITE_REPLAY_RUN_ID), shown because no completed full run exists yet. Not live.`;
   }
 }
 
+/** Pure: the first of the newest candidates that loads. `failedId` is set when candidates existed but none loaded (never a silent fallback). */
+export async function loadNewestRun(
+  rows: readonly QueueRow[],
+  mode: "live" | "past",
+  eventId: string,
+  fetchRun: (runId: string) => Promise<RecordedRun | null>,
+  isAborted: () => boolean = () => false,
+): Promise<{ run: RecordedRun; row: QueueRow } | { run: null; failedId: string | null }> {
+  const candidates = completedFullRuns(rows, mode, eventId, SAMPLE_RUN_ID).slice(0, 3);
+  for (const row of candidates) {
+    const run = await fetchRun(row.runId);
+    if (isAborted()) break;
+    if (run) return { run, row };
+  }
+  return { run: null, failedId: candidates[0]?.runId ?? null };
+}
+
 /**
- * The reviewed run: VITE_REPLAY_RUN_ID wins; else the newest completed full-lane run for the current mode's event
- * (GET /runs/past); else the bundled recording of run f16733274f1c, said so.
+ * The reviewed run: the newest completed full-lane run for the current mode (GET /runs/past). VITE_REPLAY_RUN_ID is only
+ * the fallback when no real run exists (it used to override the newest run, which pinned an old recording); then the
+ * bundled recording. Every fallback is labelled.
  */
 export function useReviewRun(): { run: RecordedRun | null; source: Source } {
   const { mode, eventId } = useConsole();
-  const [run, setRun] = useState<RecordedRun | null>(() => sampleRecordedRun());
-  const [source, setSource] = useState<Source>(() => {
-    const id = replayRunId();
-    return id ? { kind: "loading", id } : { kind: "bundled" };
-  });
+  const lookLabel = () => (mode === "past" ? eventLabel(eventId) : "live data");
+  // No sample while the newest real run is being looked up: it would be shown as if it were the answer.
+  const [run, setRun] = useState<RecordedRun | null>(null);
+  const [source, setSource] = useState<Source>(() => ({ kind: "looking", label: lookLabel() }));
   useEffect(() => {
     const controller = new AbortController();
-    const configured = replayRunId();
-    const label = mode === "past" ? eventLabel(eventId) : "live data";
-    setRun(sampleRecordedRun());
-    if (configured) {
-      setSource({ kind: "loading", id: configured });
-      void fetchRecordedRun(configured, undefined, controller.signal).then((r) => {
-        if (controller.signal.aborted) return;
-        if (r) {
-          setRun(r);
-          setSource({ kind: "configured", id: configured });
-        } else setSource({ kind: "failed", id: configured });
-      });
-      return () => controller.abort();
-    }
-    setSource({ kind: "none", label });
-    void fetchPastRuns(50, controller.signal).then(async (list) => {
-      if (controller.signal.aborted || !list.ok) return;
-      // The newest run that passed the Judge (looking at the latest few); else the newest. The row list carries no verdict.
-      const candidates = completedFullRuns(list.rows, mode, eventId).slice(0, 6);
-      const loaded: Record<string, RecordedRun> = {};
-      const verdicts: Record<string, boolean | null> = {};
-      for (const c of candidates) {
-        const r = await fetchRecordedRun(c.runId, undefined, controller.signal);
-        if (controller.signal.aborted) return;
-        if (!r) continue;
-        loaded[c.runId] = r;
-        verdicts[c.runId] = r.judgePasses;
-        if (r.judgePasses === true) break;
+    const label = lookLabel();
+    setRun(null);
+    setSource({ kind: "looking", label });
+    const fallback = async (failedId: string | null) => {
+      const configured = replayRunId();
+      const r = configured ? await fetchRecordedRun(configured, undefined, controller.signal) : null;
+      if (controller.signal.aborted) return;
+      if (r && configured) {
+        setRun(r);
+        setSource({ kind: "configured", id: configured });
+      } else {
+        setRun(sampleRecordedRun());
+        setSource(failedId ? { kind: "failed", id: failedId } : { kind: "none", label });
       }
-      const row = preferJudgePass(candidates.filter((c) => loaded[c.runId]), verdicts);
-      if (!row) return;
-      setRun(loaded[row.runId]);
-      setSource({ kind: "newest", id: row.runId, label, question: row.question });
+    };
+    void fetchPastRuns(50, controller.signal).then(async (list) => {
+      if (controller.signal.aborted) return;
+      if (!list.ok) return fallback(null);
+      const got = await loadNewestRun(list.rows, mode, eventId, (id) => fetchRecordedRun(id, undefined, controller.signal), () => controller.signal.aborted);
+      if (controller.signal.aborted) return;
+      if (!got.run) return fallback(got.failedId);
+      setRun(got.run);
+      setSource({ kind: "newest", id: got.row.runId, label, question: got.row.question });
     });
     return () => controller.abort();
   }, [mode, eventId]);
@@ -96,6 +106,12 @@ export function ReviewPage() {
   const { run, source } = useReviewRun();
   const real = source.kind === "newest" || source.kind === "configured";
   const { mode, eventId } = useConsole();
+  if (source.kind === "looking")
+    return (
+      <div className="page-stack">
+        <p className="note" role="status">{causalChainNote(source)}</p>
+      </div>
+    );
   return (
     <div className="page-stack">
       {run && real ? <TechTrace run={run} /> : <LatestRunTechTrace mode={mode} eventId={eventId} />}

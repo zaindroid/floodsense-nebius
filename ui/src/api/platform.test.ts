@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { parsePlatformStatus } from "./platform";
+import { platformLines } from "../components/SystemPanel";
+import { fetchPlatformStatus, parsePlatformStatus } from "./platform";
 
 describe("parsePlatformStatus", () => {
   it("reads the API shape", () => {
@@ -18,5 +19,30 @@ describe("parsePlatformStatus", () => {
   it("survives junk", () => {
     expect(parsePlatformStatus([])).toBeNull();
     expect(parsePlatformStatus({})?.dataBackend).toBe("zetaris");
+  });
+});
+
+describe("platformLines", () => {
+  it("handles a sparse status", () => {
+    const s = parsePlatformStatus({ llm_backend: "nebius", lanes: { fast: "m1" }, tavily: false, cache: {}, rate_limit: {} })!;
+    const out = platformLines(s).join("\n");
+    expect(out).toContain("LLM backend: nebius (fast: m1)");
+    expect(out).toContain("Cache hit rate: –");
+    expect(out).toContain("LLM check: not run yet");
+    expect(out).toContain("LLM usage: not reported");
+  });
+});
+
+describe("platformLines more", () => {
+  it("null backend and cost present", () => {
+    const s = parsePlatformStatus({ llm_usage: { lanes: { fast: { calls: 1, total_tokens: 10 } }, cost_usd: 0.0123, price_note: "n" } })!;
+    const out = platformLines(s).join("\n");
+    expect(out).toContain("LLM backend: unknown");
+    expect(out).toContain("cost $0.0123");
+  });
+  it("fetch failure is an error string", async () => {
+    const r = await fetchPlatformStatus("http://127.0.0.1:1");
+    expect(r.status).toBeNull();
+    expect(r.error).toContain("API not reached");
   });
 });

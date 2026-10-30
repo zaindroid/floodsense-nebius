@@ -5,6 +5,7 @@ import { NowPage } from "./NowPage";
 import { DisasterReplay } from "./DisasterReplay";
 import { ControlTower } from "./ControlTower";
 import { HowItWorks } from "./HowItWorks";
+import { StackPage } from "./stack/StackPage";
 import { pageLabel, type CitizenPage } from "../lib/route";
 import { useConsole } from "../context/ConsoleContext";
 
@@ -50,5 +51,7 @@ function CitizenBody({ page }: { page: CitizenPage }) {
       return <ControlTower />;
     case "how":
       return <HowItWorks />;
+    case "stack":
+      return <StackPage />;
   }
 }

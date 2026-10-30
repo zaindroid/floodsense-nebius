@@ -1,5 +1,6 @@
 import { Approvals } from "./Approvals";
 import { HowItWorks } from "./HowItWorks";
+import { StackPage } from "./stack/StackPage";
 import { OperatorSituation } from "./OperatorSituation";
 import type { OperatorPage } from "../lib/route";
 
@@ -16,5 +17,7 @@ export function OperatorView({ page }: { page: OperatorPage }) {
       );
     case "how":
       return <HowItWorks />;
+    case "stack":
+      return <StackPage />;
   }
 }

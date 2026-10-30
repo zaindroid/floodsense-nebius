@@ -55,6 +55,12 @@ export const CITIZEN_PURPOSE: Record<CitizenPage, PagePurpose> = {
     live: "Router, agents, data and human approval, with status dots",
     past: "Same",
   },
+  stack: {
+    purpose: "Which technology does what, right now?",
+    data: "/platform/status, /system, a recorded run",
+    live: "Animated cards per technology, each labelled live, replay or sample",
+    past: "Same",
+  },
   tower: {
     purpose: "How does FloodSense keep watch, and is it running?",
     data: "/watch/status, /watch/events (read only)",
@@ -118,6 +124,12 @@ export const INSURER_PURPOSE: Record<InsurerPage, PagePurpose> = {
     live: "Router, agents, data and human approval, with status dots",
     past: "Same",
   },
+  stack: {
+    purpose: "Which technology does what, right now?",
+    data: "/platform/status, /system, a recorded run",
+    live: "Animated cards per technology, each labelled live, replay or sample",
+    past: "Same",
+  },
   tower: {
     purpose: "Is the watch loop running, and what did it find?",
     data: "/watch/status, /watch/events, live watch",
@@ -144,6 +156,12 @@ export const OPERATOR_PURPOSE: Record<OperatorPage, PagePurpose> = {
     purpose: "How does FloodSense work?",
     data: "/config, /system",
     live: "Router, agents, data and human approval, with status dots",
+    past: "Live only (no past form)",
+  },
+  stack: {
+    purpose: "Which technology does what, right now?",
+    data: "/platform/status, /system, a recorded run",
+    live: "Animated cards per technology, each labelled live, replay or sample",
     past: "Live only (no past form)",
   },
 };

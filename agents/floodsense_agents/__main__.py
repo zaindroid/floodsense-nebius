@@ -346,7 +346,10 @@ def health():
 
 @app.get("/ready")
 def ready():
-    rt = runtime()
+    try:
+        rt = runtime()
+    except RuntimeError as e:  # e.g. LLM_BACKEND=nebius without NEBIUS_API_KEY: say so, no crash loop
+        raise HTTPException(503, str(e))
     try:
         probe = rt.deps.zetaris.run_sql("SELECT 1")
     except Exception as e:
@@ -403,6 +406,9 @@ def config():
                 "FF_FORECAST_LANE": router.forecast_enabled(),
             },
             "llm_backend": settings.llm_backend,
+            # The API's platform status reads this; it was only on /ready, so the
+            # status said Tavily was off while runs were citing it. Never the key.
+            "tavily": settings.ff_tavily,
             "lanes": {"fast": settings.lane("fast"), "deep": settings.lane("deep")},
             "llm_check": _last_llm_check,
             "llm_usage": GLOBAL_USAGE.as_dict(),

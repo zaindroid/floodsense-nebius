@@ -9,6 +9,8 @@ import { LoadingNote, SlowSourceNote } from "./Loading";
 import { DemoChip, LiveHealthNote, SwitchToLive } from "./ModeSwitch";
 import { PlacePicker, useCitizenPlace } from "./CitizenView";
 import { demoSnapshotText } from "../lib/demo";
+import { ImpactStrip } from "./ImpactStrip";
+import { citizenChips, FACTS, GOALS } from "../lib/impact";
 import { InsurerNowPage } from "./InsurerNowPage";
 import { LiveSourceBadge } from "./LiveSources";
 import { evidenceFor, PlacesToWatch, sourceTitle, StatusChip, timeText } from "./PlacesToWatch";
@@ -48,6 +50,7 @@ function CitizenNowPage() {
 
   return (
     <div className="now-page">
+      <ImpactStrip goal={GOALS.citizen} chips={citizenChips(live.sources)} fact={FACTS.citizen} />
       <header className="now-head">
         <div>
           <h2 className="now-title">Right now, across our watch</h2>

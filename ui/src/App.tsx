@@ -1,3 +1,4 @@
+import { useLoadLlmBackend } from "./hooks/useLlmBackend";
 import { ConsoleProvider } from "./context/ConsoleContext";
 import { AskFloodSense } from "./components/AskFloodSense";
 import { Colophon } from "./components/Banners";
@@ -19,6 +20,7 @@ export function App() {
 
 function Shell() {
   const nav = useCollapsedNav();
+  useLoadLlmBackend();
   return (
     <div className="app-shell" data-nav={nav.collapsed ? "collapsed" : "open"}>
       <div className="shell-stage">

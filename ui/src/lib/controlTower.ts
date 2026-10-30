@@ -42,6 +42,14 @@ function str(value: unknown): string | null {
   return typeof value === "string" ? value : null;
 }
 
+export const RATE_LIMIT_TEXT = "A weather data source is rate limiting requests; this scan will retry.";
+
+/** A raw upstream error (HTTP 429, "HTTP response code", a URL) becomes one plain sentence; the raw text moves to the detail line. */
+export function plainEventText(text: string): { text: string; detail: string | null } {
+  if (/\b429\b|rate.?limit/i.test(text) && /HTTP|https?:\/\//i.test(text)) return { text: RATE_LIMIT_TEXT, detail: text };
+  return { text, detail: null };
+}
+
 /** A feed event from the wire, or null when it is not one (a bad row is dropped, never guessed at). */
 export function asWatchEvent(value: unknown): WatchEvent | null {
   const r = rec(value);
@@ -56,6 +64,7 @@ export function asWatchEvent(value: unknown): WatchEvent | null {
   if (!id || !/^w\d{8}$/.test(id) || !ts || !text || !KINDS.includes(kind) || !AGENTS.includes(agent) || !TONES.includes(tone) || !source) return null;
   const view = str(source.view);
   if (!view) return null;
+  const plain = plainEventText(text);
   return {
     id,
     ts,
@@ -67,10 +76,10 @@ export function asWatchEvent(value: unknown): WatchEvent | null {
     country: str(r.country) ?? "",
     status: str(r.status) ?? "",
     tone,
-    text,
+    text: plain.text,
     run_id: str(r.run_id),
     source: { view, query_id: str(source.query_id) },
-    detail: str(r.detail),
+    detail: str(r.detail) ?? plain.detail,
     data: rec(r.data) ?? {},
   };
 }

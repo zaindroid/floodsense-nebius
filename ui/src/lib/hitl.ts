@@ -157,7 +157,9 @@ export function actionChip(type: ActionType | null): string {
  * The site count, said honestly. null: the Exposure step gave no count, so nothing is claimed. 0 outside Valencia:
  * the demo book (synthetic, Valencia only) has no site there, which is not the same as "no exposure".
  */
-export function sitesLine(count: number | null, eventId?: string | null): string {
+export function sitesLine(count: number | null, eventId?: string | null, policies?: number | null): string {
+  // The Exposure step's asset sample holds at most 20 rows, so a big footprint has no exact site count; its policy total is exact.
+  if (count === null && policies) return `${policies} insured ${policies === 1 ? "policy" : "policies"} in the affected area`;
   if (count === null) return "Site count not reported by the Exposure step";
   if (count === 0) {
     return eventId && eventId !== "EMSR773"

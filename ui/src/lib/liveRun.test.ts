@@ -50,7 +50,7 @@ describe("liveReducer", () => {
 describe("helpers", () => {
   it("labels models", () => {
     expect(shortModel("nvidia/nemotron-3.5-lightning-30b-a3b")).toBe("nemotron-3.5-lightning");
-    expect(modelLine("nvidia/nemotron-3.5-lightning-30b-a3b", "fast")).toBe("nemotron-3.5-lightning · Nightshift");
+    expect(modelLine("nvidia/nemotron-3.5-lightning-30b-a3b", "fast")).toBe("nemotron-3.5-lightning");
     expect(modelLine("deterministic", "none")).toBe("deterministic");
     expect(modelLine(null, "sql")).toBe("SQL · Zetaris");
   });

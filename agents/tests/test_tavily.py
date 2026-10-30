@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import os
 import sys
 import unittest
@@ -11,6 +12,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 os.environ.setdefault("CHECKPOINTER", "memory")
 os.environ.setdefault("ZETARIS_MODE", "fake")
 os.environ.setdefault("LLM_MODE", "fake")
+os.environ.setdefault("LLM_BACKEND", "nightshift")
 
 import httpx  # noqa: E402
 
@@ -59,6 +61,7 @@ class TavilyTest(unittest.TestCase):
         def h(req):
             seen["auth"] = req.headers["authorization"]
             seen["url"] = str(req.url)
+            seen["body"] = json.loads(req.content)
             return httpx.Response(200, json=OK)
 
         r = tavily.search("Koeln", transport=mock(h))
@@ -66,6 +69,9 @@ class TavilyTest(unittest.TestCase):
         self.assertEqual(len(r.items), 1)
         self.assertEqual(seen["auth"], "Bearer tvly-test")
         self.assertEqual(seen["url"], tavily.URL)
+        # Social posts are not evidence; they are excluded at the source.
+        self.assertIn("facebook.com", seen["body"]["exclude_domains"])
+        self.assertNotIn("api_key", seen["body"])
 
     def test_empty(self):
         r = tavily.search("Koeln", transport=mock(lambda q: httpx.Response(200, json={"results": []})))
@@ -99,6 +105,19 @@ class TavilyTest(unittest.TestCase):
         tavily.search("Koeln", transport=mock(h))
         self.assertEqual(len(n), 1)
         self.assertEqual(tavily.search("Bonn", transport=mock(h)).reason, "rate guard")
+
+    def test_config_publishes_the_switch(self):
+        """The API's platform status reads /config; it must see Tavily on when it is."""
+        from fastapi.testclient import TestClient
+        from floodsense_agents import __main__ as service
+        from unittest import mock as umock
+
+        from floodsense_agents.settings import settings
+
+        with umock.patch.object(settings, "ff_tavily", True):
+            body = TestClient(service.app).get("/config").json()
+        self.assertIs(body["tavily"], True)
+        self.assertNotIn("tvly", json.dumps(body))
 
     def test_flag_default_off(self):
         self.assertFalse(settings.ff_tavily)

@@ -3,11 +3,11 @@ import type { RouteId } from "../types/ui";
 /** Desk in the hash: the three roles the header switches. */
 export type RoleId = RouteId;
 
-export const CITIZEN_PAGES = ["now", "replay", "overview", "area", "actions", "evidence", "how", "tower"] as const;
-export const INSURER_PAGES = ["tower", "now", "replay", "approvals", "portfolio", "sites", "alerts", "review", "system", "how"] as const;
+export const CITIZEN_PAGES = ["now", "replay", "overview", "area", "actions", "evidence", "how", "stack", "tower"] as const;
+export const INSURER_PAGES = ["tower", "now", "replay", "approvals", "portfolio", "sites", "alerts", "review", "system", "how", "stack"] as const;
 
 /** Civil protection desk. Situation board first; its own approval queue; the shared how-it-works page. */
-export const OPERATOR_PAGES = ["situation", "approvals", "how"] as const;
+export const OPERATOR_PAGES = ["situation", "approvals", "how", "stack"] as const;
 
 export type CitizenPage = (typeof CITIZEN_PAGES)[number];
 export type InsurerPage = (typeof INSURER_PAGES)[number];
@@ -32,6 +32,7 @@ export const DESK_NAV: {
     { page: "actions", label: "What to do" },
     { page: "evidence", label: "Evidence" },
     { page: "how", label: "How it works" },
+    { page: "stack", label: "Under the hood" },
   ],
   insurer: [
     { page: "tower", label: "Control tower" },
@@ -44,11 +45,13 @@ export const DESK_NAV: {
     { page: "review", label: "Review" },
     { page: "system", label: "System" },
     { page: "how", label: "How it works" },
+    { page: "stack", label: "Under the hood" },
   ],
   operator: [
     { page: "situation", label: "Situation board" },
     { page: "approvals", label: "Approvals" },
     { page: "how", label: "How it works" },
+    { page: "stack", label: "Under the hood" },
   ],
 };
 

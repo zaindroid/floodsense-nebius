@@ -1,5 +1,5 @@
 import type { RecordedRun, ReplayStep } from "../api/replay";
-import { laneLabel, providerOf } from "./lanes";
+import { laneLabel, providerLabel as providerOf } from "./lanes";
 
 /** Canonical node order of the agent graph. world_model steps are folded into badges, not nodes. */
 export const PIPELINE_ORDER = [
@@ -135,13 +135,13 @@ function llmIds(modelId: string | null | undefined): string[] {
     .filter((m) => m && m !== "deterministic");
 }
 
-/** Badge for an LLM id, by the shared provider rule (`providerOf`): Nemotron ids are Nightshift. */
+/** Badge for an LLM id, by the shared provider rule (`providerOf`): Nemotron ids are named after the live backend. */
 export function modelBadge(modelId: string, provider?: string | null): PipelineBadge {
   const label = laneLabel(modelId);
   const p = providerOf(modelId, provider);
   if (p === "Nightshift") return { kind: "nightshift", text: `Nightshift · ${label}` };
   if (p) return { kind: "model", text: `${p} · ${label}` };
-  return { kind: "model", text: modelId };
+  return { kind: "model", text: label };
 }
 
 /** Pure: N from a memory summary "recalled N past approved finding(s)", else null. */

@@ -1,0 +1,101 @@
+/* "Under the hood" page. Tokens come from global.css, so light and dark both follow. CSS-only motion. */
+.stk-page { display: grid; gap: 0.8rem; min-width: 0; }
+.stk-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 0.8rem; align-items: start; }
+.stk-card, .stk-intro { min-width: 0; overflow-wrap: anywhere; }
+.stk-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.6rem; }
+.stk-title { margin: 0; font-size: 1.02rem; }
+.stk-role, .stk-note, .stk-fact { margin: 0.3rem 0; font-size: 0.88rem; color: var(--muted); }
+.stk-fact { color: var(--ink); }
+.stk-warn { color: var(--warn); }
+.stk-sub { margin: 0.8rem 0 0.3rem; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+.stk-empty { margin: 0.6rem 0; padding: 0.6rem 0.75rem; border: 1px dashed var(--line); border-radius: 10px; color: var(--muted); font-size: 0.88rem; }
+.stk-mono { font-family: var(--mono); font-size: 0.74rem; color: var(--muted); display: block; margin: 0; }
+.stk-num { font-variant-numeric: tabular-nums; }
+
+.stk-badge { flex: none; font-size: 0.66rem; font-weight: 700; letter-spacing: 0.08em; padding: 0.15rem 0.5rem; border-radius: 999px; border: 1px solid var(--line); }
+.stk-badge--live { background: var(--ok-soft); color: var(--ok); border-color: var(--live-border); }
+.stk-badge--replay { background: var(--cached-bg); color: var(--cached-ink); }
+.stk-badge--sample { background: var(--sample-bg); color: var(--warn); border-color: var(--sample-border); }
+.stk-badge--none { background: var(--bg-sunken); color: var(--muted); }
+
+/* flow: nodes joined by a wire with travelling dots */
+.stk-flow, .stk-zflow { display: flex; align-items: center; gap: 0.4rem; margin: 0.6rem 0; flex-wrap: wrap; }
+.stk-zflow { flex-direction: column; align-items: stretch; }
+.stk-node { padding: 0.3rem 0.6rem; border: 1px solid var(--line); border-radius: 10px; background: var(--bg-sunken); font-size: 0.82rem; text-align: center; }
+.stk-node--accent, .stk-node--zet { background: var(--zetaris-bg); border-color: var(--zetaris-border); color: var(--zetaris-ink); }
+.stk-node--accent { background: var(--brand-soft); border-color: var(--brand-border); color: var(--brand-ink); }
+:root[data-theme="dark"] .stk-node--accent { color: var(--ink); }
+.stk-node--src { opacity: 0.5; }
+.stk-node.is-lit, .stk-node--src.is-lit { opacity: 1; box-shadow: 0 0 0 2px var(--brand-border); }
+.stk-srcs { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 0.4rem; }
+.stk-wire { position: relative; flex: 1 1 40px; min-width: 40px; height: 2px; background: var(--line); }
+.stk-wire:not(.stk-wire--on) i { display: none; }
+.stk-wire i { position: absolute; top: -2px; left: 0; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: stk-run 2.4s linear infinite; }
+.stk-wire i:nth-child(2) { animation-delay: 0.8s; }
+.stk-wire i:nth-child(3) { animation-delay: 1.6s; }
+.stk-wire--v { flex: none; align-self: center; width: 2px; height: 26px; min-width: 0; }
+.stk-wire--v i { left: -2px; top: 0; animation-name: stk-down; }
+@keyframes stk-run { from { left: 0; opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } to { left: calc(100% - 6px); opacity: 0; } }
+@keyframes stk-down { from { top: 0; opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } to { top: calc(100% - 6px); opacity: 0; } }
+
+.stk-lanes { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: 0.6rem; }
+.stk-lane { border: 1px solid var(--line); border-radius: 12px; padding: 0.6rem 0.7rem; background: var(--bg); min-width: 0; }
+.stk-lane-h { margin: 0; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+.stk-model { margin: 0.2rem 0 0; font-weight: 600; }
+.stk-kv { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.4rem 0.8rem; margin: 0.5rem 0 0; }
+.stk-kv--3 { grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); }
+.stk-kv dt { font-size: 0.72rem; color: var(--muted); }
+.stk-kv dd { margin: 0; font-size: 1.05rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+/* agent pool */
+.stk-steps { list-style: none; margin: 0.6rem 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.45rem; }
+.stk-step { display: flex; gap: 0.5rem; align-items: flex-start; padding: 0.45rem 0.55rem; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); opacity: 0.55; transition: opacity 0.3s, border-color 0.3s, background 0.3s; min-width: 0; }
+.stk-step--done { opacity: 1; border-color: var(--live-border); }
+.stk-step--active { opacity: 1; border-color: var(--accent); background: var(--accent-soft); animation: stk-pulse 1.2s ease-in-out infinite; }
+.stk-dot { flex: none; width: 1.4rem; height: 1.4rem; border-radius: 50%; display: grid; place-items: center; font-size: 0.74rem; background: var(--bg-sunken); color: var(--muted); }
+.stk-step--done .stk-dot { background: var(--ok-soft); color: var(--ok); }
+.stk-step--active .stk-dot { background: var(--accent); color: var(--on-brand); }
+.stk-step-body { display: grid; min-width: 0; font-size: 0.84rem; }
+.stk-loops { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.4rem 0; }
+.stk-chip { font-size: 0.76rem; padding: 0.15rem 0.55rem; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); }
+.stk-chip--on { color: var(--ink); border-color: var(--accent); background: var(--accent-soft); }
+.stk-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin: 0.4rem 0; }
+.stk-scrub { flex: 1 1 120px; min-width: 0; }
+.stk-scrub input { width: 100%; }
+.stk-speeds { display: inline-flex; gap: 0.25rem; }
+.stk-btn { font: inherit; font-size: 0.84rem; padding: 0.3rem 0.8rem; border-radius: 8px; border: 1px solid var(--line); background: var(--bg-raised); color: var(--ink); cursor: pointer; min-height: 32px; }
+.stk-btn--sm { padding: 0.3rem 0.5rem; }
+.stk-btn[aria-pressed="true"] { background: var(--accent); color: var(--on-brand); border-color: var(--accent); }
+.stk-btn:focus-visible, .stk-scrub input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@keyframes stk-pulse { 50% { box-shadow: 0 0 0 4px var(--accent-soft); } }
+
+/* zetaris table */
+.stk-table-wrap { overflow: auto; max-width: 100%; max-height: 16rem; }
+.stk-table { border-collapse: collapse; width: 100%; font-size: 0.82rem; }
+.stk-table th, .stk-table td { text-align: left; padding: 0.25rem 0.5rem 0.25rem 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+.stk-table th { color: var(--muted); font-weight: 600; }
+
+/* engines */
+.stk-recall { margin: 0; padding: 0; list-style: none; display: grid; gap: 0.35rem; font-size: 0.84rem; }
+.stk-recall li { padding: 0.35rem 0.55rem; border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 6px; animation: stk-pulse 2.4s ease-in-out infinite; }
+.stk-loop { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.35rem; font-size: 0.8rem; }
+.stk-loop li { padding: 0.2rem 0.55rem; border: 1px solid var(--line); border-radius: 999px; }
+.stk-loop li.is-gate { border-color: var(--warn); color: var(--warn); font-weight: 600; }
+
+/* cache + limits */
+.stk-cache { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; }
+.stk-cache .stk-kv { flex: 1 1 160px; margin: 0; }
+.stk-ring-bg { fill: none; stroke: var(--bg-sunken); stroke-width: 10; }
+.stk-ring { fill: none; stroke: var(--accent); stroke-width: 10; stroke-linecap: round; animation: stk-ring 1.2s ease-out; }
+.stk-ring-t { fill: var(--ink); font-size: 18px; font-weight: 700; }
+@keyframes stk-ring { from { stroke-dasharray: 0 400; } }
+.stk-slots { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.6rem 0 0.3rem; }
+.stk-slot { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--line); background: var(--bg-sunken); }
+.stk-slot.is-on { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 8px var(--accent); animation: stk-pulse 1.4s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .stk-wire i, .stk-step--active, .stk-recall li, .stk-ring, .stk-slot.is-on { animation: none; }
+  .stk-wire i { left: 50%; opacity: 1; }
+  .stk-wire--v i { left: -2px; top: 50%; }
+  .stk-step { transition: none; }
+}

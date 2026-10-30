@@ -27,6 +27,12 @@ URL = "https://api.tavily.com/search"
 LABEL = "Web context, not an official warning"
 TTL_S = 900.0
 MIN_GAP_S = 1.0  # per-process rate guard: at most one live call a second
+# Social posts came back as "news" for a Paiporta question (two of three results
+# were Facebook). They are not evidence a reviewer can weigh, so they are not asked for.
+EXCLUDE_DOMAINS = [
+    "facebook.com", "instagram.com", "x.com", "twitter.com", "tiktok.com",
+    "youtube.com", "reddit.com", "threads.net", "linkedin.com", "pinterest.com",
+]
 _lock = threading.Lock()
 _cache: dict[tuple[str, str], tuple[float, list[dict]]] = {}
 _last_call = 0.0
@@ -76,6 +82,7 @@ def search(place: str, *, transport: httpx.BaseTransport | None = None) -> WebRe
                     "time_range": "week",
                     "max_results": 3,
                     "search_depth": "basic",
+                    "exclude_domains": EXCLUDE_DOMAINS,
                 },
             )
         if r.status_code != 200:

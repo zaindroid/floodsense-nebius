@@ -58,6 +58,9 @@ export type ModelId =
   | "nvidia/nemotron-3.5-lightning-30b-a3b"
   | "nvidia/Nemotron-3.5-Super-VL"
   | "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B"
+  | "nvidia/Nemotron-3_5-Lightning"
+  | "nvidia/Nemotron-3-Ultra-550b-a55b"
+  | "nvidia/nemotron-3-super-120b-a12b"
   | "deterministic";
 
 export interface Locator {

@@ -44,10 +44,10 @@ class Settings:
     model_fast: str = _env("MODEL_FAST", "meterless/fast")
     model_deep: str = _env("MODEL_DEEP", "meterless/deep")
     # Nebius Token Factory (LLM_BACKEND=nebius): see NebiusClient in nightshift.py
-    llm_backend: str = _env("LLM_BACKEND", "nightshift")  # nightshift | nebius
+    llm_backend: str = _env("LLM_BACKEND", "nebius")  # nebius (default) | nightshift
     nebius_api_key: str = _env("NEBIUS_API_KEY", "") or ""
     nebius_base_url: str = _env("NEBIUS_BASE_URL", "https://api.tokenfactory.nebius.com/v1")
-    nebius_model_fast: str = _env("NEBIUS_MODEL_FAST", "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B")
+    nebius_model_fast: str = _env("NEBIUS_MODEL_FAST", "nvidia/Nemotron-3_5-Lightning")
     nebius_model_deep: str = _env("NEBIUS_MODEL_DEEP", "nvidia/Nemotron-3.5-Super-VL")
     llm_timeout_s: float = float(_env("LLM_TIMEOUT_S", "180"))
     # Attempts per call for transient errors (5xx, connection, bad JSON body).

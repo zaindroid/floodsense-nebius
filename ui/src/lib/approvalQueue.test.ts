@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { adoptPastRuns, approvalHeader, buildQueue, completedFullRuns, curateQueue, earlierText, isSmallTalk, pickSelection, preferJudgePass, queueRowLine, readHidden, utcStamp, writeHidden } from "./approvalQueue";
+import { adoptPastRuns, approvalHeader, buildQueue, eventLabel, completedFullRuns, curateQueue, earlierText, isSmallTalk, pickSelection, preferJudgePass, queueRowLine, readHidden, utcStamp, writeHidden } from "./approvalQueue";
+
+import type { RecordedRun } from "../api/replay";
+import { loadNewestRun } from "../components/CausalChainHeader";
+import realPast from "../fixtures/runs_past_real.json";
 
 const PAST = {
   runs: [
@@ -89,7 +93,7 @@ describe("Approvals header", () => {
       { label: "Live run", value: "new" },
       { label: "Started", value: "27 Oct 2026, 10:30 UTC" },
       { label: "Lane", value: "Full investigation" },
-      { label: "Model", value: "Nemotron 3.5 Lightning 30B via Nightshift" },
+      { label: "Model", value: "Nemotron 3.5 Lightning 30B" },
       { label: "Judge", value: "0.91 · passes" },
       { label: "Event", value: "Live" },
     ]);
@@ -220,5 +224,57 @@ describe("Review run choice", () => {
     expect(preferJudgePass(c, { a: true, b: true })?.runId).toBe("a");
     expect(preferJudgePass(c, { a: false, b: false })?.runId).toBe("a");
     expect(preferJudgePass([], {})).toBeNull();
+  });
+});
+
+describe("event label, Valencia scope, newest run", () => {
+  const rows = adoptPastRuns({
+    runs: [
+      { run_id: "val", status: "awaiting_approval", event_id: "EMSR773", mode: "event", lane: "full", question: "Valencia sites?", created_at: "2026-10-30T00:18:24Z" },
+      { run_id: "liv", status: "awaiting_approval", event_id: "EMSR773", mode: "live", lane: "full", question: "Any point at risk?", created_at: "2026-10-30T00:10:00Z" },
+    ],
+  });
+  it("labels a live-data run Live even when it carries EMSR773", () => {
+    expect(eventLabel("EMSR773", "live")).toBe("Live");
+    expect(eventLabel("EMSR773", "event")).toBe("Valencia 2024");
+    expect(queueRowLine(rows[1])).toContain("Live");
+    expect(queueRowLine(rows[1])).not.toContain("Valencia");
+    expect(approvalHeader({ runId: "liv", row: rows[1], modelIds: [], judgeScore: 1, judgePasses: true, eventId: "EMSR773" }).facts).toContainEqual({ label: "Event", value: "Live" });
+  });
+  it("Past Valencia keeps the EMSR773 event run, Live keeps the live one", () => {
+    const base = buildQueue(rows, null, []);
+    const counts = { val: { outbound: 2, total: 3 }, liv: { outbound: 1, total: 1 } };
+    const past = curateQueue(base, { mode: "past", eventId: "EMSR773", hidden: new Set(), showHidden: false, actionCounts: counts });
+    expect(past.rows.map((r) => r.runId)).toEqual(["val"]);
+    const live = curateQueue(base, { mode: "live", eventId: "EMSR773", hidden: new Set(), showHidden: false, actionCounts: counts });
+    expect(live.rows.map((r) => r.runId)).toEqual(["liv"]);
+  });
+  it("picks the newest completed full run for the event", () => {
+    expect(completedFullRuns(rows, "past", "EMSR773").map((r) => r.runId)).toEqual(["val", "liv"]);
+  });
+  it("real /runs/past payload: newest by created_at, not list order, null judge ok", () => {
+    const real = adoptPastRuns(realPast);
+    // f1673 is listed first but is the 26 Oct recording; skip it. Live: newest of the rest, any event.
+    const live = completedFullRuns(real, "live", "EMSR773", "f16733274f1c").map((r) => r.runId);
+    expect(live[0]).toBe("2b613166f0f5");
+    expect(live).not.toContain("f16733274f1c");
+    // Shuffled input gives the same answer.
+    expect(completedFullRuns([...real].reverse(), "live", "EMSR773", "f16733274f1c")[0].runId).toBe("2b613166f0f5");
+    // Past Valencia prefers EMSR773 over the equally new EMSR517 run; Past Ahr prefers EMSR517.
+    expect(completedFullRuns(real, "past", "EMSR773", "f16733274f1c")[0].runId).toBe("2b613166f0f5");
+    expect(completedFullRuns(real, "past", "EMSR517", "f16733274f1c")[0].runId).toBe("438fbad8e8e2");
+    // Answered forecast runs are never offered.
+    expect(live).not.toContain("40e0b5838c31");
+  });
+  it("loadNewestRun: an aborted first fetch retries the next candidate; all failing is reported, not hidden", async () => {
+    const real = adoptPastRuns(realPast);
+    const ok = (id: string) => ({ runId: id }) as unknown as RecordedRun;
+    const tried: string[] = [];
+    const got = await loadNewestRun(real, "live", "EMSR773", async (id) => (tried.push(id), tried.length === 1 ? null : ok(id)));
+    expect(tried.length).toBe(2);
+    expect(got.run?.runId).toBe(tried[1]);
+    const none = await loadNewestRun(real, "live", "EMSR773", async () => null);
+    expect(none).toEqual({ run: null, failedId: expect.any(String) });
+    expect(await loadNewestRun([], "live", "EMSR773", async () => null)).toEqual({ run: null, failedId: null });
   });
 });

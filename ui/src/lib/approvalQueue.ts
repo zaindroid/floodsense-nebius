@@ -185,8 +185,6 @@ export function approvalHeader(input: {
   runId: string | null;
   row: QueueRow | null;
   modelIds: readonly string[];
-  /** Backend that served those models, from the run's trace. */
-  provider?: string | null;
   judgeScore: number | null;
   judgePasses: boolean | null;
   eventId?: string | null;
@@ -210,7 +208,7 @@ export function approvalHeader(input: {
   }
   const started = utcStamp(input.row?.createdAt);
   const lane = input.row?.lane ? (LANE_TEXT[input.row.lane] ?? input.row.lane) : null;
-  const model = runModelLine(input.modelIds, input.provider);
+  const model = runModelLine(input.modelIds);
   const eventId = input.eventId ?? input.row?.eventId ?? null;
   const facts: HeaderFact[] = [
     { label: "Live run", value: input.runId },
@@ -219,7 +217,8 @@ export function approvalHeader(input: {
     { label: "Model", value: model ?? "rules only (no model call recorded)" },
     { label: "Judge", value: judge },
   ];
-  if (eventId) facts.push({ label: "Event", value: eventLabel(eventId) });
+  // A live-data run carries whichever event the console had selected; it is a live forecast, not that event's replay.
+  if (eventId) facts.push({ label: "Event", value: eventLabel(eventId, input.row?.mode) });
   const missing = [!started && "start time", !lane && "lane"].filter(Boolean);
   return {
     title: `Live run ${input.runId}`,
@@ -232,7 +231,8 @@ export function approvalHeader(input: {
 const EVENT_LABELS: Record<string, string> = { EMSR517: "Ahr 2021", EMSR773: "Valencia 2024", "LIVE-EU": "Live" };
 
 /** Plain event name for a run: "Ahr 2021", "Valencia 2024", "Live"; an unknown id is shown as given. */
-export function eventLabel(eventId: string | null | undefined): string {
+export function eventLabel(eventId: string | null | undefined, mode?: string | null): string {
+  if (mode === "live") return "Live";
   if (!eventId) return "";
   return EVENT_LABELS[eventId] ?? eventId;
 }
@@ -249,7 +249,7 @@ export function queueRowLine(row: QueueRow): string {
   const parts = [
     row.state === "running" ? "Agents working" : null,
     row.internalOnly ? "Internal notes" : null,
-    (row.mode === "live" ? "Live" : eventLabel(row.eventId)) || null,
+    eventLabel(row.eventId, row.mode) || null,
     hhmmUtc(row.createdAt),
     row.judgeOverall !== null ? `Judge ${row.judgeOverall.toFixed(2)}` : null,
   ];
@@ -359,12 +359,17 @@ export function writeHidden(storage: Pick<Storage, "setItem"> | null, ids: Reado
 }
 
 /** Pure: finished full-lane runs for the mode's event (Live: live-data runs), newest first, from the /runs/past rows. */
-export function completedFullRuns(rows: readonly QueueRow[], mode: "live" | "past", eventId: string): QueueRow[] {
-  const done = rows.filter((r) => {
-    if (r.lane !== "full" || isSmallTalk(r.question) || r.state === "running" || r.status === "out_of_scope" || r.status === "running") return false;
-    return mode === "live" ? r.mode === "live" || r.eventId === "LIVE-EU" : r.eventId === eventId && r.mode !== "live";
-  });
-  return [...done].sort((a, b) => t(b.createdAt) - t(a.createdAt));
+export function completedFullRuns(rows: readonly QueueRow[], mode: "live" | "past", eventId: string, skipId?: string): QueueRow[] {
+  // awaiting_approval or approved only; newest by created_at (list order is not trusted). Live: any event.
+  // Past flood: the chosen event's runs first, then the rest, so a real run is always shown when one exists.
+  const done = rows.filter(
+    (r) => r.lane === "full" && !isSmallTalk(r.question) && (r.status === "awaiting_approval" || r.status === "approved") && r.runId !== skipId,
+  );
+  // Equal start times: the current event's run first.
+  const byNewest = (a: QueueRow, b: QueueRow) => t(b.createdAt) - t(a.createdAt) || Number(b.eventId === eventId) - Number(a.eventId === eventId);
+  if (mode === "live") return [...done].sort(byNewest);
+  const own = (r: QueueRow) => r.eventId === eventId && r.mode !== "live";
+  return [...done.filter(own).sort(byNewest), ...done.filter((r) => !own(r)).sort(byNewest)];
 }
 
 /**

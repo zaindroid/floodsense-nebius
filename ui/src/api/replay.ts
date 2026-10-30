@@ -47,6 +47,34 @@ export interface ReplayJudgeClaim {
   modelId: string | null;
 }
 
+export interface RunUsage {
+  models: { lane: string; modelId: string; calls: number; totalTokens: number }[];
+  calls: number;
+  totalTokens: number;
+  avgLatencyMs: number | null;
+  costUsd: number | null;
+  priceNote: string;
+}
+
+/** Per-run token meter; null when the run carries none. calls may be 0 (a deterministic run). */
+export function parseRunUsage(v: unknown): RunUsage | null {
+  const u = rec(v);
+  const total = rec(u?.total);
+  if (!u || !total || !Array.isArray(u.models) || num(total.calls) === null) return null;
+  return {
+    models: u.models.flatMap((raw) => {
+      const m = rec(raw);
+      const modelId = m && str(m.model_id);
+      return m && modelId ? [{ lane: str(m.lane) ?? "?", modelId, calls: num(m.calls) ?? 0, totalTokens: num(m.total_tokens) ?? 0 }] : [];
+    }),
+    calls: num(total.calls) ?? 0,
+    totalTokens: num(total.total_tokens) ?? 0,
+    avgLatencyMs: num(total.avg_latency_ms),
+    costUsd: num(u.cost_usd),
+    priceNote: str(u.price_note) ?? "price not configured",
+  };
+}
+
 /** A recorded agent run, read from GET /runs/{id}/replay. Always a replay, never live. */
 export interface RecordedRun {
   runId: string;
@@ -62,6 +90,8 @@ export interface RecordedRun {
   status: string | null;
   threadId: string | null;
   modelIds: string[];
+  /** Per-run token meter (run.usage); null/absent for old fixtures and cached or replayed answers. */
+  usage?: RunUsage | null;
   /** The agents' effective mode (body.mode.mode): live reads hazard_now, event replays the event window. */
   mode: "live" | "event" | null;
   eventId: string | null;
@@ -179,6 +209,7 @@ export function adoptRunBody(run: Record<string, unknown>, runId: string): Recor
     servedFrom: served,
     status: str(run.status),
     threadId: str(run.thread_id),
+    usage: parseRunUsage(run.usage),
     modelIds: Array.isArray(run.model_ids) ? run.model_ids.filter((m): m is string => typeof m === "string") : [],
     mode: modeOf(run.mode),
     eventId: str(run.event_id),

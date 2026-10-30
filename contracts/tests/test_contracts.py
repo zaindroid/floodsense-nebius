@@ -206,7 +206,7 @@ class ContractTests(unittest.TestCase):
             Judge.model_validate(auto)
 
         discontinued = deepcopy(judge)
-        discontinued["claims"][0]["model_id"] = "nvidia/nemotron-3-super-120b-a12b"
+        discontinued["claims"][0]["model_id"] = "nvidia/not-a-real-model"
         assert_invalid(self, "judge", discontinued)
         with self.assertRaises(PydanticError):
             Judge.model_validate(discontinued)
@@ -229,6 +229,9 @@ class ContractTests(unittest.TestCase):
             "nvidia/nemotron-3.5-lightning-30b-a3b",
             "nvidia/Nemotron-3.5-Super-VL",
             "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+            "nvidia/Nemotron-3_5-Lightning",
+            "nvidia/Nemotron-3-Ultra-550b-a55b",
+            "nvidia/nemotron-3-super-120b-a12b",
             "deterministic",
         ]
         self.assertEqual(DEFS["judge_claim"]["properties"]["model_id"]["enum"], enum)
@@ -236,7 +239,6 @@ class ContractTests(unittest.TestCase):
         typescript = (CONTRACTS / "typescript" / "index.ts").read_text(encoding="utf-8")
         for model_id in enum:
             self.assertIn(f'"{model_id}"', typescript)
-        self.assertNotIn("nvidia/nemotron-3-super-120b-a12b", typescript)
         self.assertEqual(
             DEFS["answer_fields"]["properties"]["served_from"]["enum"],
             ["live", "cache", "replay"],

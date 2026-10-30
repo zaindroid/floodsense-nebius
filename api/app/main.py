@@ -59,7 +59,6 @@ import hmac
 import json
 import os
 import re
-import threading
 import time
 from typing import Any
 
@@ -83,7 +82,7 @@ from app.metrics import counters
 from app.ratelimit import RateLimiter, TokenBuckets
 from app.platform_status import build_platform_status
 from app.system import build_system
-from app.views_cache import ViewsCache, WARM_VIEWS
+from app.views_cache import ViewsCache
 
 AGENTS_URL = os.environ.get("AGENTS_URL", "http://127.0.0.1:8100").rstrip("/")
 UI_ORIGINS = [
@@ -689,20 +688,43 @@ async def get_view(name: str, event_id: str | None = None, source: str | None = 
     )
 
 
-def _fetch_view_sync(name: str) -> tuple[int, str, str, dict[str, str]]:
-    r = httpx.get(f"{AGENTS_URL}/views/{name}", timeout=TIMEOUT)
-    headers = {k: v for k, v in r.headers.items() if k.lower().startswith("x-")}
-    return r.status_code, r.text, r.headers.get("content-type", "application/json"), headers
+def _prewarm_interval_s() -> float:
+    """VIEWS_PREWARM_INTERVAL_S: default 120, floor 30, 0 disables the refresh loop (not the first fill)."""
+    try:
+        v = float(os.environ.get("VIEWS_PREWARM_INTERVAL_S", "120"))
+    except ValueError:
+        return 120.0
+    return 0.0 if v <= 0 else max(30.0, v)
+
+
+def _view_upstream(name: str):
+    async def upstream() -> tuple[int, str, str, dict[str, str]]:
+        r = await _agents_request("GET", f"/views/{name}")
+        headers = {k: v for k, v in r.headers.items() if k.lower().startswith("x-")}
+        return r.status_code, r.content.decode("utf-8", errors="replace"), r.headers.get(
+            "content-type", "application/json"
+        ), headers
+
+    return upstream
+
+
+_prewarm_task: asyncio.Task | None = None
 
 
 @app.on_event("startup")
-def _warm_views() -> None:
-    """Fill the views cache in the background: one call per live view, 5 s apart. /health never waits."""
+async def _warm_views() -> None:
+    """Fill, then refresh, the views cache in a background task. /health never waits."""
+    global _prewarm_task
     if os.environ.get("VIEWS_CACHE_WARM", "1").strip().lower() in ("0", "false", "no", "off"):
         return
-    threading.Thread(
-        target=views_cache.warm, args=(_fetch_view_sync, WARM_VIEWS), name="views-warm", daemon=True
-    ).start()
+    _prewarm_task = asyncio.create_task(views_cache.prewarm(_view_upstream, _prewarm_interval_s()))
+
+
+@app.on_event("shutdown")
+async def _stop_prewarm() -> None:
+    if _prewarm_task is not None:
+        _prewarm_task.cancel()
+        await asyncio.gather(_prewarm_task, return_exceptions=True)
 
 
 @app.get("/runs/{run_id}")

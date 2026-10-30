@@ -184,9 +184,12 @@
             "nvidia/nemotron-3.5-lightning-30b-a3b",
             "nvidia/Nemotron-3.5-Super-VL",
             "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+            "nvidia/Nemotron-3_5-Lightning",
+            "nvidia/Nemotron-3-Ultra-550b-a55b",
+            "nvidia/nemotron-3-super-120b-a12b",
             "deterministic"
           ],
-          "description": "Id the graph recorded. The contract names are the routing modes meterless/fast and meterless/deep. A reply that carries a grounding may instead name the model that answered. deterministic means the Judge did not call a model, or the reply did not parse or had no grounding: the score stays deterministic and does not keep a returned model id. Not meterless/auto. The discontinued nvidia/nemotron-3-super-120b-a12b id is not accepted. Which model answers a routing name today is the table at the top of docs/architecture/c4.md."
+          "description": "Id the graph recorded. The contract names are the routing modes meterless/fast and meterless/deep. A reply that carries a grounding may instead name the model that answered. deterministic means the Judge did not call a model, or the reply did not parse or had no grounding: the score stays deterministic and does not keep a returned model id. Not meterless/auto. Unknown ids are not accepted. Which model answers a routing name today is the table at the top of docs/architecture/c4.md."
         }
       }
     },

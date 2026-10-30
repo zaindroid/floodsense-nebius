@@ -1,30 +1,28 @@
 import type { RecordedRun } from "../api/replay";
 import type { MemoryUsed } from "./hitl";
-import { MODEL_BACKENDS, providerOf } from "./lanes";
-import { traceProvider } from "./modelChip";
+import { NEBIUS_NAME, providerLabel } from "./lanes";
 import { formatLatency, parseBoard } from "./pipeline";
 
 /**
  * "How this answer was made": four sponsor tiles derived only from fields the run snapshot already carries
  * (trace, claims[].citations, memory_used, judge_summary, lane, router_reason, model_ids, served_from). Nothing is
- * invented: a tile with no evidence says so, a backend is never claimed for a run it did not serve,
+ * invented: a tile with no evidence says so, Nightshift is never claimed for a run without a Nightshift model call,
  * and a cached or recorded answer says it was not run just now.
  */
 
-export type TileId = "zetaris" | "nightshift" | "hmem" | "world" | "tavily";
+export type TileId = "zetaris" | "nightshift" | "tokenfactory" | "hmem" | "world" | "tavily";
 
-export const GLOSSARY: Record<TileId, string> = {
+export const GLOSSARY: Record<TileId | "model", string> = {
+  model: "Language model: the NVIDIA Nemotron models the agents think with (fast and deep lanes). The serving backend is named once it is known.",
   zetaris: "Zetaris: the only SQL path to the data.",
+  tokenfactory:
+    "Nebius Token Factory: the hosted inference service that serves the agents' model calls (fast and deep lanes) with NVIDIA Nemotron models.",
   nightshift:
     "Meterless Nightshift: the gateway that routes the agents' model calls (meterless/fast and meterless/deep) to NVIDIA Nemotron models.",
   hmem: "Meterless H-MEM: remembers approved findings (and clearly labelled demo seeds).",
   world: "Meterless World Model: tracks which hypotheses the evidence still supports.",
   tavily: "Tavily: optional web search. Its snippets are cited web context, not an official warning.",
 };
-
-const TOKEN_FACTORY = "Nebius Token Factory";
-const TOKEN_FACTORY_GLOSSARY =
-  "Nebius Token Factory: the OpenAI-compatible API that serves the agents' fast and deep lanes on NVIDIA Nemotron models.";
 
 export interface TileDetail {
   label: string;
@@ -115,10 +113,10 @@ function zetarisTile(run: RecordedRun): Tile {
 export interface ModelUse {
   id: string;
   name: string;
-  /** "Nightshift", "Nebius Token Factory" or another stated provider; null when the id does not say. */
+  /** "Nightshift" or another stated provider; null when the id does not say. */
   provider: string | null;
-  /** True for a model a lane backend served (Nightshift or Token Factory), false for the test switch. */
-  served: boolean;
+  /** True only for a Nemotron id served through the Nightshift gateway. */
+  nightshift: boolean;
   /** fast / deep, when a trace step that ran this model states it. */
   lanes: string[];
   /** Trace steps that carried this model id (model-assisted steps, not counted calls). */
@@ -126,12 +124,12 @@ export interface ModelUse {
   latencyMs: number;
 }
 
-/** Display name for a Nemotron id, by kind and size when the id has one; anything else as stored. */
+/** Display name for a Nemotron id; the three Nightshift models by size, anything else as stored. */
 export function modelDisplay(id: string): string {
-  const m = /nemotron-([\d._]+)-(super-vl|lightning|ultra|nano|super)(?:-(\d+)b)?/i.exec(id);
+  const m = /nemotron-([\d.]+)-(super-vl|lightning|ultra)-(\d+)b/i.exec(id);
   if (!m) return id.includes("/") ? id.slice(id.lastIndexOf("/") + 1) : id;
   const kind = m[2].toLowerCase() === "super-vl" ? "Super VL" : m[2][0].toUpperCase() + m[2].slice(1).toLowerCase();
-  return `Nemotron ${m[1].replace(/_/g, ".")} ${kind}${m[3] ? ` ${m[3]}B` : ""}`;
+  return `Nemotron ${m[1]} ${kind} ${m[3]}B`;
 }
 
 const llmIds = (modelId: string | null | undefined): string[] =>
@@ -148,8 +146,9 @@ const llmIds = (modelId: string | null | undefined): string[] =>
 export function modelUse(run: Pick<RecordedRun, "trace" | "modelIds" | "provider">): { models: ModelUse[]; steps: number; latencyMs: number } {
   const byId = new Map<string, ModelUse>();
   const make = (id: string, explicit: string | null | undefined): ModelUse => {
-    const provider = providerOf(id, explicit ?? run.provider ?? null);
-    return { id, name: modelDisplay(id), provider, served: MODEL_BACKENDS.has(provider ?? ""), lanes: [], steps: 0, latencyMs: 0 };
+    // Explicit provider only: a recorded run without one is not assumed to be the current backend.
+    const provider = providerLabel(id, explicit ?? run.provider ?? null);
+    return { id, name: modelDisplay(id), provider, nightshift: (provider === null && /nemotron/i.test(id)) || provider === "Nightshift" || provider === NEBIUS_NAME, lanes: [], steps: 0, latencyMs: 0 };
   };
   let steps = 0;
   let latencyMs = 0;
@@ -182,13 +181,39 @@ export const RECORDED_NOTE = "Recorded run: replayed from cache, not run just no
 
 const isRecorded = (run: Pick<RecordedRun, "servedFrom">): boolean => run.servedFrom !== "live";
 
-function nightshiftTile(run: RecordedRun): Tile {
+/** Usage rows from run.usage. Absent usage is only reported when the run made model calls; a deterministic run adds nothing. */
+function usageDetails(run: RecordedRun, hadModelCalls: boolean): { before: TileDetail[]; after: TileDetail[] } {
+  const u = run.usage;
+  if (!u) return { before: hadModelCalls ? [{ label: "Usage", value: "Not recorded for this answer (cached, replayed or older run)" }] : [], after: [] };
+  if (u.calls === 0) return { before: [], after: [{ label: "Usage", value: "No model call in this answer" }] };
+  return {
+    before: [],
+    after: [
+      ...u.models.map((m) => ({ label: `${m.lane} lane · ${m.modelId}`, value: `${plural(m.calls, "call")} · ${m.totalTokens} tokens` })),
+      { label: "This run", value: `${plural(u.calls, "model call")} · ${u.totalTokens} tokens${u.avgLatencyMs != null ? ` · avg ${formatLatency(u.avgLatencyMs)}` : ""}` },
+      { label: "Cost", value: u.costUsd == null ? "price not configured" : `$${u.costUsd.toFixed(4)} (${u.priceNote})` },
+    ],
+  };
+}
+
+function nightshiftTile(run: RecordedRun, backend?: string | null): Tile {
+  const t = nightshiftBase(run);
+  const u = usageDetails(run, modelUse(run).models.length > 0);
+  // Keep the "Time in model-assisted steps" row last among the trace rows; unrecorded-usage note goes before it.
+  const i = t.details.findIndex((d) => d.label.startsWith("Time in model"));
+  const details = [...t.details];
+  details.splice(i < 0 ? details.length : i, 0, ...u.before);
+  details.push(...u.after);
+  // Named after the current backend; neutral until /platform/status is known.
+  if (backend === "nebius") return { ...t, name: NEBIUS_NAME, glossary: GLOSSARY.tokenfactory, details };
+  if (backend === "nightshift") return { ...t, details };
+  return { ...t, name: "Language model", glossary: GLOSSARY.model, details };
+}
+
+function nightshiftBase(run: RecordedRun): Tile {
   const use = modelUse(run);
   const recorded: TileDetail[] = isRecorded(run) ? [{ label: "Served from", value: RECORDED_NOTE }] : [];
-  const backend = providerOf("", run.provider ?? traceProvider(run.trace));
-  const onTokenFactory = backend === TOKEN_FACTORY || use.models.some((m) => m.provider === TOKEN_FACTORY);
-  const name = onTokenFactory ? TOKEN_FACTORY : "Meterless Nightshift";
-  const glossary = onTokenFactory ? TOKEN_FACTORY_GLOSSARY : GLOSSARY.nightshift;
+  const name = "Meterless Nightshift";
   if (!use.models.length) {
     const total = totalLatency(run);
     const took = total > 0 ? ` in ${formatLatency(total)}` : "";
@@ -197,20 +222,20 @@ function nightshiftTile(run: RecordedRun): Tile {
       name,
       used: false,
       headline: "No model call",
-      glossary,
+      glossary: GLOSSARY.nightshift,
       details: [
         ...recorded,
         { label: "Why", value: `No model call: answered deterministically from Zetaris data — the router chose the cheapest safe path${took}.` },
       ],
     };
   }
-  const served = use.models.filter((m) => m.served);
-  const other = use.models.filter((m) => !m.served);
+  const nightshift = use.models.filter((m) => m.nightshift);
+  const other = use.models.filter((m) => !m.nightshift);
   const stepText = (n: number) => plural(n, "model-assisted step");
   const details: TileDetail[] = [
     ...recorded,
     ...use.models.map((m) => ({
-      label: m.served ? m.name : `${m.name} (test provider)`,
+      label: m.nightshift ? m.name : `${m.name} (test provider)`,
       value:
         [m.lanes.length ? `${m.lanes.join("/")} lane` : null, m.steps > 0 ? stepText(m.steps) : null, m.latencyMs > 0 ? formatLatency(m.latencyMs) : null]
           .filter(Boolean)
@@ -220,14 +245,14 @@ function nightshiftTile(run: RecordedRun): Tile {
   if (use.steps > 0) {
     details.push({ label: "Time in model-assisted steps (includes data queries)", value: `${formatLatency(use.latencyMs)} over ${plural(use.steps, "step")}` });
   }
-  if (!served.length) {
-    details.push({ label: "Provider", value: `These model calls went to the test provider, not to ${onTokenFactory ? "Token Factory" : "Nightshift"}.` });
-    return { id: "nightshift", name, used: false, headline: `Test provider · ${other.map((m) => m.name).join(" + ")}`, glossary, details };
+  if (!nightshift.length) {
+    details.push({ label: "Provider", value: "These model calls went to the test provider, not to Nightshift." });
+    return { id: "nightshift", name, used: false, headline: `Test provider · ${other.map((m) => m.name).join(" + ")}`, glossary: GLOSSARY.nightshift, details };
   }
-  const names = served.map((m) => m.name.replace(/^Nemotron [\d.]+ /, "")).join(" + ");
+  const names = nightshift.map((m) => m.name.replace(/^Nemotron [\d.]+ /, "")).join(" + ");
   const extra = other.length ? ` + test provider ${other.map((m) => m.name).join(", ")}` : "";
   const headline = `${names}${extra}${use.steps > 0 ? ` · ${stepText(use.steps)}` : ""}`;
-  return { id: "nightshift", name, used: true, headline, glossary, details };
+  return { id: "nightshift", name, used: true, headline, glossary: GLOSSARY.nightshift, details };
 }
 
 /* ---------- H-MEM ---------- */
@@ -377,10 +402,10 @@ export function pickRunRow<T extends { runId: string; status: string; eventId: s
 }
 
 /** Pure: everything the TechTrace panel draws. */
-export function buildTechTrace(run: RecordedRun): TechTraceModel {
+export function buildTechTrace(run: RecordedRun, backend?: string | null): TechTraceModel {
   return {
     routerLine: routerLine(run),
     judgeLine: judgeLine(run),
-    tiles: [zetarisTile(run), nightshiftTile(run), hmemTile(run), worldTile(run), tavilyTile(run)],
+    tiles: [zetarisTile(run), nightshiftTile(run, backend), hmemTile(run), worldTile(run), tavilyTile(run)],
   };
 }

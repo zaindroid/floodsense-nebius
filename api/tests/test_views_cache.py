@@ -243,26 +243,96 @@ class ViewsCacheTest(unittest.TestCase):
         self.assertEqual(run(vc.get("eu_watch", {}, up)).cache, "hit")
         self.assertEqual(vc.stats()["backend"], "memory")
 
-    def test_warm_is_serialized_with_gaps_and_skips_fresh(self) -> None:
-        vc = self.make()
-        run(vc.get("eu_watch", {}, Upstream(ok(1))))
-        seen, naps = [], []
 
-        def fetch(name):
-            seen.append(name)
-            if name == "hazard_now":
-                return 429, "x", "text/plain", {}
-            return ok(3)
+class Stop(Exception):
+    pass
 
-        vc.warm(fetch, sleep=naps.append)
-        self.assertNotIn("eu_watch", seen)
-        self.assertEqual(seen[0], "hazard_now")
-        self.assertEqual(len(naps), len(seen) - 1)
-        self.assertTrue(all(n == 5.0 for n in naps))
-        self.assertEqual(run(vc.get("gauge_levels", {}, Upstream(ok(4)))).cache, "hit")
-        self.assertIn("429", vc.stats()["views"]["hazard_now"]["last_upstream_error"]["detail"])
-        self.assertIsNone(vc.stats()["views"]["hazard_now"]["last_ok_at"])
-        self.assertIsNotNone(vc.stats()["views"]["gauge_levels"]["last_ok_at"])
+
+class PrewarmTest(unittest.TestCase):
+    NAMES = ("gauge_levels", "eu_watch")
+
+    def setUp(self) -> None:
+        self.clock = Clock()
+        self.vc = ViewsCache(clock=self.clock)
+        self.calls: list[str] = []
+        self.fail: set[str] = set()
+        self.ticks = 0
+
+    def upstream_for(self, name):
+        async def up():
+            self.calls.append(name)
+            if name in self.fail:
+                raise httpx.ConnectError("down")
+            return ok(len(self.calls))
+
+        return up
+
+    def go(self, interval, ticks, gap=0):
+        async def sleep(s):
+            if s == interval and interval:
+                self.ticks += 1
+                if self.ticks >= ticks:
+                    raise asyncio.CancelledError
+            self.clock.t += s
+
+        async def main():
+            try:
+                await self.vc.prewarm(self.upstream_for, interval, self.NAMES, gap_s=gap, sleep=sleep)
+            except asyncio.CancelledError:
+                pass
+
+        run(main())
+
+    def test_fills_cache_and_tolerates_errors(self) -> None:
+        self.fail.add("eu_watch")
+        self.go(0, 1)
+        self.assertEqual(self.calls, ["gauge_levels", "eu_watch"])
+        served = run(self.vc.get("gauge_levels", None, Upstream(ok(99))))
+        self.assertEqual((served.cache, served.headers["x-query-id"]), ("hit", "q1"))
+
+    def test_refresh_respects_ttl_per_view(self) -> None:
+        self.go(120, 6)  # 720 s: gauge_levels (TTL 120) refreshes, eu_watch (TTL 600) about once
+        self.assertGreater(self.calls.count("gauge_levels"), self.calls.count("eu_watch"))
+        self.assertLessEqual(self.calls.count("eu_watch"), 2)
+
+    def test_backoff_doubles_after_failure_and_failed_refresh_serves_stale(self) -> None:
+        self.go(0, 1)  # fill both
+        q = run(self.vc.get("eu_watch", None, Upstream(ok(99)))).headers["x-query-id"]
+        self.fail.add("eu_watch")
+        self.calls.clear()
+        self.go(30, 12)  # 360 s, eu_watch due at ~570 s so not yet
+        self.assertNotIn("eu_watch", self.calls)
+        self.ticks = 0
+        self.go(30, 40)  # 1200 s more: fails, then backs off 60, 120, 240 s ...
+        n = self.calls.count("eu_watch")
+        self.assertTrue(1 <= n <= 6, n)
+        self.clock.t += 700  # past TTL, upstream still down
+        served = run(self.vc.get("eu_watch", None, self.upstream_for("eu_watch")))
+        self.assertEqual((served.cache, served.headers["x-query-id"]), ("stale", q))
+        self.fail.clear()
+        self.clock.t += 4000
+        self.calls.clear()
+        self.ticks = 0
+        self.go(30, 1)
+        self.assertIn("eu_watch", self.calls)
+
+    def test_cancel_ends_task(self) -> None:
+        async def main():
+            t = asyncio.ensure_future(self.vc.prewarm(self.upstream_for, 3600, self.NAMES, gap_s=0))
+            await asyncio.sleep(0.01)
+            t.cancel()
+            await asyncio.gather(t, return_exceptions=True)
+            return t.cancelled()
+
+        self.assertTrue(run(main()))
+
+    def test_interval_floor_and_disable(self) -> None:
+        for raw, want in (("5", 30.0), ("0", 0.0), ("-1", 0.0), ("300", 300.0), ("x", 120.0)):
+            with mock.patch.dict(os.environ, {"VIEWS_PREWARM_INTERVAL_S": raw}):
+                self.assertEqual(api._prewarm_interval_s(), want)
+        with mock.patch.dict(os.environ, {}, clear=False):
+            os.environ.pop("VIEWS_PREWARM_INTERVAL_S", None)
+            self.assertEqual(api._prewarm_interval_s(), 120.0)
 
 
 class ViewsRouteTest(unittest.TestCase):

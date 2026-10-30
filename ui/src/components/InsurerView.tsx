@@ -8,6 +8,7 @@ import { NowPage } from "./NowPage";
 import { Portfolio } from "./Portfolio";
 import { ControlTower } from "./ControlTower";
 import { HowItWorks } from "./HowItWorks";
+import { StackPage } from "./stack/StackPage";
 import { SystemPanel } from "./SystemPanel";
 import { useConsole } from "../context/ConsoleContext";
 import type { InsurerPage } from "../lib/route";
@@ -49,5 +50,7 @@ export function InsurerView({ page }: { page: InsurerPage }) {
       return <ControlTower />;
     case "how":
       return <HowItWorks />;
+    case "stack":
+      return <StackPage />;
   }
 }

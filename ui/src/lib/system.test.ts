@@ -2,6 +2,7 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import { SystemCards } from "../components/SystemPanel";
+import { setLlmBackend } from "./lanes";
 import { countText, hitRate, laneLabel, liveSummary, modelName, parseSystem, shortUtc } from "./system";
 
 const body = {
@@ -107,7 +108,12 @@ describe("SystemCards", () => {
     expect(out).toContain("1 of 2 live runs in flight");
     expect(out).toContain("Nemotron 3.5 Lightning 30B A3B");
     expect(out).toContain("engines up");
-    expect(out).toContain("<h2>Nightshift</h2>");
+    expect(out).toContain("<h2>Models</h2>"); // backend not known yet: neutral
+    setLlmBackend("nightshift");
+    expect(html(parseSystem(body))).toContain("<h2>Nightshift</h2>");
+    setLlmBackend("nebius");
+    expect(html(parseSystem(body))).toContain("<h2>Nebius Token Factory</h2>");
+    setLlmBackend(null);
     expect(out).not.toContain("Nightshift · nightshift");
     expect(out).toContain("1 of the latest 2 are");
     // Only the summary is live; the "Last checked" line is not.

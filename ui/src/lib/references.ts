@@ -155,6 +155,13 @@ export function isFixtureQueryId(id: string | null): boolean {
  * paragraph, licence, and the Zetaris query id that hydrated it; data shows the view, the query id, and the
  * upstream link (lib/sources.ts). Missing facts are said, not left out silently.
  */
+/** A Zetaris view citation is a data row: no text quote and no link is normal, so one plain line replaces both "missing" notes. */
+export function isStructuredRow(ref: Pick<Reference, "kind" | "quote">): boolean {
+  return ref.kind === "zetaris" && !ref.quote;
+}
+
+export const STRUCTURED_ROW_NOTE = "Structured data row, no text quote.";
+
 export function drawerFields(ref: Reference): DrawerField[] {
   const qid = ref.queryId
     ? isFixtureQueryId(ref.queryId)

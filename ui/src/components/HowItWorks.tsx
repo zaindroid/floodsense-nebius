@@ -1,6 +1,8 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { fetchAgentsConfig } from "../api/config";
 import { fetchSystem } from "../api/system";
+import { useLlmBackend } from "../hooks/useLlmBackend";
+import { llmBoxTitle } from "../lib/lanes";
 import { fetchGaugeLevels } from "../api/gauges";
 import { TechTraceOverview } from "./TechTrace";
 import { useConsole } from "../context/ConsoleContext";
@@ -64,6 +66,7 @@ export function HowItWorks() {
     });
     return () => controller.abort();
   }, []);
+  const backend = useLlmBackend();
   const status = probes ? boxStatuses(probes.config, probes.system, probes.gauge) : null;
   const mode = probes ? feedsMode(probes.config) : null;
   const zetarisNote = probes ? zetarisHealth(probes.system?.viewsCache, probes.gauge).note : null;
@@ -131,7 +134,7 @@ export function HowItWorks() {
           </Box>
           <Box
             id="nightshift"
-            title="Nightshift · NVIDIA Nemotron"
+            title={llmBoxTitle(backend)}
             line="The language model the agents think with: a fast lane for quick steps, a deep lane for checking."
             status={status}
           >

@@ -4,7 +4,7 @@ import { LiveEvidenceView } from "./LiveSources";
 import { useConsole } from "../context/ConsoleContext";
 import { useDismiss } from "../hooks/useDismiss";
 import { numberedCitations, retrievedAt, WEB_LABEL, webCitations } from "../lib/citations";
-import { drawerFields, type Reference } from "../lib/references";
+import { drawerFields, isStructuredRow, STRUCTURED_ROW_NOTE, type Reference } from "../lib/references";
 import { formatCell, formatDay } from "../lib/format";
 import { glofasDischargeNote, pointById, provenanceForSource, rowAt, sourceExplanation } from "../lib/series";
 import type { Answer, Evidence } from "../types/contract";
@@ -254,14 +254,20 @@ export function ReferenceDetail({ source }: { source: Reference }) {
           </div>
         ))}
       </dl>
-      {source.quote ? <blockquote className="ref-quote">“{source.quote}”</blockquote> : <p className="note">No text quote for this source.</p>}
+      {source.quote ? (
+        <blockquote className="ref-quote">“{source.quote}”</blockquote>
+      ) : isStructuredRow(source) ? (
+        <p className="note">{STRUCTURED_ROW_NOTE}</p>
+      ) : (
+        <p className="note">No text quote for this source.</p>
+      )}
       {source.attribution && <p className="note">{source.attribution}</p>}
       {source.link ? (
         <p>
           <SafeLink href={source.link.href}>{source.link.label} ↗</SafeLink>
         </p>
       ) : (
-        <p className="note">No source link was recorded for this citation.</p>
+        !isStructuredRow(source) && <p className="note">No source link was recorded for this citation.</p>
       )}
     </section>
   );

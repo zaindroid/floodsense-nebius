@@ -53,8 +53,8 @@ describe("buildPipeline", () => {
     const badges = (id: string) => model.nodes.find((n) => n.id === id)!.badges.map((b) => b.text);
     expect(badges("watchers")).toEqual(["Zetaris · 3 queryIds"]);
     expect(badges("memory")).toEqual(["H-MEM recall · 3"]);
-    // Shared provider rule: a Nemotron id is Nightshift.
-    expect(badges("skeptic")).toContain("Nightshift · answered by Nemotron 3.5 Lightning 30B A3B");
+    // A recorded run with no provider stays neutral: the model, no provider guessed.
+    expect(badges("skeptic")).toContain("answered by Nemotron 3.5 Lightning 30B A3B");
     expect(badges("skeptic").some((t) => t.startsWith("World Model · H1 not_supported"))).toBe(true);
     expect(badges("investigator")).toContain("pgvector + Zetaris JDBC");
     expect(badges("scope")).toEqual([]);
@@ -78,7 +78,7 @@ describe("buildPipeline", () => {
         "x",
       )!;
     const text = (r: ReturnType<typeof body>) => buildPipeline(r).nodes.find((n) => n.id === "skeptic")!.badges[0].text;
-    expect(text(body({}))).toMatch(/^Nightshift · /);
+    expect(text(body({}))).not.toMatch(/Nightshift|Nebius/);
     // An explicit provider in the run or trace wins over the id rule.
     expect(text(body({ request: { llm_provider: "openrouter" } }))).toMatch(/^openrouter · /);
     expect(text(body({ request: { llm_provider: "nightshift" } }))).toMatch(/^Nightshift · /);
@@ -243,7 +243,9 @@ describe("replay sources and labels", () => {
     expect(d).toContain("Peak discharge 249.6 m³/s on 14 Jul 2021");
     expect(d).toContain("Crossed the line on 14 Jul 2021 (daily value)");
     expect(causalChainNote({ kind: "bundled" })).toMatch(/Bundled recording/);
-    expect(causalChainNote({ kind: "failed", id: "abc" })).toMatch(/Could not load recorded run abc/);
-    expect(causalChainNote({ kind: "configured", id: "abc" })).toBeNull();
+    expect(causalChainNote({ kind: "failed", id: "abc" })).toMatch(/Could not load run abc/);
+    expect(causalChainNote({ kind: "configured", id: "abc" })).toMatch(/Pinned recording abc/);
+    expect(causalChainNote({ kind: "looking", label: "Valencia 2024" })).toMatch(/Looking for the newest/);
+    expect(causalChainNote({ kind: "none", label: "Valencia 2024" })).toMatch(/^Sample, not a real run/);
   });
 });
