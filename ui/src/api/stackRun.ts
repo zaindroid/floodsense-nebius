@@ -5,7 +5,7 @@ export async function fetchReplayBody(runId: string, signal?: AbortSignal, base 
   try {
     const timeout = AbortSignal.timeout(Math.max(apiTimeoutMs(), 5000));
     const r = await fetch(`${base}/runs/${encodeURIComponent(runId)}/replay`, {
-      credentials: "omit",
+      credentials: "same-origin",
       signal: signal ? AbortSignal.any([signal, timeout]) : timeout,
     });
     return r.ok ? await r.json() : null;

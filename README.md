@@ -4,7 +4,8 @@ The deploy mirror of [FloodSenseEU-Hackathon-Monorepo](https://github.com/GenAI-
 for the Nebius entry, served at **https://floodsense-nebius.zaindroid.me**.
 
 Everything except `serve/` comes from the monorepo's `main` (currently with PR #132, which records the model
-provider on the trace, and PR #131, which fixes Tavily's status and sources). Every model call goes to **NVIDIA Nemotron on Nebius Token
+provider on the trace, PR #131, which fixes Tavily's status and sources, and PR #134, which
+sends the login with API calls). Every model call goes to **NVIDIA Nemotron on Nebius Token
 Factory**; the data comes from Zetaris.
 
 ## Two copies of the same app

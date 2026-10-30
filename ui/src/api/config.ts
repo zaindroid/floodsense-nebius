@@ -23,7 +23,7 @@ export async function fetchAgentsConfig(signal?: AbortSignal): Promise<{ kind: "
   const onAbort = () => ctrl.abort();
   signal?.addEventListener("abort", onAbort);
   try {
-    const r = await fetch(`${apiBaseUrl()}/config`, { signal: ctrl.signal, credentials: "omit" });
+    const r = await fetch(`${apiBaseUrl()}/config`, { signal: ctrl.signal, credentials: "same-origin" });
     return r.ok ? { kind: "ok", body: await r.json() } : { kind: "down" };
   } catch {
     return { kind: "down" };

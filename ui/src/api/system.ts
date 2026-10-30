@@ -14,7 +14,7 @@ export async function fetchSystem(base = apiBaseUrl(), signal?: AbortSignal): Pr
   signal?.addEventListener("abort", onAbort);
   try {
     const response = await fetch(`${base}/system`, {
-      credentials: "omit",
+      credentials: "same-origin",
       cache: "no-store",
       signal: controller.signal,
     });

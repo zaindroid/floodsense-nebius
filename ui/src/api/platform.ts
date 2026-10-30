@@ -91,7 +91,7 @@ export async function fetchPlatformStatus(
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), apiTimeoutMs());
   try {
-    const r = await fetch(`${base}/platform/status`, { credentials: "omit", cache: "no-store", signal: controller.signal });
+    const r = await fetch(`${base}/platform/status`, { credentials: "same-origin", cache: "no-store", signal: controller.signal });
     if (!r.ok) return { status: null, error: `GET /platform/status returned ${r.status}` };
     const status = parsePlatformStatus(await r.json());
     return status ? { status, error: null } : { status: null, error: "GET /platform/status did not return an object" };

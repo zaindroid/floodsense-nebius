@@ -24,7 +24,7 @@ export async function fetchEuWatch(signal?: AbortSignal, fetcher: typeof fetch =
   const onAbort = () => controller.abort();
   signal?.addEventListener("abort", onAbort, { once: true });
   try {
-    const response = await (isDemo() ? (demoFetch as typeof fetch) : fetcher)(`${base}${EU_WATCH_PATH}`, { credentials: "omit", signal: controller.signal });
+    const response = await (isDemo() ? (demoFetch as typeof fetch) : fetcher)(`${base}${EU_WATCH_PATH}`, { credentials: "same-origin", signal: controller.signal });
     const queryId = response.headers?.get?.("x-query-id") ?? null;
     const executedAt = response.headers?.get?.("x-executed-at") ?? null;
     if (!response.ok) return { rows: [], state: "unavailable", detail: `GET ${EU_WATCH_PATH} returned ${response.status}`, queryId };

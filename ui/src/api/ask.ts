@@ -164,7 +164,7 @@ export async function askFloodSense(input: AskInput, signal?: AbortSignal, base 
   try {
     response = await fetch(`${base}/runs`, {
       method: "POST",
-      credentials: "omit",
+      credentials: "same-origin",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(buildRunRequest(input)),
       signal,

@@ -255,7 +255,7 @@ export async function fetchRecordedRun(
 ): Promise<RecordedRun | null> {
   try {
     const response = await fetch(`${base}/runs/${encodeURIComponent(runId)}/replay`, {
-      credentials: "omit",
+      credentials: "same-origin",
       signal: AbortSignal.any([AbortSignal.timeout(Math.max(apiTimeoutMs(), 5000)), ...(signal ? [signal] : [])]),
     });
     if (!response.ok) return null;

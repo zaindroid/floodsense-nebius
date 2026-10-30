@@ -68,7 +68,7 @@ export async function loadAhrRows(event: DisasterEvent, signal?: AbortSignal): P
   if (ahrSourceMode() === "fixture") return ahrFixture();
   try {
     const r = await fetch(replayViewUrl(apiBaseUrl(), "hazard_timeline", event.eventId), {
-      credentials: "omit",
+      credentials: "same-origin",
       signal,
     });
     if (r.ok) {

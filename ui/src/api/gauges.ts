@@ -29,7 +29,7 @@ export async function fetchGaugeLevels(signal?: AbortSignal, fetcher: typeof fet
   const onAbort = () => controller.abort();
   signal?.addEventListener("abort", onAbort, { once: true });
   try {
-    const response = await (isDemo() ? (demoFetch as typeof fetch) : fetcher)(`${base}${GAUGE_LEVELS_PATH}`, { credentials: "omit", signal: controller.signal });
+    const response = await (isDemo() ? (demoFetch as typeof fetch) : fetcher)(`${base}${GAUGE_LEVELS_PATH}`, { credentials: "same-origin", signal: controller.signal });
     const queryId = response.headers?.get?.("x-query-id") ?? null;
     const executedAt = response.headers?.get?.("x-executed-at") ?? null;
     if (!response.ok) return { rows: [], state: "unavailable", detail: `GET ${GAUGE_LEVELS_PATH} returned ${response.status}`, queryId, executedAt };

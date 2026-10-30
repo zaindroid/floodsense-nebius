@@ -8,7 +8,7 @@ export async function fetchPastRuns(limit = 50, signal?: AbortSignal, base = api
   const timeout = AbortSignal.timeout(Math.max(apiTimeoutMs(), 4000));
   try {
     const response = await fetch(`${base}/runs/past?limit=${limit}`, {
-      credentials: "omit",
+      credentials: "same-origin",
       signal: signal && typeof AbortSignal.any === "function" ? AbortSignal.any([signal, timeout]) : timeout,
     });
     if (!response.ok) return { ok: false, detail: `GET /runs/past returned ${response.status}` };

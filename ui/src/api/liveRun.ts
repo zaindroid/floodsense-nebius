@@ -48,7 +48,7 @@ export async function startLiveRun(input: AskInput, signal?: AbortSignal, base =
   try {
     response = await fetch(`${base}/runs?wait=false`, {
       method: "POST",
-      credentials: "omit",
+      credentials: "same-origin",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(buildRunRequest(input)),
       signal,
@@ -72,7 +72,7 @@ export async function fetchRunSnapshot(
   signal?: AbortSignal,
   base = apiBaseUrl(),
 ): Promise<{ status: number; body: Record<string, unknown> | null; run: RecordedRun | null }> {
-  const response = await fetch(`${base}/runs/${encodeURIComponent(runId)}`, { credentials: "omit", signal });
+  const response = await fetch(`${base}/runs/${encodeURIComponent(runId)}`, { credentials: "same-origin", signal });
   let body: Record<string, unknown> | null = null;
   try {
     body = rec(await response.json());
@@ -215,7 +215,7 @@ export async function resolveFinalRun(
 
 /** GET /runs/{id}/approval. 409 when the run is no longer waiting. */
 export async function fetchApproval(runId: string, base = apiBaseUrl()): Promise<{ status: number; body: Record<string, unknown> | null }> {
-  const response = await fetch(`${base}/runs/${encodeURIComponent(runId)}/approval`, { credentials: "omit" });
+  const response = await fetch(`${base}/runs/${encodeURIComponent(runId)}/approval`, { credentials: "same-origin" });
   let body: Record<string, unknown> | null = null;
   try {
     body = rec(await response.json());
@@ -234,7 +234,7 @@ export async function postApproval(
   try {
     response = await fetch(`${base}/runs/${encodeURIComponent(runId)}/approval`, {
       method: "POST",
-      credentials: "omit",
+      credentials: "same-origin",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     });

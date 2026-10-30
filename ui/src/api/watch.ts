@@ -14,7 +14,7 @@ async function call(path: string, init: RequestInit = {}, signal?: AbortSignal):
   const onAbort = () => ctrl.abort();
   signal?.addEventListener("abort", onAbort);
   try {
-    const r = await fetch(`${apiBaseUrl()}${path}`, { ...init, credentials: "omit", cache: "no-store", signal: ctrl.signal });
+    const r = await fetch(`${apiBaseUrl()}${path}`, { ...init, credentials: "same-origin", cache: "no-store", signal: ctrl.signal });
     const retry = Number(r.headers.get("Retry-After"));
     let body: unknown = null;
     try {

@@ -28,7 +28,7 @@ function signalFor(signal: AbortSignal): AbortSignal {
 }
 
 async function getJson(path: string, signal: AbortSignal): Promise<{ body: unknown; headers: Headers }> {
-  const response = await (isDemo() ? demoFetch : fetch)(`${apiBaseUrl()}${path}`, { credentials: "omit", signal: signalFor(signal) });
+  const response = await (isDemo() ? demoFetch : fetch)(`${apiBaseUrl()}${path}`, { credentials: "same-origin", signal: signalFor(signal) });
   if (!response.ok) throw new Error(`GET ${path} returned ${response.status}`);
   return { body: await response.json(), headers: response.headers };
 }

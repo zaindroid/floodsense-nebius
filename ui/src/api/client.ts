@@ -27,7 +27,7 @@ export interface LiveViews {
 async function fetchHealth(base: string): Promise<HealthProbe> {
   try {
     const response = await fetch(`${base}/health`, {
-      credentials: "omit",
+      credentials: "same-origin",
       signal: AbortSignal.timeout(apiTimeoutMs()),
     });
     if (!response.ok) {
@@ -47,7 +47,7 @@ async function fetchJson(base: string, name: ViewName): Promise<{ body: unknown;
   const path = VIEW_PATHS[name];
   try {
     const response = await fetch(`${base}${path}`, {
-      credentials: "omit",
+      credentials: "same-origin",
       signal: AbortSignal.timeout(apiTimeoutMs()),
     });
     if (!response.ok) {
