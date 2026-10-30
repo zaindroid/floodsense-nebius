@@ -5,6 +5,7 @@ import "./styles/global.css";
 import "./styles/agents.css";
 import "./styles/walkthrough.css";
 import "./styles/clarity.css";
+import "./styles/polish.css";
 
 const root = document.getElementById("root");
 if (!root) {

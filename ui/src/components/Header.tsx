@@ -3,6 +3,7 @@ import { useConsole } from "../context/ConsoleContext";
 import { useDismiss } from "../hooks/useDismiss";
 import { headerSubtitle } from "../lib/events";
 import { ModeSwitch } from "./ModeSwitch";
+import { AgentHeartbeat } from "./AgentHeartbeat";
 import { SponsorStrip } from "./SponsorStrip";
 import { useLiveWatch } from "../hooks/useLiveWatch";
 import { plainOf, worstFirst } from "../lib/places";
@@ -155,6 +156,7 @@ export function Header() {
           </div>
         </div>
       </div>
+      <AgentHeartbeat />
       <SponsorStrip />
       <ModeSwitch />
     </header>
