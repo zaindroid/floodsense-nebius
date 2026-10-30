@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { BAND_STYLE, STATUS_STYLE, bandPoint, columnsGeoJson, failMapMode, flatGeoJson, MAP_MODE_KEY, readMapMode, statusPoint, writeMapMode } from "./shellLogic";
+import { BAND_STYLE, STATUS_STYLE, bandPoint, columnsGeoJson, focusBounds, riverFocusIds, failMapMode, flatGeoJson, MAP_MODE_KEY, readMapMode, statusPoint, writeMapMode } from "./shellLogic";
 
 const store = () => {
   const m = new Map<string, string>();
@@ -44,8 +44,8 @@ describe("columns", () => {
   it("drops non-finite positions", () => {
     expect(columnsGeoJson([bandPoint({ ...base, lat: NaN }, "low")], undefined, 0.01).features).toHaveLength(0);
   });
-  it("never uses a red colour, on every actual palette value", () => {
-    const colors = [...Object.values(BAND_STYLE), ...Object.values(STATUS_STYLE)].map((v) => v.color);
+  it("never uses a red colour in the model bands or non-over statuses", () => {
+    const colors = [...Object.values(BAND_STYLE), ...Object.values({ ...STATUS_STYLE, over: BAND_STYLE.peak })].map((v) => v.color);
     expect(colors.length).toBeGreaterThan(7);
     for (const c of colors) {
       const [r, g, b] = [1, 3, 5].map((k) => parseInt(c.slice(k, k + 2), 16)) as [number, number, number];
@@ -54,7 +54,7 @@ describe("columns", () => {
     }
   });
   it("unknown status and missing value get no column, only a labelled flat marker", () => {
-    const pts = [statusPoint(base, "unknown"), bandPoint({ ...base, id: "n" }, null), statusPoint({ ...base, id: "ok" }, "ok")];
+    const pts = [statusPoint(base, "unknown", true), bandPoint({ ...base, id: "n" }, null), statusPoint({ ...base, id: "ok" }, "ok", true)];
     expect(columnsGeoJson(pts, undefined, 0.01).features.map((f) => f.properties.id)).toEqual(["ok"]);
     const flat = flatGeoJson(pts).features;
     expect(flat.map((f) => f.properties.id)).toEqual(["a", "n"]);
@@ -68,5 +68,31 @@ describe("3D failure", () => {
     writeMapMode("3d", s);
     expect(failMapMode(s)).toBe("2d");
     expect(readMapMode(s)).toBe("2d");
+  });
+});
+
+describe("red and focus", () => {
+  it("red only for a measured gauge above MHW", () => {
+    const p = { id: "a", lat: 1, lon: 2, label: "a" };
+    expect(statusPoint(p, "over", true).color).toBe("#c0392b");
+    expect(statusPoint(p, "over", true).alert).toBe(true);
+    expect(statusPoint(p, "over", false).color).toBe(BAND_STYLE.peak.color);
+    expect(statusPoint(p, "over", false).alert).toBeUndefined();
+    for (const s of ["ok", "near", "unknown"] as const) expect(statusPoint(p, s, true).alert).toBeUndefined();
+    expect(Object.values(BAND_STYLE).some((b) => b.color === "#c0392b")).toBe(false);
+  });
+  const pts = [{ id: "a", lat: 50, lon: 7, river: "Rhine" }, { id: "b", lat: 51, lon: 7.5, river: "rhine" }, { id: "c", lat: 48, lon: 2, river: "Seine" }, { id: "d", lat: 40, lon: 0 }];
+  it("riverFocusIds groups by river", () => {
+    expect(riverFocusIds(pts, "a")).toEqual(["a", "b"]);
+    expect(riverFocusIds(pts, "d")).toEqual(["d"]);
+    expect(riverFocusIds(pts, "zz")).toEqual([]);
+    expect(riverFocusIds(pts, null)).toEqual([]);
+  });
+  it("focusBounds fits ids and pads a lone point", () => {
+    expect(focusBounds(pts, ["a", "b"])).toEqual([[50, 7], [51, 7.5]]);
+    const one = focusBounds(pts, ["c"])!;
+    expect(one[1][0] - one[0][0]).toBeCloseTo(0.06);
+    expect(focusBounds(pts, [])).toBeNull();
+    expect(focusBounds(pts, ["nope"])).toBeNull();
   });
 });

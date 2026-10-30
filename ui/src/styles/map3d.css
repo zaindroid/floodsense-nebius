@@ -1,0 +1,35 @@
+/* 3D map: gauge pins that open into an animated dial when zoomed in. Motion is off for reduced-motion users. */
+.gpin { position: relative; width: 0; height: 0; cursor: pointer; }
+.gpin__pin { position: absolute; left: -12px; bottom: 0; width: 24px; height: 34px; filter: drop-shadow(0 3px 3px rgb(0 0 0 / .45)); transform-origin: 50% 100%; animation: gpin-bob 2.6s ease-in-out infinite; }
+.gpin__pulse { position: absolute; left: -14px; top: -14px; width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--c); opacity: 0; animation: gpin-pulse 2.4s ease-out infinite; pointer-events: none; }
+.gpin__pulse--b { animation-delay: 1.2s; }
+.gpin__dial { position: absolute; left: -32px; top: -32px; width: 64px; height: 64px; display: none; filter: drop-shadow(0 4px 6px rgb(0 0 0 / .5)); }
+.gpin__level { transform: translateY(calc(64px - var(--fill) * 56px - 4px)); transition: transform .8s ease; }
+.gpin__wave { animation: gpin-wave 2.2s linear infinite; }
+.gpin__wave--b { animation-duration: 3.4s; animation-direction: reverse; }
+.gpin--unknown .gpin__pin { opacity: .65; animation: none; }
+.gpin--unknown .gpin__pulse { display: none; }
+.gpin--sel .gpin__pin { transform: scale(1.35); }
+.gpin--sel .gpin__dial { transform: scale(1.2); }
+.gpin:focus-visible { outline: none; }
+.gpin:focus-visible .gpin__pin, .gpin:focus-visible .gpin__dial { filter: drop-shadow(0 0 3px #fff) drop-shadow(0 0 6px var(--c)); }
+.map3d--near .gpin__pin, .map3d--near .gpin__pulse { display: none; }
+.map3d--near .gpin__dial { display: block; }
+@keyframes gpin-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+@keyframes gpin-pulse { 0% { transform: scale(.4); opacity: .85; } 100% { transform: scale(2.6); opacity: 0; } }
+@keyframes gpin-wave { to { transform: translateX(32px); } }
+@media (prefers-reduced-motion: reduce) {
+  .gpin__pin, .gpin__pulse, .gpin__wave { animation: none; }
+  .gpin__level { transition: none; }
+}
+
+/* Gauge measured above its MHW is red (model bands never are); the red pin pulses faster. */
+.gpin--over .gpin__pulse { animation-duration: 1.1s; }
+.gpin--over .gpin__pulse--b { animation-delay: .55s; }
+.leaflet-container .map-marker--alert { fill: #c0392b; stroke: #5a0f08; stroke-width: 4; stroke-dasharray: none; }
+.map-legend .map-legend__dot--alert { background: #c0392b; box-shadow: 0 0 0 2px #fff, 0 0 0 3px #5a0f08; }
+.eu-shape.eu-shape--alert.eu-tone--elevated { background: #c0392b; box-shadow: 0 0 0 2px #fff, 0 0 0 3px #5a0f08; }
+@media (prefers-reduced-motion: reduce) { .gpin--over .gpin__pulse { animation: none; } }
+.gpin__bang { position: absolute; left: -5px; top: -30px; width: 10px; text-align: center; font: 700 12px/1 system-ui, sans-serif; color: #fff; text-shadow: 0 0 2px #5a0f08, 0 0 2px #5a0f08; pointer-events: none; }
+.map3d--near .gpin--over .gpin__bang { top: -42px; }
+.map3d--near .gpin--over .gpin__dial { filter: drop-shadow(0 0 1px #fff) drop-shadow(0 0 1px #fff) drop-shadow(0 0 1px #5a0f08) drop-shadow(0 4px 6px rgb(0 0 0 / .5)); }

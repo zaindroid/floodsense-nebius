@@ -8,7 +8,8 @@
     "build": "tsc --noEmit && vite build",
     "lint": "tsc --noEmit",
     "test": "vitest run",
-    "preview": "vite preview --host 0.0.0.0 --port 5173"
+    "preview": "vite preview --host 0.0.0.0 --port 5173",
+    "build:embed": "tsc --noEmit && node scripts/build-embed.mjs"
   },
   "dependencies": {
     "leaflet": "^1.9.4",

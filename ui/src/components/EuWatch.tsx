@@ -5,7 +5,7 @@ import { useConsole } from "../context/ConsoleContext";
 import { EU_WATCH_BOUNDS, sortSources, type SortKey, type WatchSource } from "../lib/euWatch";
 import { escapeHtml, type GaugeStatus } from "../lib/gauges";
 import { MapShell, type Bounds } from "./map/MapShell";
-import { statusPoint } from "./map/shellLogic";
+import { riverFocusIds, statusPoint } from "./map/shellLogic";
 import { basisLabel, statusView } from "../lib/places";
 
 const EU_VIEW: Bounds = [
@@ -32,7 +32,7 @@ function LegendRow({ kind, statuses }: { kind: WatchSource["kind"]; statuses: Ga
         const v = statusView(kind, st);
         return (
           <li key={st}>
-            <span className={`eu-shape eu-shape--${kind} eu-tone--${v.tone}`} aria-hidden="true" />
+            <span className={`eu-shape eu-shape--${kind} eu-tone--${v.tone}${kind === "gauge" && st === "over" ? " eu-shape--alert" : ""}`} aria-hidden="true" />
             {v.word}
           </li>
         );
@@ -42,7 +42,7 @@ function LegendRow({ kind, statuses }: { kind: WatchSource["kind"]; statuses: Ga
 }
 
 /**
- * Legend in three groups, so a gauge band is never read as a model band. Red is used only for a gauge at or
+ * Legend in three groups, so a gauge band is never read as a model band. Red (with a ring) is used only for a live gauge at or
  * above its long-term mean high water; model bands are amber, the Valencia points amber or neutral.
  */
 export function EuWatchLegend() {
@@ -73,17 +73,18 @@ export function EuWatchLegend() {
 
 /** All live-watch sources on one map (2D Leaflet or 3D MapLibre). Clicking a marker pre-fills Ask FloodSense. */
 export function EuWatchMap({ sources }: { sources: WatchSource[] }) {
-  const { openAsk } = useConsole();
+  const { openAsk, placeId } = useConsole();
   const [map, setMap] = useState<L.Map | null>(null);
   const askRef = useRef(openAsk);
   askRef.current = openAsk;
-  const points3d = useMemo(() => sources.map((s) => statusPoint({ id: s.id, lat: s.lat, lon: s.lon, label: `${s.river ? `${s.river} · ${s.name}` : s.name} · ${statusView(s.kind, s.status).word}${s.live ? "" : " · not live (stale or seed)"}` }, s.status)), [sources]);
+  const points3d = useMemo(() => sources.map((s) => statusPoint({ id: s.id, lat: s.lat, lon: s.lon, label: `${s.river ? `${s.river} · ${s.name}` : s.name} · ${statusView(s.kind, s.status).word}${s.live ? "" : " · not live (stale or seed)"}` }, s.status, s.kind === "gauge" && s.live)), [sources]);
+  const focusIds = useMemo(() => riverFocusIds(sources, placeId), [sources, placeId]);
 
   useEffect(() => {
     if (!map) return;
     const layer = L.layerGroup().addTo(map);
     for (const s of sources) {
-      const cls = `map-marker map-marker--${s.status}${s.live ? "" : " map-marker--sample"}`;
+      const cls = `map-marker map-marker--${s.status}${s.live ? "" : " map-marker--sample"}${s.kind === "gauge" && s.live && s.status === "over" ? " map-marker--alert" : ""}`;
       const marker =
         s.kind === "gauge"
           ? L.circleMarker([s.lat, s.lon], { radius: 6, className: cls, bubblingMouseEvents: false })
@@ -113,6 +114,8 @@ export function EuWatchMap({ sources }: { sources: WatchSource[] }) {
       fit={{ bounds: EU_VIEW, padding: 8 }}
       onMap2d={setMap}
       points3d={points3d}
+      selectedId={placeId ?? undefined}
+      focusIds={focusIds}
       onSelect={(id) => {
         const s = sources.find((x) => x.id === id);
         if (s) ask(askRef.current, s);
@@ -147,7 +150,7 @@ export function EuWatchList({ sources }: { sources: WatchSource[] }) {
         {sorted.map((s) => (
           <li key={s.id}>
             <button type="button" className={`eu-row eu-row--${s.status}`} onClick={() => ask(openAsk, s)} title={s.question}>
-              <span className={`eu-shape eu-shape--${s.kind} eu-tone--${statusView(s.kind, s.status).tone}`} aria-hidden="true" />
+              <span className={`eu-shape eu-shape--${s.kind} eu-tone--${statusView(s.kind, s.status).tone}${s.kind === "gauge" && s.live && s.status === "over" ? " eu-shape--alert" : ""}`} aria-hidden="true" />
               <span className="eu-row__place">
                 {s.river ? (
                   <>

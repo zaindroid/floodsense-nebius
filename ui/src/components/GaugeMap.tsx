@@ -16,7 +16,7 @@ const GAUGE_VIEW: Bounds = [
 const LEGEND: { status: GaugeStatus; label: string }[] = [
   { status: "ok", label: "Below MHW" },
   { status: "near", label: "Near MHW" },
-  { status: "over", label: "Above MHW" },
+  { status: "over", label: "Above MHW (red, live only)" },
   { status: "unknown", label: "No threshold" },
 ];
 
@@ -25,7 +25,7 @@ export function MapLegend({ showNotLive }: { showNotLive: boolean }) {
     <ul className="map-legend" aria-label="Map legend">
       {LEGEND.map((item) => (
         <li key={item.status}>
-          <span className={`map-legend__dot map-legend__dot--${item.status}`} aria-hidden="true" />
+          <span className={`map-legend__dot ${item.status === "over" ? "map-legend__dot--alert" : `map-legend__dot--${item.status}`}`} aria-hidden="true" />
           {item.label}
         </li>
       ))}
@@ -60,7 +60,7 @@ export function GaugeMap({ load, gauges }: { load: GaugeState; gauges: GaugeSumm
   const points3d = useMemo(
     () =>
       placed.map((g) =>
-        statusPoint({ id: `${g.station}-${g.water}`, lat: g.lat as number, lon: g.lon as number, label: `${g.station} (${g.water}): ${Math.round(g.levelCm)} cm · ${gaugeBadge(g).text}${g.status === "unknown" ? " · no MHW threshold" : ""}` }, g.status),
+        statusPoint({ id: `${g.station}-${g.water}`, lat: g.lat as number, lon: g.lon as number, label: `${g.station} (${g.water}): ${Math.round(g.levelCm)} cm · ${gaugeBadge(g).text}${g.status === "unknown" ? " · no MHW threshold" : g.status === "over" ? " · above MHW" : ""}` }, g.status, isLiveGauge(g)),
       ),
     [placed],
   );
@@ -72,7 +72,7 @@ export function GaugeMap({ load, gauges }: { load: GaugeState; gauges: GaugeSumm
       const live = isLiveGauge(g);
       const circle = L.circleMarker([g.lat as number, g.lon as number], {
         radius: 7,
-        className: `map-marker map-marker--${g.status}${live ? "" : " map-marker--sample"}`,
+        className: `map-marker map-marker--${g.status}${live ? "" : " map-marker--sample"}${live && g.status === "over" ? " map-marker--alert" : ""}`,
         bubblingMouseEvents: false,
       });
       const tip = `${g.station} (${g.water}): ${Math.round(g.levelCm)} cm · ${formatHour(g.measuredAt)} · ${gaugeBadge(g).text}`;

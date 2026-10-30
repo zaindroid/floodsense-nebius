@@ -47,6 +47,8 @@ export interface ShellPoint {
   label: string;
   rank: number;
   color: string;
+  /** True only for an official measured gauge above its MHW: red, fast pulse. Never set for model bands. */
+  alert?: boolean;
 }
 
 export interface ExtraPoint {
@@ -56,24 +58,56 @@ export interface ExtraPoint {
   lon: number;
 }
 
-/** Amber, never red, for every model band; red is not in this palette at all. */
+/** Amber, never red, for every model band: a model is not an official warning. */
 export const BAND_STYLE: Record<DischargeBand, { rank: number; color: string }> = {
   low: { rank: 0, color: "#3f8f5f" },
   typical: { rank: 1, color: "#d9b44a" },
   elevated: { rank: 2, color: "#d98a1f" },
   peak: { rank: 3, color: "#a85d00" },
 };
+/** Red is reserved for a gauge measured above its MHW (official measured status). */
+export const OVER_RED = "#c0392b";
 export const STATUS_STYLE: Record<GaugeStatus, { rank: number; color: string }> = {
   ok: { rank: 0, color: "#3f8f5f" },
   near: { rank: 1, color: "#d9b44a" },
-  over: { rank: 2, color: "#a85d00" },
+  over: { rank: 2, color: OVER_RED },
   unknown: { rank: -1, color: "#8a97a8" },
 };
 
 type Base = { id: string; lat: number; lon: number; label: string };
 /** `null` band = no value for that point: a flat marker, not a column. */
 export const bandPoint = (p: Base, band: DischargeBand | null): ShellPoint => ({ ...p, ...(band ? BAND_STYLE[band] : STATUS_STYLE.unknown) });
-export const statusPoint = (p: Base, status: GaugeStatus): ShellPoint => ({ ...p, ...STATUS_STYLE[status] });
+/** `measured` (true only for a live official gauge reading) is required: false: a high status keeps the amber model palette, never red. */
+export const statusPoint = (p: Base, status: GaugeStatus, measured: boolean): ShellPoint =>
+  status === "over" && !measured
+    ? { ...p, ...BAND_STYLE.peak }
+    : { ...p, ...STATUS_STYLE[status], ...(status === "over" ? { alert: true } : {}) };
+
+export type Bounds = [[number, number], [number, number]];
+
+/** Ids to focus when `selectedId` is picked: every item on the same river, else just the one. Empty if unknown. */
+export function riverFocusIds(items: readonly { id: string; river?: string | null }[], selectedId: string | null | undefined): string[] {
+  const sel = items.find((i) => i.id === selectedId);
+  if (!sel) return [];
+  const river = sel.river?.trim().toLowerCase();
+  return river ? items.filter((i) => i.river?.trim().toLowerCase() === river).map((i) => i.id) : [sel.id];
+}
+
+/** Bounds of the points with these ids; a lone or very tight group gets a minimum half span so the camera keeps a useful zoom. */
+export function focusBounds(points: readonly { id: string; lat: number; lon: number }[], ids: readonly string[] | undefined, minHalfDeg = 0.03): Bounds | null {
+  const set = new Set(ids);
+  const pts = points.filter((p) => set.has(p.id) && Number.isFinite(p.lat) && Number.isFinite(p.lon));
+  if (pts.length === 0) return null;
+  const span = (v: number[]): [number, number] => {
+    const lo = Math.min(...v);
+    const hi = Math.max(...v);
+    const half = Math.max((hi - lo) / 2, minHalfDeg);
+    return [(lo + hi) / 2 - half, (lo + hi) / 2 + half];
+  };
+  const [s, n] = span(pts.map((p) => p.lat));
+  const [w, e] = span(pts.map((p) => p.lon));
+  return [[s, w], [n, e]];
+}
 
 const M_PER_DEG = 111_000;
 
