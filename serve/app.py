@@ -12,7 +12,7 @@ from pathlib import Path
 
 import httpx
 from fastapi import FastAPI
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.main import app as api_app  # api/app/main.py, mirrored from main
@@ -75,6 +75,12 @@ def version() -> dict[str, str]:
 app.mount("/api/stream", stream_app)
 app.mount("/api", api_app)
 app.mount("/nebius", nebius.app)
+
+
+@app.get("/nebius", include_in_schema=False)
+def nebius_page() -> RedirectResponse:
+    # The mount only matches /nebius/...; the bare address is what people type.
+    return RedirectResponse("/nebius/")
 
 
 if DIST.is_dir():
