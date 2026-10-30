@@ -1,0 +1,50 @@
+[
+  {
+    "dataset": "EMSR773 flood extent (observed event layers)",
+    "source_url": "https://mapping.emergency.copernicus.eu/activations/EMSR773",
+    "publisher": "European Commission / Copernicus EMS",
+    "licence": "CEMS On-Demand Mapping Terms and Conditions (07/06/2023)",
+    "attribution": "Copernicus Emergency Management Service (© 2024 European Union), EMSR773",
+    "fetched_at": "2026-10-23T00:00:00Z"
+  },
+  {
+    "dataset": "OSM sites in the Horta Sud / Valencia bbox",
+    "source_url": "https://www.openstreetmap.org/copyright",
+    "publisher": "OpenStreetMap contributors",
+    "licence": "ODbL 1.0",
+    "attribution": "© OpenStreetMap contributors",
+    "fetched_at": "2026-10-23T00:00:00Z"
+  },
+  {
+    "dataset": "Synthetic insurer portfolio",
+    "source_url": "https://github.com/GenAI-Open-Agent-Hackathon/FloodSenseEU-Hackathon-Monorepo/blob/main/ingestion/prep/synthetic_portfolio.py",
+    "publisher": "FloodSense EU team",
+    "licence": "Generated (no third-party rights)",
+    "attribution": "Synthetic portfolio generated for the demo. Not real policies",
+    "fetched_at": "2026-10-23T00:00:00Z"
+  },
+  {
+    "dataset": "Open-Meteo Flood API (GloFAS discharge)",
+    "source_url": "https://open-meteo.com/en/docs/flood-api",
+    "publisher": "Open-Meteo.com",
+    "licence": "CC BY 4.0 (free API non-commercial only)",
+    "attribution": "Weather data by Open-Meteo.com",
+    "fetched_at": "2026-10-23T00:00:00Z"
+  },
+  {
+    "dataset": "Open-Meteo historical weather API (rain)",
+    "source_url": "https://open-meteo.com/en/docs/historical-weather-api",
+    "publisher": "Open-Meteo.com",
+    "licence": "CC BY 4.0 (free API non-commercial only)",
+    "attribution": "Weather data by Open-Meteo.com",
+    "fetched_at": "2026-10-23T00:00:00Z"
+  },
+  {
+    "dataset": "AEMET observations (Valencia)",
+    "source_url": "https://opendata.aemet.es/",
+    "publisher": "Agencia Estatal de Meteorología",
+    "licence": "Reuse allowed incl. commercial; no distortion",
+    "attribution": "© AEMET",
+    "fetched_at": "2026-10-23T00:00:00Z"
+  }
+]

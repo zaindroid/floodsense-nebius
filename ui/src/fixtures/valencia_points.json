@@ -1,0 +1,90 @@
+[
+  {
+    "point_id": "VAL01",
+    "name": "Paiporta centre",
+    "municipality": "Paiporta",
+    "lat": 39.4278,
+    "lon": -0.4172,
+    "why": "Worst-hit town on 29 Oct 2024 (Barranc del Poyo)",
+    "verified_against_footprint": "yes",
+    "in_flood": "yes",
+    "dist_m_to_flood": 0
+  },
+  {
+    "point_id": "VAL02",
+    "name": "Catarroja centre",
+    "municipality": "Catarroja",
+    "lat": 39.4019,
+    "lon": -0.4036,
+    "why": "Horta Sud near the Barranc del Poyo outflow",
+    "verified_against_footprint": "yes",
+    "in_flood": "no",
+    "dist_m_to_flood": 271
+  },
+  {
+    "point_id": "VAL03",
+    "name": "Sedavi centre",
+    "municipality": "Sedaví",
+    "lat": 39.4267,
+    "lon": -0.3836,
+    "why": "Horta Sud flooded area",
+    "verified_against_footprint": "yes",
+    "in_flood": "no",
+    "dist_m_to_flood": 61
+  },
+  {
+    "point_id": "VAL04",
+    "name": "Alfafar centre",
+    "municipality": "Alfafar",
+    "lat": 39.4181,
+    "lon": -0.3792,
+    "why": "Horta Sud near the Albufera",
+    "verified_against_footprint": "yes",
+    "in_flood": "yes",
+    "dist_m_to_flood": 0
+  },
+  {
+    "point_id": "VAL05",
+    "name": "Benetusser centre",
+    "municipality": "Benetússer",
+    "lat": 39.4244,
+    "lon": -0.3969,
+    "why": "Horta Sud flooded area",
+    "verified_against_footprint": "yes",
+    "in_flood": "no",
+    "dist_m_to_flood": 161
+  },
+  {
+    "point_id": "VAL06",
+    "name": "Algemesi centre",
+    "municipality": "Algemesí",
+    "lat": 39.1906,
+    "lon": -0.4367,
+    "why": "Ribera Alta along the Jucar",
+    "verified_against_footprint": "yes",
+    "in_flood": "no",
+    "dist_m_to_flood": 313
+  },
+  {
+    "point_id": "VAL07",
+    "name": "Chiva centre",
+    "municipality": "Chiva",
+    "lat": 39.4694,
+    "lon": -0.7186,
+    "why": "Upstream of the Barranc del Poyo catchment",
+    "verified_against_footprint": "yes",
+    "in_flood": "no",
+    "dist_m_to_flood": 2719
+  },
+  {
+    "point_id": "VAL08",
+    "name": "Utiel centre",
+    "municipality": "Utiel",
+    "lat": 39.5683,
+    "lon": -1.2056,
+    "why": "La Plana de Utiel (named in the activation)",
+    "verified_against_footprint": "yes",
+    "in_flood": "no",
+    "dist_m_to_flood": 249
+  }
+]

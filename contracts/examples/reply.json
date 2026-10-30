@@ -1,0 +1,12 @@
+{
+  "kind": "reply",
+  "intent": "greeting",
+  "answer": "Hello! I'm FloodSense. I can tell you the flood risk at a place and why, show live river levels, and walk you through past floods such as Valencia 2024 and the Ahr 2021, always with sources.",
+  "suggestions": [
+    "Is Valencia at risk of flooding in the next 48 hours?",
+    "What are the river levels on the Ahr right now?",
+    "What happened in the Valencia floods of October 2024?"
+  ],
+  "model_id": "rules",
+  "latency_ms": 3
+}

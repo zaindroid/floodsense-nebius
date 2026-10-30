@@ -1,0 +1,818 @@
+[
+  {
+    "point_id": "VAL01",
+    "date": "2024-10-20",
+    "discharge_m3s": 11.02,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL01",
+    "date": "2024-10-21",
+    "discharge_m3s": 10.12,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL01",
+    "date": "2024-10-22",
+    "discharge_m3s": 8.53,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL01",
+    "date": "2024-10-23",
+    "discharge_m3s": 7.11,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL01",
+    "date": "2024-10-24",
+    "discharge_m3s": 8.48,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL01",
+    "date": "2024-10-25",
+    "discharge_m3s": 6.73,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL01",
+    "date": "2024-10-26",
+    "discharge_m3s": 5.81,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL01",
+    "date": "2024-10-27",
+    "discharge_m3s": 5.27,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL01",
+    "date": "2024-10-28",
+    "discharge_m3s": 23.38,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL01",
+    "date": "2024-10-29",
+    "discharge_m3s": 31.06,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL01",
+    "date": "2024-10-30",
+    "discharge_m3s": 467.81,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL01",
+    "date": "2024-10-31",
+    "discharge_m3s": 397.11,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL01",
+    "date": "2024-11-01",
+    "discharge_m3s": 193.09,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL01",
+    "date": "2024-11-02",
+    "discharge_m3s": 122.03,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL01",
+    "date": "2024-11-03",
+    "discharge_m3s": 99.46,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL01",
+    "date": "2024-11-04",
+    "discharge_m3s": 89.36,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL01",
+    "date": "2024-11-05",
+    "discharge_m3s": 88.33,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL02",
+    "date": "2024-10-20",
+    "discharge_m3s": 11.02,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL02",
+    "date": "2024-10-21",
+    "discharge_m3s": 10.12,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL02",
+    "date": "2024-10-22",
+    "discharge_m3s": 8.53,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL02",
+    "date": "2024-10-23",
+    "discharge_m3s": 7.11,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL02",
+    "date": "2024-10-24",
+    "discharge_m3s": 8.48,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL02",
+    "date": "2024-10-25",
+    "discharge_m3s": 6.73,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL02",
+    "date": "2024-10-26",
+    "discharge_m3s": 5.81,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL02",
+    "date": "2024-10-27",
+    "discharge_m3s": 5.27,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL02",
+    "date": "2024-10-28",
+    "discharge_m3s": 23.38,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL02",
+    "date": "2024-10-29",
+    "discharge_m3s": 31.06,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL02",
+    "date": "2024-10-30",
+    "discharge_m3s": 467.81,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL02",
+    "date": "2024-10-31",
+    "discharge_m3s": 397.11,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL02",
+    "date": "2024-11-01",
+    "discharge_m3s": 193.09,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL02",
+    "date": "2024-11-02",
+    "discharge_m3s": 122.03,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL02",
+    "date": "2024-11-03",
+    "discharge_m3s": 99.46,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL02",
+    "date": "2024-11-04",
+    "discharge_m3s": 89.36,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL02",
+    "date": "2024-11-05",
+    "discharge_m3s": 88.33,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL03",
+    "date": "2024-10-20",
+    "discharge_m3s": 11.65,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL03",
+    "date": "2024-10-21",
+    "discharge_m3s": 10.8,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL03",
+    "date": "2024-10-22",
+    "discharge_m3s": 9.23,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL03",
+    "date": "2024-10-23",
+    "discharge_m3s": 7.95,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL03",
+    "date": "2024-10-24",
+    "discharge_m3s": 9.47,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL03",
+    "date": "2024-10-25",
+    "discharge_m3s": 8.08,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL03",
+    "date": "2024-10-26",
+    "discharge_m3s": 6.89,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL03",
+    "date": "2024-10-27",
+    "discharge_m3s": 6.16,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL03",
+    "date": "2024-10-28",
+    "discharge_m3s": 26.73,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL03",
+    "date": "2024-10-29",
+    "discharge_m3s": 33.99,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL03",
+    "date": "2024-10-30",
+    "discharge_m3s": 471.06,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL03",
+    "date": "2024-10-31",
+    "discharge_m3s": 411.1,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL03",
+    "date": "2024-11-01",
+    "discharge_m3s": 198.07,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL03",
+    "date": "2024-11-02",
+    "discharge_m3s": 124.89,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL03",
+    "date": "2024-11-03",
+    "discharge_m3s": 101.33,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL03",
+    "date": "2024-11-04",
+    "discharge_m3s": 91.68,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL03",
+    "date": "2024-11-05",
+    "discharge_m3s": 90.2,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL04",
+    "date": "2024-10-20",
+    "discharge_m3s": 11.65,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL04",
+    "date": "2024-10-21",
+    "discharge_m3s": 10.8,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL04",
+    "date": "2024-10-22",
+    "discharge_m3s": 9.23,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL04",
+    "date": "2024-10-23",
+    "discharge_m3s": 7.95,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL04",
+    "date": "2024-10-24",
+    "discharge_m3s": 9.47,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL04",
+    "date": "2024-10-25",
+    "discharge_m3s": 8.08,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL04",
+    "date": "2024-10-26",
+    "discharge_m3s": 6.89,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL04",
+    "date": "2024-10-27",
+    "discharge_m3s": 6.16,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL04",
+    "date": "2024-10-28",
+    "discharge_m3s": 26.73,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL04",
+    "date": "2024-10-29",
+    "discharge_m3s": 33.99,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL04",
+    "date": "2024-10-30",
+    "discharge_m3s": 471.06,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL04",
+    "date": "2024-10-31",
+    "discharge_m3s": 411.1,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL04",
+    "date": "2024-11-01",
+    "discharge_m3s": 198.07,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL04",
+    "date": "2024-11-02",
+    "discharge_m3s": 124.89,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL04",
+    "date": "2024-11-03",
+    "discharge_m3s": 101.33,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL04",
+    "date": "2024-11-04",
+    "discharge_m3s": 91.68,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL04",
+    "date": "2024-11-05",
+    "discharge_m3s": 90.2,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL05",
+    "date": "2024-10-20",
+    "discharge_m3s": 11.65,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL05",
+    "date": "2024-10-21",
+    "discharge_m3s": 10.8,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL05",
+    "date": "2024-10-22",
+    "discharge_m3s": 9.23,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL05",
+    "date": "2024-10-23",
+    "discharge_m3s": 7.95,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL05",
+    "date": "2024-10-24",
+    "discharge_m3s": 9.47,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL05",
+    "date": "2024-10-25",
+    "discharge_m3s": 8.08,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL05",
+    "date": "2024-10-26",
+    "discharge_m3s": 6.89,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL05",
+    "date": "2024-10-27",
+    "discharge_m3s": 6.16,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL05",
+    "date": "2024-10-28",
+    "discharge_m3s": 26.73,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL05",
+    "date": "2024-10-29",
+    "discharge_m3s": 33.99,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL05",
+    "date": "2024-10-30",
+    "discharge_m3s": 471.06,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL05",
+    "date": "2024-10-31",
+    "discharge_m3s": 411.1,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL05",
+    "date": "2024-11-01",
+    "discharge_m3s": 198.07,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL05",
+    "date": "2024-11-02",
+    "discharge_m3s": 124.89,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL05",
+    "date": "2024-11-03",
+    "discharge_m3s": 101.33,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL05",
+    "date": "2024-11-04",
+    "discharge_m3s": 91.68,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL05",
+    "date": "2024-11-05",
+    "discharge_m3s": 90.2,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL06",
+    "date": "2024-10-20",
+    "discharge_m3s": 0.02,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL06",
+    "date": "2024-10-21",
+    "discharge_m3s": 0.02,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL06",
+    "date": "2024-10-22",
+    "discharge_m3s": 0.02,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL06",
+    "date": "2024-10-23",
+    "discharge_m3s": 0.26,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL06",
+    "date": "2024-10-24",
+    "discharge_m3s": 0.41,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL06",
+    "date": "2024-10-25",
+    "discharge_m3s": 0.13,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL06",
+    "date": "2024-10-26",
+    "discharge_m3s": 0.23,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL06",
+    "date": "2024-10-27",
+    "discharge_m3s": 0.12,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL06",
+    "date": "2024-10-28",
+    "discharge_m3s": 0.3,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL06",
+    "date": "2024-10-29",
+    "discharge_m3s": 0.18,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL06",
+    "date": "2024-10-30",
+    "discharge_m3s": 1.4,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL06",
+    "date": "2024-10-31",
+    "discharge_m3s": 0.44,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL06",
+    "date": "2024-11-01",
+    "discharge_m3s": 0.26,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL06",
+    "date": "2024-11-02",
+    "discharge_m3s": 0.23,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL06",
+    "date": "2024-11-03",
+    "discharge_m3s": 0.12,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL06",
+    "date": "2024-11-04",
+    "discharge_m3s": 0.39,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL06",
+    "date": "2024-11-05",
+    "discharge_m3s": 0.21,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL07",
+    "date": "2024-10-20",
+    "discharge_m3s": 0.07,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL07",
+    "date": "2024-10-21",
+    "discharge_m3s": 0.05,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL07",
+    "date": "2024-10-22",
+    "discharge_m3s": 0.04,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL07",
+    "date": "2024-10-23",
+    "discharge_m3s": 0.04,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL07",
+    "date": "2024-10-24",
+    "discharge_m3s": 0.31,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL07",
+    "date": "2024-10-25",
+    "discharge_m3s": 0.13,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL07",
+    "date": "2024-10-26",
+    "discharge_m3s": 0.37,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL07",
+    "date": "2024-10-27",
+    "discharge_m3s": 0.2,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL07",
+    "date": "2024-10-28",
+    "discharge_m3s": 0.73,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL07",
+    "date": "2024-10-29",
+    "discharge_m3s": 0.62,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL07",
+    "date": "2024-10-30",
+    "discharge_m3s": 45.99,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL07",
+    "date": "2024-10-31",
+    "discharge_m3s": 19.23,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL07",
+    "date": "2024-11-01",
+    "discharge_m3s": 1.44,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL07",
+    "date": "2024-11-02",
+    "discharge_m3s": 0.85,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL07",
+    "date": "2024-11-03",
+    "discharge_m3s": 0.47,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL07",
+    "date": "2024-11-04",
+    "discharge_m3s": 0.64,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL07",
+    "date": "2024-11-05",
+    "discharge_m3s": 0.39,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL08",
+    "date": "2024-10-20",
+    "discharge_m3s": 0.04,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL08",
+    "date": "2024-10-21",
+    "discharge_m3s": 0.04,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL08",
+    "date": "2024-10-22",
+    "discharge_m3s": 0.04,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL08",
+    "date": "2024-10-23",
+    "discharge_m3s": 0.04,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL08",
+    "date": "2024-10-24",
+    "discharge_m3s": 0.04,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL08",
+    "date": "2024-10-25",
+    "discharge_m3s": 0.04,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL08",
+    "date": "2024-10-26",
+    "discharge_m3s": 0.04,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL08",
+    "date": "2024-10-27",
+    "discharge_m3s": 0.04,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL08",
+    "date": "2024-10-28",
+    "discharge_m3s": 0.06,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL08",
+    "date": "2024-10-29",
+    "discharge_m3s": 0.06,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL08",
+    "date": "2024-10-30",
+    "discharge_m3s": 2.94,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL08",
+    "date": "2024-10-31",
+    "discharge_m3s": 1.36,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL08",
+    "date": "2024-11-01",
+    "discharge_m3s": 0.12,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL08",
+    "date": "2024-11-02",
+    "discharge_m3s": 0.09,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL08",
+    "date": "2024-11-03",
+    "discharge_m3s": 0.07,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL08",
+    "date": "2024-11-04",
+    "discharge_m3s": 0.06,
+    "source": "seed:open-meteo-flood-glofas"
+  },
+  {
+    "point_id": "VAL08",
+    "date": "2024-11-05",
+    "discharge_m3s": 0.06,
+    "source": "seed:open-meteo-flood-glofas"
+  }
+]

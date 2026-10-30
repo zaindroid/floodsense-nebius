@@ -1,0 +1,7 @@
+fastapi>=0.115,<1
+uvicorn>=0.32,<1
+httpx>=0.27,<1
+# Current Starlette TestClient imports httpx2. Without it, `make test` warns.
+httpx2>=2,<3
+# Optional cache backend (REDIS_URL). Without REDIS_URL it is not used.
+redis>=5,<7

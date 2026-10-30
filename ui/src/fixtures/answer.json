@@ -1,0 +1,334 @@
+{
+  "run_id": "run_fixture_valencia_emsr773",
+  "question": "Why is the Paiporta point (VAL01) showing a modelled discharge peak around 29–30 Oct 2024?",
+  "claims": [
+    {
+      "claim_id": "claim_val01_rain",
+      "text": "In floodsense_seed.hazard_timeline, VAL01 hourly rain on 29 Oct 2024 peaks at 16.4 mm at 12:00 UTC. warning_level is null. Joined discharge that hour is 31.06 m³/s."
+    },
+    {
+      "claim_id": "claim_val07",
+      "text": "VAL07 discharge in floodsense_seed.discharge_daily is 0.62 m³/s on 29 Oct 2024 and 45.99 m³/s on 30 Oct 2024. The source column is seed:open-meteo-flood-glofas."
+    },
+    {
+      "claim_id": "claim_val01_peak",
+      "text": "On 30 Oct 2024, floodsense_seed.discharge_daily lists 467.81 m³/s at VAL01. The source column is seed:open-meteo-flood-glofas. From 20 Oct through 27 Oct the same point stays between 5.27 and 11.02 m³/s."
+    },
+    {
+      "claim_id": "claim_grid",
+      "text": "VAL01 and VAL02 list the same discharge_m3s on every date in this seed extract, including 467.81 m³/s on 30 Oct 2024."
+    }
+  ],
+  "citations": [
+    {
+      "citation_id": "cit_fixture_hazard_val01",
+      "claim_id": "claim_val01_rain",
+      "layer": "a",
+      "source_url": "https://open-meteo.com/en/docs/historical-weather-api",
+      "title": "floodsense_seed.hazard_timeline",
+      "publisher": "FloodSense EU fixture, copied from the seed view",
+      "accessed_at": "2026-10-24T14:32:00Z",
+      "licence": "CC BY 4.0",
+      "attribution": "Weather data by Open-Meteo.com",
+      "quote": "Seed hazard_timeline for VAL01 shows 16.4 mm of rain at 2024-10-29 12:00 UTC, with warning_level null and discharge_m3s 31.06 that hour.",
+      "content_sha256": "927e30bf9d3d5370f5e8704bdbcaa343505414be663a65b7a5be9850e0b46e03",
+      "storage": "pointer",
+      "query_id": "qry_fixture_hazard_val01"
+    },
+    {
+      "citation_id": "cit_fixture_open_meteo_rain",
+      "claim_id": "claim_val01_rain",
+      "layer": "b",
+      "source_url": "https://open-meteo.com/en/docs/historical-weather-api",
+      "title": "Open-Meteo historical weather API",
+      "publisher": "Open-Meteo",
+      "accessed_at": "2026-10-24T14:32:00Z",
+      "licence": "CC BY 4.0 (free API non-commercial only)",
+      "attribution": "Weather data by Open-Meteo.com",
+      "quote": "Weather data by Open-Meteo.com",
+      "content_sha256": "ae395d5813fc788e1f3ff2e3e43fa08348552a0bc6db9cca3a9ff6fe022b46c2",
+      "storage": "pointer",
+      "query_id": "qry_fixture_hazard_val01"
+    },
+    {
+      "citation_id": "cit_fixture_discharge_val07",
+      "claim_id": "claim_val07",
+      "layer": "a",
+      "source_url": "https://open-meteo.com/en/docs/flood-api",
+      "title": "floodsense_seed.discharge_daily",
+      "publisher": "FloodSense EU fixture, copied from the seed view",
+      "accessed_at": "2026-10-24T14:32:00Z",
+      "licence": "CC BY 4.0",
+      "attribution": "Weather data by Open-Meteo.com",
+      "quote": "Seed discharge_daily for VAL07 lists 0.62 m3/s on 2024-10-29 and 45.99 m3/s on 2024-10-30.",
+      "content_sha256": "bac9f32f5e58db85487fc98730606e75c8b4661cb5eeb337b256f19b77333fac",
+      "storage": "pointer",
+      "query_id": "qry_fixture_discharge_val07"
+    },
+    {
+      "citation_id": "cit_fixture_open_meteo_val07",
+      "claim_id": "claim_val07",
+      "layer": "b",
+      "source_url": "https://open-meteo.com/en/docs/flood-api",
+      "title": "Open-Meteo Flood API (GloFAS)",
+      "publisher": "Open-Meteo",
+      "accessed_at": "2026-10-24T14:32:00Z",
+      "licence": "CC BY 4.0 (free API non-commercial only)",
+      "attribution": "Weather data by Open-Meteo.com",
+      "quote": "Weather data by Open-Meteo.com",
+      "content_sha256": "ae395d5813fc788e1f3ff2e3e43fa08348552a0bc6db9cca3a9ff6fe022b46c2",
+      "storage": "pointer",
+      "query_id": "qry_fixture_discharge_val07"
+    },
+    {
+      "citation_id": "cit_fixture_discharge_val01",
+      "claim_id": "claim_val01_peak",
+      "layer": "a",
+      "source_url": "https://open-meteo.com/en/docs/flood-api",
+      "title": "floodsense_seed.discharge_daily",
+      "publisher": "FloodSense EU fixture, copied from the seed view",
+      "accessed_at": "2026-10-24T14:32:00Z",
+      "licence": "CC BY 4.0",
+      "attribution": "Weather data by Open-Meteo.com",
+      "quote": "Seed discharge_daily for VAL01 includes 467.81 m3/s on 2024-10-30 and stays between 5.27 and 11.02 m3/s from 2024-10-20 through 2024-10-27.",
+      "content_sha256": "8e965676f32a20a60a699bb87ebab7b5474dae4a719399b69bdabb9e5ee643bc",
+      "storage": "pointer",
+      "query_id": "qry_fixture_discharge_val01"
+    },
+    {
+      "citation_id": "cit_fixture_open_meteo_val01",
+      "claim_id": "claim_val01_peak",
+      "layer": "b",
+      "source_url": "https://open-meteo.com/en/docs/flood-api",
+      "title": "Open-Meteo Flood API (GloFAS)",
+      "publisher": "Open-Meteo",
+      "accessed_at": "2026-10-24T14:32:00Z",
+      "licence": "CC BY 4.0 (free API non-commercial only)",
+      "attribution": "Weather data by Open-Meteo.com",
+      "quote": "Weather data by Open-Meteo.com",
+      "content_sha256": "ae395d5813fc788e1f3ff2e3e43fa08348552a0bc6db9cca3a9ff6fe022b46c2",
+      "storage": "pointer",
+      "query_id": "qry_fixture_discharge_val01"
+    },
+    {
+      "citation_id": "cit_fixture_discharge_pair",
+      "claim_id": "claim_grid",
+      "layer": "a",
+      "source_url": "https://open-meteo.com/en/docs/flood-api",
+      "title": "floodsense_seed.discharge_daily",
+      "publisher": "FloodSense EU fixture, copied from the seed view",
+      "accessed_at": "2026-10-24T14:32:00Z",
+      "licence": "CC BY 4.0",
+      "attribution": "Weather data by Open-Meteo.com",
+      "quote": "On 2024-10-30, VAL01 and VAL02 both list 467.81 m3/s in seed discharge_daily.",
+      "content_sha256": "98fc269d06a615076df0ed5727adcde592777adece56466added43af59b05902",
+      "storage": "pointer",
+      "query_id": "qry_fixture_discharge_pair"
+    },
+    {
+      "citation_id": "cit_fixture_open_meteo_pair",
+      "claim_id": "claim_grid",
+      "layer": "b",
+      "source_url": "https://open-meteo.com/en/docs/flood-api",
+      "title": "Open-Meteo Flood API (GloFAS)",
+      "publisher": "Open-Meteo",
+      "accessed_at": "2026-10-24T14:32:00Z",
+      "licence": "CC BY 4.0 (free API non-commercial only)",
+      "attribution": "Weather data by Open-Meteo.com",
+      "quote": "Weather data by Open-Meteo.com",
+      "content_sha256": "ae395d5813fc788e1f3ff2e3e43fa08348552a0bc6db9cca3a9ff6fe022b46c2",
+      "storage": "pointer",
+      "query_id": "qry_fixture_discharge_pair"
+    }
+  ],
+  "evidence": [
+    {
+      "query_id": "qry_fixture_hazard_val01",
+      "view": "floodsense_seed.hazard_timeline",
+      "sql": "SELECT point_id, ts_utc, rain_mm, discharge_m3s, warning_level FROM floodsense_seed.hazard_timeline WHERE point_id = 'VAL01' AND ts_utc = TIMESTAMP '2024-10-29 12:00:00'",
+      "rows_sample": [
+        {
+          "point_id": "VAL01",
+          "ts_utc": "2024-10-29T12:00:00Z",
+          "rain_mm": 16.4,
+          "discharge_m3s": 31.06,
+          "warning_level": null
+        }
+      ],
+      "row_count": 1,
+      "executed_at_utc": "2026-10-24T14:32:00Z"
+    },
+    {
+      "query_id": "qry_fixture_discharge_val07",
+      "view": "floodsense_seed.discharge_daily",
+      "sql": "SELECT point_id, date, discharge_m3s, source FROM floodsense_seed.discharge_daily WHERE point_id = 'VAL07' AND date IN (DATE '2024-10-29', DATE '2024-10-30')",
+      "rows_sample": [
+        {
+          "point_id": "VAL07",
+          "date": "2024-10-29",
+          "discharge_m3s": 0.62,
+          "source": "seed:open-meteo-flood-glofas"
+        },
+        {
+          "point_id": "VAL07",
+          "date": "2024-10-30",
+          "discharge_m3s": 45.99,
+          "source": "seed:open-meteo-flood-glofas"
+        }
+      ],
+      "row_count": 2,
+      "executed_at_utc": "2026-10-24T14:32:00Z"
+    },
+    {
+      "query_id": "qry_fixture_discharge_val01",
+      "view": "floodsense_seed.discharge_daily",
+      "sql": "SELECT point_id, date, discharge_m3s, source FROM floodsense_seed.discharge_daily WHERE point_id = 'VAL01' AND date BETWEEN DATE '2024-10-20' AND DATE '2024-10-30'",
+      "rows_sample": [
+        {
+          "point_id": "VAL01",
+          "date": "2024-10-20",
+          "discharge_m3s": 11.02,
+          "source": "seed:open-meteo-flood-glofas"
+        },
+        {
+          "point_id": "VAL01",
+          "date": "2024-10-21",
+          "discharge_m3s": 10.12,
+          "source": "seed:open-meteo-flood-glofas"
+        },
+        {
+          "point_id": "VAL01",
+          "date": "2024-10-22",
+          "discharge_m3s": 8.53,
+          "source": "seed:open-meteo-flood-glofas"
+        },
+        {
+          "point_id": "VAL01",
+          "date": "2024-10-23",
+          "discharge_m3s": 7.11,
+          "source": "seed:open-meteo-flood-glofas"
+        },
+        {
+          "point_id": "VAL01",
+          "date": "2024-10-24",
+          "discharge_m3s": 8.48,
+          "source": "seed:open-meteo-flood-glofas"
+        },
+        {
+          "point_id": "VAL01",
+          "date": "2024-10-25",
+          "discharge_m3s": 6.73,
+          "source": "seed:open-meteo-flood-glofas"
+        },
+        {
+          "point_id": "VAL01",
+          "date": "2024-10-26",
+          "discharge_m3s": 5.81,
+          "source": "seed:open-meteo-flood-glofas"
+        },
+        {
+          "point_id": "VAL01",
+          "date": "2024-10-27",
+          "discharge_m3s": 5.27,
+          "source": "seed:open-meteo-flood-glofas"
+        },
+        {
+          "point_id": "VAL01",
+          "date": "2024-10-28",
+          "discharge_m3s": 23.38,
+          "source": "seed:open-meteo-flood-glofas"
+        },
+        {
+          "point_id": "VAL01",
+          "date": "2024-10-29",
+          "discharge_m3s": 31.06,
+          "source": "seed:open-meteo-flood-glofas"
+        },
+        {
+          "point_id": "VAL01",
+          "date": "2024-10-30",
+          "discharge_m3s": 467.81,
+          "source": "seed:open-meteo-flood-glofas"
+        }
+      ],
+      "row_count": 11,
+      "executed_at_utc": "2026-10-24T14:32:00Z"
+    },
+    {
+      "query_id": "qry_fixture_discharge_pair",
+      "view": "floodsense_seed.discharge_daily",
+      "sql": "SELECT point_id, date, discharge_m3s, source FROM floodsense_seed.discharge_daily WHERE point_id IN ('VAL01', 'VAL02') AND date = DATE '2024-10-30'",
+      "rows_sample": [
+        {
+          "point_id": "VAL01",
+          "date": "2024-10-30",
+          "discharge_m3s": 467.81,
+          "source": "seed:open-meteo-flood-glofas"
+        },
+        {
+          "point_id": "VAL02",
+          "date": "2024-10-30",
+          "discharge_m3s": 467.81,
+          "source": "seed:open-meteo-flood-glofas"
+        }
+      ],
+      "row_count": 2,
+      "executed_at_utc": "2026-10-24T14:32:00Z"
+    }
+  ],
+  "served_from": "replay",
+  "cached_at": "2026-10-24T14:32:00Z",
+  "playbook_actions": [
+    {
+      "action_id": "act_fixture_review_footprint",
+      "run_id": "run_fixture_valencia_emsr773",
+      "title": "Review synthetic policies inside the EMSR773 footprint",
+      "detail": "Preview only. Nothing is sent. exposure_join.in_footprint marks the synthetic book against the footprint; confirm it before any outbound notice.",
+      "citation_ids": [
+        "cit_fixture_discharge_val01",
+        "cit_fixture_open_meteo_val01"
+      ]
+    }
+  ],
+  "judge": {
+    "overall_score": 0.89,
+    "claims": [
+      {
+        "claim_id": "claim_val01_rain",
+        "grounding": "supported",
+        "citation_faithful": true,
+        "numbers_match": true,
+        "score": 0.9,
+        "rationale": "Fixture score. The 16.4 mm and 31.06 m³/s figures match the hazard sample. Not a Nightshift result.",
+        "model_id": "meterless/deep"
+      },
+      {
+        "claim_id": "claim_val07",
+        "grounding": "supported",
+        "citation_faithful": true,
+        "numbers_match": true,
+        "score": 0.92,
+        "rationale": "Fixture score. 0.62 and 45.99 match the VAL07 sample, and the source stamp matches. Not a Nightshift result.",
+        "model_id": "meterless/deep"
+      },
+      {
+        "claim_id": "claim_val01_peak",
+        "grounding": "supported",
+        "citation_faithful": true,
+        "numbers_match": true,
+        "score": 0.93,
+        "rationale": "Fixture score. 467.81 and the 5.27–11.02 early range are in the VAL01 sample. Not a Nightshift result.",
+        "model_id": "meterless/deep"
+      },
+      {
+        "claim_id": "claim_grid",
+        "grounding": "partial",
+        "citation_faithful": true,
+        "numbers_match": true,
+        "score": 0.8,
+        "rationale": "Fixture score. The sample shows the 30 Oct pair at 467.81. It does not itself list all 17 dates. Not a Nightshift result.",
+        "model_id": "meterless/deep"
+      }
+    ]
+  }
+}

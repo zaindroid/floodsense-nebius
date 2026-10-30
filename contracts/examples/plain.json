@@ -1,0 +1,14 @@
+{
+  "headline": "Nothing alarming expected at Budapest.",
+  "one_line": "The Danube at Budapest is expected to stay within its normal range this week and no significant rain is forecast over the next two days.",
+  "horizon": "7d",
+  "status": "normal",
+  "basis": "model",
+  "places": ["Budapest"],
+  "country": "HU",
+  "service": "HungaroMet and the water directorate (OVF, vizugy.hu)",
+  "context": "For context, from the past: Danube at Budapest, 21 September 2024: the river reached its highest level in around a decade, with water at the steps of the Parliament building. (history, from Wikipedia: 2024 Central European Floods, demo seed; not today's conditions)",
+  "next_step": "Ask me about another place or open the official warnings.",
+  "disclaimer": "Model-based check, not an official warning. Follow HungaroMet and the water directorate (OVF, vizugy.hu).",
+  "details": ["F1", "F2"]
+}

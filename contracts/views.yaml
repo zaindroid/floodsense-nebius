@@ -1,0 +1,100 @@
+# Column names and types for Zetaris views.
+# floodsense.<name> and floodsense_seed.<name> share one entry.
+# Migration headers (-- view: / -- columns: / -- min_rows:) must match this file.
+# scripts/tests/test_migration_contract.py reads "  <view>:" and "- {name: ..., type: ...}".
+
+views:
+  # min_rows: live 136 (8 points, 2024-10-20 through 2024-11-05), seed 180 (051: those 136 plus 44 Ahr rows, AHR01-AHR04, 2021-07-10 through 2021-07-20)
+  discharge_daily:
+    - {name: point_id, type: string}
+    - {name: date, type: date}
+    - {name: discharge_m3s, type: double}
+    - {name: source, type: string}
+  # min_rows: live 3264, seed 960 (052: 576 Valencia plus 384 Ahr rows, AHR01-AHR04 hourly 2021-07-13 through 2021-07-16)
+  hazard_timeline:
+    - {name: point_id, type: string}
+    - {name: ts_utc, type: timestamp}
+    - {name: rain_mm, type: double}
+    - {name: discharge_m3s, type: double}
+    - {name: warning_level, type: string}
+  # min_rows: live 1152 (8 points x 144 hours, rolling), seed 576.
+  # horizon is the rolling-window label (039): past or forecast. Seed rows are replay (040).
+  # past is Open-Meteo past_days plus GloFAS model output, not a station measurement.
+  hazard_now:
+    - {name: point_id, type: string}
+    - {name: ts_utc, type: timestamp}
+    - {name: rain_mm, type: double}
+    - {name: discharge_m3s, type: double}
+    - {name: warning_level, type: string}
+    - {name: horizon, type: string}
+  # min_rows: live 0 until a PEGELONLINE pull replaces the header, seed 3 (Ahr Rhine gauges, no invented levels).
+  gauge_levels:
+    - {name: station, type: string}
+    - {name: water, type: string}
+    - {name: ts_utc, type: timestamp}
+    - {name: level_cm, type: double}
+    - {name: source, type: string}
+    - {name: river_km, type: double}
+    - {name: lat, type: double}
+    - {name: lon, type: double}
+    - {name: trend_cm_h, type: double}
+    - {name: mnw_cm, type: double}
+    - {name: mw_cm, type: double}
+    - {name: mhw_cm, type: double}
+    - {name: hhw_cm, type: double}
+    - {name: hsw_cm, type: double}
+    - {name: band, type: string}
+    - {name: fetched_at, type: timestamp}
+    # is_stale: fetched_at missing or older than 30 min (live); always true in seed.
+    - {name: is_stale, type: boolean}
+  # min_rows: 11 (live and seed). EU live watch, GloFAS model points outside Germany (060-065; 064/065 are the latest).
+  # band is relative to the series (7-day forecast max vs 2x the exact past-30-day median): model, not an official warning.
+  eu_watch:
+    - {name: point_id, type: string}
+    - {name: name, type: string}
+    - {name: country, type: string}
+    - {name: river, type: string}
+    - {name: lat, type: double}
+    - {name: lon, type: double}
+    - {name: discharge_m3s, type: double}
+    - {name: forecast_max_m3s, type: double}
+    - {name: past30_median_m3s, type: double}
+    - {name: band, type: string}
+    - {name: basis, type: string}
+    - {name: source, type: string}
+    - {name: as_of_date, type: date}
+  # min_rows: live 3240 (45 places x 72 forecast hours, rolling), seed 45 (positions only, no forecast).
+  # Forecast lane (070-072): hourly precipitation, Open-Meteo forecast API with the DWD ICON model.
+  # lead_h 0 is the current GMT hour. kind: gauge | eu | valencia. Model output, not a warning.
+  weather_forecast:
+    - {name: point_id, type: string}
+    - {name: kind, type: string}
+    - {name: name, type: string}
+    - {name: river, type: string}
+    - {name: lat, type: double}
+    - {name: lon, type: double}
+    - {name: lead_h, type: int}
+    - {name: ts_utc, type: timestamp}
+    - {name: precip_mm, type: double}
+    - {name: model, type: string}
+    - {name: source, type: string}
+  # min_rows: 359 (live and seed). synthetic is the portfolio flag (yes). Not a live book.
+  # Migration 018 is the column list verify checks once it is applied. 014 and 016 create the view first.
+  exposure_join:
+    - {name: policy_id, type: string}
+    - {name: site_id, type: string}
+    - {name: lat, type: double}
+    - {name: lon, type: double}
+    - {name: in_footprint, type: boolean}
+    - {name: sum_insured_eur, type: double}
+    - {name: segment, type: string}
+    - {name: synthetic, type: string}
+  # min_rows: 9 cleared datasets (073: 041's 8 plus the inline DWD ICON forecast row). ds_dwd_brightsky
+  # stays in the CSV and is filtered out of the views. 015 and 017 create the view first.
+  provenance:
+    - {name: dataset, type: string}
+    - {name: source_url, type: string}
+    - {name: publisher, type: string}
+    - {name: licence, type: string}
+    - {name: attribution, type: string}
+    - {name: fetched_at, type: timestamp}

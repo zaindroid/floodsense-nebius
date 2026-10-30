@@ -1,0 +1,21 @@
+{
+  "approval_id": "apr_example_pending",
+  "run_id": "run_example_valencia",
+  "action_id": "act_example_review",
+  "status": "pending",
+  "note": "Example queue item. No outbound action is sent.",
+  "judge": {
+    "overall_score": 1,
+    "claims": [
+      {
+        "claim_id": "claim_example_rain",
+        "grounding": "supported",
+        "citation_faithful": true,
+        "numbers_match": true,
+        "score": 1,
+        "rationale": "Example fixture. Not a Judge result from a model.",
+        "model_id": "meterless/deep"
+      }
+    ]
+  }
+}

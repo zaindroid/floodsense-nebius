@@ -1,0 +1,21 @@
+{
+  "citation_id": "cit_example_open_meteo",
+  "claim_id": "claim_example_rain",
+  "layer": "b",
+  "source_url": "https://open-meteo.com/",
+  "title": "Open-Meteo weather data",
+  "publisher": "Open-Meteo",
+  "accessed_at": "2026-10-22T00:00:00Z",
+  "licence": "CC BY 4.0",
+  "attribution": "Weather data by Open-Meteo.com",
+  "locator": {
+    "section": "example",
+    "page": 1,
+    "paragraph": 1,
+    "lines": "1-2"
+  },
+  "quote": "Example quote for the contract test. It is not a measurement.",
+  "content_sha256": "225f5827d706a2b029e64b3b3ba5418deae13a534f55e4c8f5260811ad7f05c1",
+  "storage": "full_text",
+  "query_id": "qry_example_discharge"
+}

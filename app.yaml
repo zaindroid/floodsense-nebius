@@ -1,0 +1,22 @@
+# zorc app contract for the Nebius hackathon entry. Everything but serve/ is
+# mirrored from the FloodSenseEU-Hackathon-Monorepo main (with PR #120 until
+# it merges). The previous hackathon's floodsense-desk is a separate app and
+# is not touched by this one.
+name: floodsense-nebius
+port: 8080
+memory_mb: 512
+
+domains:
+  - floodsense-nebius.zaindroid.me
+
+# Every model call goes to Nebius Token Factory (LLM_BACKEND=nebius), and the
+# data comes from the shared Zetaris gateway. Neither needs a platform
+# database, cache or AI gateway.
+database: false
+redis: false
+ai: false
+
+# Set after the first start with set_app_env_vars, because each is tied to an
+# external account: LLM_BACKEND, NEBIUS_API_KEY, the ZETARIS_* gateway values,
+# JUDGE_PASSWORD, and for the /nebius page NEBIUS_INSTANCE_ID, NEBIUS_DEMO_URL
+# and the power-operator service account key.

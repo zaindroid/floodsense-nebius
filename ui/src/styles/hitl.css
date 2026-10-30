@@ -1,0 +1,67 @@
+/* Live pipeline, source chips, memories panel and the HITL approval card (ported from spike/mock-ui). */
+
+/* ---- live pipeline ---- */
+.agp-live .agp-node { transition: border-color 0.2s, background 0.2s, opacity 0.2s; }
+.agp-live-idle { opacity: 0.55; }
+.agp-live-running { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); opacity: 1; }
+.agp-live-done { opacity: 1; }
+.agp-live-status-done { color: var(--ok); font-weight: 700; }
+.agp-live-status-running { color: var(--accent-strong, var(--accent)); display: inline-flex; align-items: center; gap: 0.3rem; }
+.agp-pulse { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--accent); animation: agp-pulse 1.2s ease-in-out infinite; }
+@keyframes agp-pulse { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .agp-pulse { animation: none; } }
+.agp-loops { list-style: none; margin: 0.4rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.agp-loops li { font-size: 0.75rem; padding: 0.1rem 0.5rem; border-radius: 999px; background: var(--warn-soft); color: var(--warn); }
+.ask-tip { margin: 0.25rem 0 0; font-size: 0.8rem; color: var(--muted); font-style: italic; }
+.ask-elapsed { font-variant-numeric: tabular-nums; }
+.ask-retry { margin: 0.5rem 0; padding: 0.4rem 0.6rem; border-radius: var(--radius-sm); background: var(--warn-soft); color: var(--warn); font-size: 0.85rem; }
+.ask-reply { white-space: pre-wrap; }
+
+/* ---- source chips ---- */
+.src-chips { display: inline-flex; flex-wrap: wrap; gap: 0.25rem; vertical-align: middle; max-width: 100%; }
+.src-chip { display: inline-block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.7rem; font-weight: 600; padding: 0.05rem 0.45rem; border-radius: 999px; border: 1px solid var(--border); background: var(--surface-2, var(--bg-sunken)); color: var(--muted); }
+.src-chip-zetaris { background: var(--zetaris-bg); border-color: var(--zetaris-border); color: var(--zetaris-ink); }
+.src-chip-document { background: var(--accent-soft); border-color: transparent; color: var(--ink); }
+.src-chip-provenance { background: var(--cached-bg); color: var(--cached-ink); }
+
+/* ---- memories ---- */
+.mem-panel { margin: 0.6rem 0; padding: 0.5rem 0.7rem; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--bg-sunken, var(--surface)); }
+.mem-title { margin: 0 0 0.25rem; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
+.mem-list { margin: 0; padding-left: 1.1rem; font-size: 0.85rem; overflow-wrap: anywhere; }
+
+/* ---- approval card (mock look) ---- */
+.hitl { min-width: 0; }
+.hitl .eyebrow { margin: 0.2rem 0 0; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 600; }
+.hitl .chip { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0.1rem 0.5rem; border-radius: 999px; background: var(--bg-sunken, var(--surface)); border: 1px solid var(--border); color: var(--muted); }
+.hitl .chip--notify-policyholders { background: var(--accent-soft); color: var(--ink); border-color: transparent; }
+.hitl .chip--dispatch-loss-adjuster { background: var(--warn-soft); color: var(--warn); border-color: transparent; }
+.hitl .chip--flag-underwriting-review { background: var(--zetaris-bg); color: var(--zetaris-ink); border-color: var(--zetaris-border); }
+.hitl .chip--inform-public { background: var(--ok-soft); color: var(--ok); border-color: transparent; }
+.approval-list { list-style: none; margin: 0.5rem 0; padding: 0; display: flex; flex-direction: column; gap: 0.6rem; }
+.approval { border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); min-width: 0; }
+.approval.is-selected { border-color: var(--accent); box-shadow: inset 3px 0 0 var(--accent); }
+.approval__summary { width: 100%; display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.75rem; text-align: left; border: 0; background: transparent; padding: 0.65rem 0.8rem; color: inherit; font: inherit; cursor: pointer; }
+.approval__summary strong { flex: 1 1 220px; min-width: 0; overflow-wrap: anywhere; }
+.approval__summary .muted { color: var(--muted); }
+.approval__summary .small { font-size: 0.8rem; }
+.approval__detail { padding: 0 0.9rem 0.9rem; display: flex; flex-direction: column; gap: 0.6rem; min-width: 0; }
+.approval__detail p { margin: 0; overflow-wrap: anywhere; }
+.approval__detail .field { display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.85rem; }
+.approval__detail input, .approval__detail textarea { width: 100%; box-sizing: border-box; font: inherit; padding: 0.4rem 0.5rem; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); color: inherit; }
+.draft { margin: 0; padding: 0.6rem 0.8rem; background: var(--bg-sunken, var(--surface)); border: 1px dashed var(--border); border-radius: var(--radius-sm); font-size: 0.88rem; white-space: pre-wrap; overflow-wrap: anywhere; }
+.approval__actions { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 0.3rem; }
+.approval__actions .button { min-width: 6.5rem; }
+.status { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; padding: 0.1rem 0.5rem; border-radius: 6px; background: var(--warn-soft); color: var(--warn); }
+.status--approved, .status--edited { background: var(--ok-soft); color: var(--ok); }
+.status--rejected { background: var(--danger-soft); color: var(--danger); }
+.status-line { font-size: 0.86rem; padding: 0.5rem 0.7rem; border-radius: var(--radius-sm); }
+.status-line--approved { background: var(--ok-soft); }
+.status-line--rejected { background: var(--danger-soft); }
+.judge-badge { font-size: 0.72rem; font-weight: 700; padding: 0.1rem 0.5rem; border-radius: 999px; }
+.judge-badge--ok { background: var(--ok-soft); color: var(--ok); }
+.judge-badge--warn { background: var(--warn-soft); color: var(--warn); }
+.judge-badge--none { background: var(--cached-bg); color: var(--cached-ink); }
+@media (max-width: 480px) {
+  .approval__actions .button { flex: 1 1 100%; }
+  .approval__summary strong { flex-basis: 100%; }
+}

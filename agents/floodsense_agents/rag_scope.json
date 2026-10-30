@@ -1,0 +1,30 @@
+{
+  "note": "Generated from corpus/manifest.yaml by python scripts/rag_corpus.py --write-scope",
+  "generic": {
+    "boe-a-2004-18910": "ES",
+    "eea-briefing-economic-losses-2022": "EU",
+    "eea-briefing-economic-losses-2025": "EU",
+    "eiopa-19-485": "EU",
+    "eu-floods-directive-2007-60-ec": "EU"
+  },
+  "watch": {
+    "boe-a-2004-18910": "ES",
+    "eea-briefing-economic-losses-2022": "EU",
+    "eea-briefing-economic-losses-2025": "EU",
+    "eiopa-19-485": "EU",
+    "eu-floods-directive-2007-60-ec": "EU",
+    "wiki-1997-central-european-flood": "EU",
+    "wiki-2002-european-floods": "EU",
+    "wiki-2010-central-european-floods": "PL",
+    "wiki-2013-european-floods": "EU",
+    "wiki-2016-european-floods": "EU",
+    "wiki-2021-european-floods": "EU",
+    "wiki-2024-central-european-floods": "EU",
+    "wiki-2024-spanish-floods": "ES",
+    "wiki-flood-control-netherlands": "EU",
+    "wiki-list-of-floods": "EU",
+    "wiki-moselle": "EU",
+    "wiki-neckar": "DE",
+    "wiki-seine": "FR"
+  }
+}

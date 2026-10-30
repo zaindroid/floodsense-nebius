@@ -1,0 +1,40 @@
+/* Civil protection desk: Situation board, call script. Only the tokens at the top of global.css are used. */
+.op-page { max-width: 62rem; }
+.op-page .card { min-width: 0; }
+.op-h { margin: 0.15rem 0 0.35rem; font-size: 1.1rem; overflow-wrap: anywhere; }
+.op-h4 { margin: 1rem 0 0.35rem; font-size: 0.95rem; }
+.op-h4--ok { color: var(--ok-ink); }
+.op-h4--no { color: var(--danger-ink); }
+.op-head { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 0.5rem 1rem; margin-bottom: 0.4rem; }
+.op-actions { justify-content: flex-start; flex-wrap: wrap; margin-top: 0.6rem; }
+
+.op-picker { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem 1rem; align-items: end; }
+.op-picker__counts { grid-column: 1 / -1; margin: 0; }
+@media (max-width: 560px) { .op-picker { grid-template-columns: minmax(0, 1fr); } }
+
+.op-river-list { list-style: none; margin: 0.6rem 0 0; padding: 0; display: flex; flex-direction: column; gap: 0.25rem; }
+.op-row { position: relative; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); padding: 0.45rem 0.65rem 0.5rem; }
+.op-row.is-selected { border-color: var(--brand); background: var(--brand-soft); box-shadow: inset 3px 0 0 var(--brand); }
+.op-row--warning, .op-row--elevated { border-left-width: 3px; }
+.op-row__pick { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 0.6rem; width: 100%; text-align: left; font: inherit; color: inherit; background: none; border: 0; padding: 0.15rem 0; cursor: pointer; min-height: 2.25rem; }
+.op-row__pick:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+.op-row__n { min-width: 1.4rem; height: 1.4rem; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--border); font-size: 0.75rem; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; }
+.op-row__name { font-weight: 650; overflow-wrap: anywhere; min-width: 0; }
+.op-row__line { margin: 0.1rem 0 0; overflow-wrap: anywhere; }
+.op-row__flow { position: absolute; left: 50%; bottom: -0.95rem; z-index: 1; font-size: 0.8rem; line-height: 1; color: var(--muted); background: var(--bg); padding: 0 0.25rem; }
+.op-river-list { row-gap: 0.7rem; }
+
+.op-claims { margin: 0.4rem 0 0; padding-left: 1.1rem; display: grid; gap: 0.45rem; overflow-wrap: anywhere; }
+.op-script__say { margin: 0.4rem 0 0.6rem; padding-left: 1.25rem; display: grid; gap: 0.4rem; font-size: 1.02rem; }
+.op-script ul, .op-script ol { overflow-wrap: anywhere; }
+.op-script ul { padding-left: 1.1rem; display: grid; gap: 0.4rem; margin: 0; }
+.op-channels { list-style: none; padding-left: 0 !important; }
+.op-two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem 1.5rem; }
+@media (max-width: 760px) { .op-two { grid-template-columns: minmax(0, 1fr); } }
+.op-badges { display: inline-flex; gap: 2px; margin-left: 3px; vertical-align: super; }
+.op-badge { cursor: help; }
+.op-sources { margin: 1rem 0 0; padding-left: 1.25rem; font-size: 0.85rem; color: var(--muted); display: grid; gap: 0.2rem; list-style: none; padding-left: 0; }
+.op-footer { margin: 0.9rem 0 0; padding-top: 0.6rem; border-top: 1px solid var(--border); font-weight: 650; }
+
+.op-partial { border: 1px solid var(--warn-ink); background: var(--risk-moderate-soft); color: var(--warn-ink); border-radius: var(--radius-sm); padding: 0.45rem 0.65rem; }
+.op-script .segmented__option { min-height: 44px; min-width: 44px; font-size: 0.9rem; }

@@ -1,0 +1,513 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:floodsense:contracts",
+  "title": "FloodSense EU shared contracts",
+  "description": "Wire format for agents, the API, and the UI. Field names follow docs/GAMEPLAN.md. This file is the source of truth. Python and TypeScript mirrors are checked against it.",
+  "$defs": {
+    "date_time": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+)?(Z|[+-][0-9]{2}:[0-9]{2})$",
+      "description": "ISO 8601 date-time with a Z or a numeric offset. The pattern is what CI enforces. format is recorded for tools that check it."
+    },
+    "locator": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Where inside a source the quote was found. On layers a and b every field is optional. On layer c, page, paragraph, and lines are required, and page is never null, including when the source is section-structured. Section stays optional on every layer and does not stand in for page.",
+      "properties": {
+        "section": { "type": "string", "minLength": 1 },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Required on layer c and never null there. A source with no PDF pagination still sets a page-like id: 1 for the whole document, or one id per section. Section does not replace page. Optional on layers a and b."
+        },
+        "paragraph": { "type": "integer", "minimum": 1 },
+        "lines": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Line range inside the paragraph, for example 3-5."
+        }
+      }
+    },
+    "citation": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "One citation record. Layers: a Zetaris evidence, b original source, c document passage. Layer c additionally requires quote, query_id, and locator.page, locator.paragraph, and locator.lines. chunk_id is optional. The runtime stays behind FF_RAG_DOCS. v0.14.0 is the layer (c) ship tag and is not cut in this change. v0.11.0 is the retired name and is not a tag. Layers a and b do not require locator, quote, query_id, or chunk_id.",
+      "required": [
+        "citation_id",
+        "claim_id",
+        "layer",
+        "source_url",
+        "title",
+        "publisher",
+        "accessed_at",
+        "licence",
+        "attribution",
+        "content_sha256",
+        "storage"
+      ],
+      "properties": {
+        "citation_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "claim_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "layer": { "enum": ["a", "b", "c"] },
+        "source_url": {
+          "type": "string",
+          "minLength": 1,
+          "format": "uri",
+          "pattern": "^[A-Za-z][A-Za-z0-9+.-]*:\\S+$"
+        },
+        "title": { "type": "string", "minLength": 1 },
+        "publisher": { "type": "string", "minLength": 1 },
+        "accessed_at": { "$ref": "#/$defs/date_time" },
+        "licence": { "type": "string", "minLength": 1 },
+        "attribution": { "type": "string", "minLength": 1 },
+        "locator": { "$ref": "#/$defs/locator" },
+        "quote": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 600,
+          "description": "One or two sentences. The schema does not count sentences."
+        },
+        "content_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$",
+          "description": "Lower-case SHA-256 hex. When quote is present this is the hash of that quote as UTF-8, which is what the Judge compares. A layer c chunk row keeps a separate hash of the full passage; that hash is not this field."
+        },
+        "storage": {
+          "enum": ["full_text", "pointer"],
+          "description": "full_text for sources we may store. pointer for paywalled or copyrighted sources."
+        },
+        "query_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "description": "Zetaris query id. Required on layer c, from the JDBC hydrate of the ranked chunk. Optional on layers a and b."
+        },
+        "chunk_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "description": "pgvector chunk id for a layer c passage. Optional. Layers a and b omit it."
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "layer": { "const": "c" } },
+            "required": ["layer"]
+          },
+          "then": {
+            "required": ["quote", "locator", "query_id"],
+            "properties": {
+              "locator": {
+                "type": "object",
+                "required": ["page", "paragraph", "lines"]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Layer (a). The Zetaris query behind a number. Row columns are not fixed yet.",
+      "required": ["query_id", "view", "sql", "rows_sample", "row_count", "executed_at_utc"],
+      "properties": {
+        "query_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "view": { "type": "string", "minLength": 1 },
+        "sql": { "type": "string", "minLength": 1 },
+        "rows_sample": {
+          "type": "array",
+          "maxItems": 20,
+          "items": { "type": "object" },
+          "description": "At most 20 rows. Keys depend on the view."
+        },
+        "row_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Full result size. May be larger than rows_sample."
+        },
+        "executed_at_utc": { "$ref": "#/$defs/date_time" }
+      }
+    },
+    "claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "A sentence that states a fact, a number, or a cause. Citations point at claim_id.",
+      "required": ["claim_id", "text"],
+      "properties": {
+        "claim_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "text": { "type": "string", "minLength": 1 },
+        "numbers_dropped": { "$ref": "#/$defs/numbers_dropped" }
+      }
+    },
+    "numbers_dropped": {
+      "type": "array",
+      "description": "Optional, for audit: numbers the Investigator set aside as not results, each with why (date, named line, query filter).",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["value", "reason"],
+        "properties": {
+          "value": { "type": "number" },
+          "reason": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "judge_claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Judge output for one claim. The Judge does not approve the claim.",
+      "required": [
+        "claim_id",
+        "grounding",
+        "citation_faithful",
+        "numbers_match",
+        "score",
+        "rationale",
+        "model_id"
+      ],
+      "properties": {
+        "claim_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "grounding": { "enum": ["supported", "partial", "unsupported"] },
+        "citation_faithful": { "type": "boolean" },
+        "numbers_match": { "type": "boolean" },
+        "numbers_dropped": { "$ref": "#/$defs/numbers_dropped" },
+        "score": { "type": "number", "minimum": 0, "maximum": 1 },
+        "rationale": { "type": "string", "minLength": 1 },
+        "model_id": {
+          "enum": [
+            "meterless/fast",
+            "meterless/deep",
+            "nvidia/nemotron-3.5-super-vl-120b-a12b",
+            "nvidia/nemotron-3.5-lightning-30b-a3b",
+            "nvidia/Nemotron-3.5-Super-VL",
+            "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+            "deterministic"
+          ],
+          "description": "Id the graph recorded. The contract names are the routing modes meterless/fast and meterless/deep. A reply that carries a grounding may instead name the model that answered. deterministic means the Judge did not call a model, or the reply did not parse or had no grounding: the score stays deterministic and does not keep a returned model id. Not meterless/auto. The discontinued nvidia/nemotron-3-super-120b-a12b id is not accepted. Which model answers a routing name today is the table at the top of docs/architecture/c4.md."
+        }
+      }
+    },
+    "judge": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Per-claim scores plus the overall score that goes in the approval payload.",
+      "required": ["claims", "overall_score"],
+      "properties": {
+        "claims": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/judge_claim" }
+        },
+        "overall_score": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "playbook_action": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "A proposed action. It cites evidence. It is not sent until a human approves.",
+      "required": ["action_id", "run_id", "title", "detail", "citation_ids"],
+      "properties": {
+        "action_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "run_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "title": { "type": "string", "minLength": 1 },
+        "detail": { "type": "string", "minLength": 1 },
+        "citation_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1, "maxLength": 128 }
+        },
+        "action_type": {
+          "enum": ["notify-policyholders", "dispatch-loss-adjuster", "flag-underwriting-review", "inform-public", null],
+          "description": "Optional (v0.13). What kind of step this is, for the approval card."
+        },
+        "target_region": { "type": ["string", "null"], "description": "Optional. The event's region." },
+        "affected_site_count": {
+          "type": ["integer", "null"],
+          "minimum": 0,
+          "description": "Optional. Distinct exposed sites from the Exposure query. Null when not knowable."
+        },
+        "draft_message": {
+          "type": ["string", "null"],
+          "description": "Optional. Exact text an outbound action would send. Sent only after approval; states only cited facts."
+        },
+        "outbound": { "type": "boolean", "description": "Optional. Contacts a person or authority: waits for approval." },
+        "released": { "type": "boolean", "description": "Optional. True once a reviewer approved or edited." }
+      }
+    },
+    "approval": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Human decision on one playbook action. approve, edit, and reject are the decisions. pending is the queue.",
+      "required": ["approval_id", "run_id", "action_id", "status"],
+      "properties": {
+        "approval_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "run_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "action_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "status": { "enum": ["pending", "approved", "edited", "rejected"] },
+        "note": { "type": "string", "minLength": 1 },
+        "judge": {
+          "$ref": "#/$defs/judge",
+          "description": "Present once the Judge has scored the run (v0.10.0). Optional before that."
+        }
+      }
+    },
+    "memory_used": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "One past approved finding H-MEM recalled for the Investigator. Context only, never evidence. seeded is true for items added by tasks.py demo-seed, not by an analyst.",
+      "required": ["memory_id", "text", "seeded"],
+      "properties": {
+        "memory_id": { "type": "string", "minLength": 1 },
+        "run_id": { "type": ["string", "null"] },
+        "claim_id": { "type": ["string", "null"] },
+        "approved_at": { "type": ["string", "null"] },
+        "text": { "type": "string" },
+        "relevance": { "type": ["number", "null"] },
+        "reviewer": { "type": ["string", "null"] },
+        "seeded": { "type": "boolean" }
+      }
+    },
+    "answer_fields": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "One run as the API serves it to the UI.",
+      "required": ["run_id", "question", "claims", "citations", "evidence", "served_from"],
+      "properties": {
+        "run_id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "question": { "type": "string", "minLength": 1 },
+        "claims": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/claim" }
+        },
+        "citations": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/citation" }
+        },
+        "evidence": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/evidence" }
+        },
+        "served_from": { "enum": ["live", "cache", "replay"] },
+        "cached_at": {
+          "type": ["string", "null"],
+          "description": "Required timestamp when served_from is cache or replay. Null or omitted when live. The cache rule checks the date-time format."
+        },
+        "playbook_actions": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/playbook_action" }
+        },
+        "judge": { "$ref": "#/$defs/judge" },
+        "lane": {
+          "enum": ["quick", "forecast", "full"],
+          "description": "Which agent path answered: quick (live watcher, deterministic template claims, deterministic Judge; no model call, no playbook, no HITL), forecast (weather_forecast, the GloFAS discharge forecast, the gauge, past patterns, H-MEM; deterministic claims and a template lead, no model call, deterministic Judge; no playbook, no HITL) or full (the deep investigation). Omitted by runs recorded before the router."
+        },
+        "forecast": { "$ref": "#/$defs/forecast" },
+        "plain": { "$ref": "#/$defs/plain" },
+        "router_reason": {
+          "type": "string",
+          "description": "Why the router chose the lane, and any escalation (\"escalated: ...\")."
+        },
+        "memory_used": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/memory_used" }
+        }
+      }
+    },
+    "answer_cache_rule": {
+      "if": {
+        "properties": { "served_from": { "const": "live" } },
+        "required": ["served_from"]
+      },
+      "then": {
+        "properties": { "cached_at": { "type": "null" } }
+      },
+      "else": {
+        "required": ["cached_at"],
+        "properties": { "cached_at": { "$ref": "#/$defs/date_time" } }
+      }
+    },
+    "plain": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Quick and forecast lanes only. The calm, plain-language answer, built by fixed rules from the statuses the lane computed (no model call). The claims stay the cited detail. A calm headline only when every computed status is normal and the data is complete.",
+      "required": ["headline", "one_line", "horizon", "status", "next_step", "disclaimer", "details"],
+      "properties": {
+        "headline": { "type": "string", "minLength": 1, "description": "One short sentence: Nothing alarming expected at <place>. / Keep an eye on <place>: <reason>. / Water is high at <place>. Follow official warnings. / We can't fully check <place> right now." },
+        "one_line": { "type": "string", "minLength": 1, "description": "One plain sentence with the reason and the horizon. A number appears only when a cited claim states it." },
+        "horizon": { "enum": ["48h", "7d"], "description": "7d only when the question asked for the week and the 7-day river forecast (eu_watch) covers it." },
+        "status": { "enum": ["normal", "watch", "elevated", "unknown"] },
+        "basis": { "enum": ["gauge", "model"], "description": "What the status is measured against: a gauge level or a model." },
+        "places": { "type": "array", "items": { "type": "string" } },
+        "country": { "type": ["string", "null"], "description": "ISO alpha-2 of the first asked place; picks the official warning links." },
+        "countries": { "type": "array", "items": { "type": "string" }, "description": "ISO alpha-2 of every asked place's country, in order; the UI shows each country's official links." },
+        "service": { "type": "string", "description": "The official service to follow, named in words." },
+        "context": { "type": ["string", "null"], "description": "A history item framed as history (past flood, source, demo seed when seeded), cut at a sentence boundary. Never presented as current." },
+        "next_step": { "type": "string", "minLength": 1 },
+        "disclaimer": { "type": "string", "minLength": 1 },
+        "details": { "type": "array", "items": { "type": "string" }, "description": "claim_id of every claim that is the cited detail." }
+      }
+    },
+    "forecast": {
+      "type": "object",
+      "description": "Forecast lane only. A FloodSense screening status and a template lead; never an official warning.",
+      "required": ["status", "disclaimer"],
+      "properties": {
+        "status": { "enum": ["Normal", "Watch", "Elevated"] },
+        "status_label": { "type": "string", "description": "Status plus what drives it, for example Elevated (river model) or Watch (rain)." },
+        "status_reason": { "type": "string" },
+        "places": { "type": "array", "items": { "type": "string" } },
+        "horizon_h": { "type": "integer", "minimum": 1 },
+        "lead": { "type": "string", "description": "Template status line built from the claims; no model writes it." },
+        "screening": { "type": "string" },
+        "gaps": { "type": "array", "items": { "type": "string" } },
+        "disclaimer": { "type": "string", "minLength": 1 },
+        "attribution": { "type": "string" }
+      }
+    },
+    "answer": {
+      "allOf": [
+        { "$ref": "#/$defs/answer_fields" },
+        { "$ref": "#/$defs/answer_cache_rule" }
+      ]
+    },
+    "reply_response": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Front-door reply to POST /runs: a greeting, help, thanks or off-topic message answered without a graph run. No run_id, never cached as a run, never carries a flood fact.",
+      "required": ["kind", "intent", "answer", "suggestions", "model_id", "latency_ms"],
+      "properties": {
+        "kind": { "const": "reply" },
+        "intent": { "enum": ["greeting", "help", "thanks", "off_topic"] },
+        "answer": { "type": "string", "minLength": 1 },
+        "suggestions": {
+          "type": "array",
+          "maxItems": 3,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "model_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The fast-lane model that classified the message, or \"rules\"."
+        },
+        "latency_ms": { "type": "integer", "minimum": 0 },
+        "lane": { "const": "reply", "description": "The router lane: always reply here." }
+      }
+    },
+    "watch_source": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Where a control tower event comes from: the contract view and the Zetaris query id of the read behind it. view is \"runs\" and query_id null for an event about an agent run, \"watch\" for the loop itself.",
+      "required": ["view"],
+      "properties": {
+        "view": { "type": "string", "minLength": 1 },
+        "query_id": { "type": ["string", "null"] }
+      }
+    },
+    "watch_event": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "One row of the control tower activity feed (GET /watch/events, SSE GET /watch/stream). The text comes from fixed templates and the rows read; no number is invented and no model writes it. id is \"w\" plus an 8-digit, strictly increasing sequence.",
+      "required": ["id", "ts", "kind", "agent", "place", "river", "country", "status", "tone", "text", "source", "data"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^w[0-9]{8}$" },
+        "ts": { "$ref": "#/$defs/date_time" },
+        "kind": {
+          "enum": ["detected", "checked", "exposure", "drafted", "awaiting_approval", "approved", "info"]
+        },
+        "agent": { "enum": ["Watch", "Forecast", "Exposure", "Playbook", "Judge", "Human"] },
+        "place_id": {
+          "type": ["string", "null"],
+          "description": "The watched source: gauge:<station>, model:<EU point>, valencia:<VAL point>. Null for an event about the loop or a run with no place."
+        },
+        "place": { "type": "string" },
+        "river": { "type": "string" },
+        "country": { "type": "string", "description": "ISO 3166-1 alpha-2, or empty." },
+        "status": {
+          "type": "string",
+          "description": "The source's plain status word at that moment (Normal, Above mean high water, Close to mean high water, Elevated (model), Watch (model), Far above its recent normal (model), Above its recent normal (model), No reading), or empty."
+        },
+        "tone": {
+          "enum": ["normal", "watch", "elevated", "neutral", "unknown"],
+          "description": "Colour class of the status. Never red; a model band is never a warning."
+        },
+        "text": { "type": "string", "minLength": 1 },
+        "run_id": { "type": ["string", "null"] },
+        "source": { "$ref": "#/$defs/watch_source" },
+        "detail": {
+          "type": ["string", "null"],
+          "description": "Optional technical detail (for example the raw upstream error of a failed read), kept out of the plain text. The UI shows it only in a collapsed Technical detail."
+        },
+        "data": {
+          "type": "object",
+          "description": "The numbers behind the sentence, read from the same rows (for example sites, insured_eur, rain_48h_mm, screening). Free keys."
+        }
+      }
+    },
+    "watch_status": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "GET /watch/status: the control tower's loop, last scan, counts and the auto-assess switch with its caps.",
+      "required": ["note", "loop", "scanning", "started_at", "counts", "awaiting_run_ids", "auto_assess", "persisted", "served_from"],
+      "properties": {
+        "note": { "type": "string", "description": "The honest label: rule-based watchers, no model calls." },
+        "loop": {
+          "type": "object",
+          "required": ["enabled", "alive", "interval_s", "next_cycle_at"],
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "alive": { "type": "boolean" },
+            "interval_s": { "type": "number" },
+            "next_cycle_at": { "type": ["string", "null"] }
+          }
+        },
+        "scanning": { "type": "boolean" },
+        "started_at": { "$ref": "#/$defs/date_time" },
+        "last_cycle": {
+          "type": ["object", "null"],
+          "description": "The last finished scan: started_at, finished_at, duration_ms, trigger, sources, elevated, new, errors, auto_assess_run_id. Null before the first scan."
+        },
+        "counts": {
+          "type": "object",
+          "required": ["sources", "elevated", "events", "awaiting_approval"],
+          "properties": {
+            "sources": { "type": "integer", "minimum": 0 },
+            "elevated": { "type": "integer", "minimum": 0 },
+            "events": { "type": "integer", "minimum": 0 },
+            "awaiting_approval": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "latest_event_id": { "type": ["string", "null"] },
+        "awaiting_run_ids": { "type": "array", "items": { "type": "string" } },
+        "auto_assess": {
+          "type": "object",
+          "required": ["enabled", "per_hour", "per_day", "used_hour", "used_day", "next_allowed_at", "uses_model_calls"],
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "per_hour": { "type": "integer", "minimum": 0 },
+            "per_day": { "type": "integer", "minimum": 0 },
+            "used_hour": { "type": "integer", "minimum": 0 },
+            "used_day": { "type": "integer", "minimum": 0 },
+            "next_allowed_at": { "type": ["string", "null"] },
+            "uses_model_calls": { "const": true }
+          }
+        },
+        "persisted": { "type": "boolean" },
+        "persisted_reason": { "type": ["string", "null"], "description": "Why nothing is saved between restarts (auto-assess then stays off), or null." },
+        "served_from": { "enum": ["live", "cache", "replay"] },
+        "cached_at": { "type": ["string", "null"] }
+      }
+    },
+    "run_response": {
+      "description": "What POST /runs returns: a run snapshot (answer) or a front-door reply.",
+      "oneOf": [
+        { "$ref": "#/$defs/answer" },
+        { "$ref": "#/$defs/reply_response" }
+      ]
+    }
+  }
+}

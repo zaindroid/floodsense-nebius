@@ -1,0 +1,39 @@
+/* "How this answer was made" sponsor tiles. Reads the global tokens only. */
+.tt { margin: 0.75rem 0; min-width: 0; max-width: 100%; color: var(--text); }
+.tt-title { margin: 0 0 0.25rem; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.02em; text-transform: uppercase; color: var(--muted); }
+.tt-line { margin: 0 0 0.5rem; font-size: 0.82rem; color: var(--muted); overflow-wrap: anywhere; }
+.tt-tiles { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.5rem; }
+.tt-tile { min-width: 0; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); }
+.tt-tile[data-tile="zetaris"] { border-color: var(--zetaris-border); background: var(--zetaris-bg); }
+.tt-tile-idle { background: var(--surface-2); }
+.tt-plain { cursor: default; }
+.tt-plain::after { content: none; }
+@media (min-width: 761px) { .tt-tiles-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+.tt-embedded { margin: 0.5rem 0 0; }
+.tt-latest, .tt-note { margin: 0.75rem 0; }
+.tt-tile-open { grid-column: 1 / -1; }
+.tt-btn {
+  display: flex; flex-direction: column; gap: 0.15rem; width: 100%; box-sizing: border-box; min-height: 44px;
+  padding: 0.5rem 1.5rem 0.5rem 0.6rem; border: 0; background: transparent; color: inherit; font: inherit; text-align: left;
+  cursor: pointer; border-radius: var(--radius-sm); position: relative;
+}
+.tt-btn::after { content: "\25B8"; position: absolute; right: 0.55rem; top: 0.5rem; color: var(--muted); }
+.tt-btn[aria-expanded="true"]::after { content: "\25BE"; }
+.tt-name { font-size: 0.75rem; font-weight: 700; color: var(--brand-ink); overflow-wrap: anywhere; }
+.tt-tile[data-tile="zetaris"] .tt-name { color: var(--zetaris-ink); }
+.tt-tile-idle .tt-name { color: var(--muted); }
+.tt-head { font-size: 0.82rem; line-height: 1.3; overflow-wrap: anywhere; }
+.tt-status { font-size: 0.72rem; color: var(--muted); }
+.tt-panel { padding: 0 0.6rem 0.6rem; font-size: 0.8rem; overflow-wrap: anywhere; }
+.tt-panel[hidden] { display: none; }
+.tt-gloss { margin: 0 0 0.35rem; color: var(--muted); font-style: italic; }
+.tt-details { margin: 0; display: flex; flex-direction: column; gap: 0.25rem; }
+.tt-details div { display: flex; flex-wrap: wrap; gap: 0.15rem 0.5rem; min-width: 0; }
+.tt-details dt { font-weight: 600; max-width: 100%; overflow-wrap: anywhere; }
+.tt-details dd { margin: 0; min-width: 0; overflow-wrap: anywhere; word-break: break-word; }
+@media (max-width: 760px) {
+  .tt-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 340px) {
+  .tt-tiles { grid-template-columns: minmax(0, 1fr); }
+}

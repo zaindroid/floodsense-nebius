@@ -1,0 +1,343 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FloodSense EU</title>
+<style>
+  :root {
+    --bg: #0e1116; --panel: #161b22; --line: #272e38; --ink: #e6edf3;
+    --dim: #8b949e; --accent: #58a6ff; --ok: #3fb950; --warn: #d29922;
+    --bad: #f85149; --mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f6f8fa; --panel: #fff; --line: #d8dee4; --ink: #1f2328;
+      --dim: #636c76; --accent: #0969da; --ok: #1a7f37; --warn: #9a6700;
+      --bad: #cf222e;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 15px/1.5 -apple-system, Segoe UI, Roboto, sans-serif;
+  }
+  header {
+    display: flex; flex-wrap: wrap; gap: 12px; align-items: baseline;
+    padding: 16px 20px; border-bottom: 1px solid var(--line);
+  }
+  header h1 { font-size: 17px; margin: 0; font-weight: 600; }
+  header .sp { flex: 1; }
+  .tag {
+    font: 11px/1.6 var(--mono); color: var(--dim);
+    border: 1px solid var(--line); border-radius: 10px; padding: 1px 7px;
+  }
+  main { max-width: 1100px; margin: 0 auto; padding: 20px; }
+  .panel {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 8px; padding: 16px; margin-bottom: 16px;
+  }
+  .panel h2 {
+    font-size: 12px; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--dim); margin: 0 0 12px; font-weight: 600;
+  }
+  form { display: flex; flex-wrap: wrap; gap: 10px; }
+  input, select, textarea, button {
+    font: inherit; color: var(--ink); background: var(--bg);
+    border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px;
+  }
+  input[name=question] { flex: 1 1 320px; }
+  textarea { width: 100%; min-height: 64px; font-family: var(--mono); font-size: 13px; }
+  button {
+    cursor: pointer; font-weight: 600; border-color: transparent;
+    background: var(--accent); color: #fff;
+  }
+  button:disabled { opacity: .5; cursor: default; }
+  button.ghost { background: transparent; border-color: var(--line); color: var(--ink); }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    font: 12px/1.5 var(--mono); border: 1px solid var(--line);
+    border-radius: 999px; padding: 2px 9px; color: var(--dim);
+  }
+  .chip b { color: var(--ink); font-weight: 600; }
+  .grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px;
+  }
+  .stat .n { font: 600 20px/1.2 var(--mono); }
+  .stat .k {
+    font-size: 11px; color: var(--dim); text-transform: uppercase; letter-spacing: .06em;
+  }
+  .ok { color: var(--ok); } .bad { color: var(--bad); } .warn { color: var(--warn); }
+  .row { border-top: 1px solid var(--line); padding: 10px 0; }
+  .row:first-of-type { border-top: 0; }
+  .mono { font-family: var(--mono); font-size: 13px; }
+  .dim { color: var(--dim); }
+  .cite {
+    font: 11px/1.4 var(--mono); color: var(--accent); background: transparent;
+    border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; cursor: pointer;
+  }
+  .pill {
+    font: 11px/1.6 var(--mono); border-radius: 999px; padding: 1px 8px;
+    border: 1px solid currentColor;
+  }
+  .hide { display: none; }
+  .err { color: var(--bad); }
+</style>
+
+<header>
+  <h1>FloodSense EU</h1>
+  <span class="tag">Secondary operator page. The product UI is the Vite console.</span>
+  <span class="tag" id="status">loading</span>
+  <span class="sp"></span>
+  <span class="tag" id="build"></span>
+</header>
+
+<main>
+  <div class="panel">
+    <h2>Ask</h2>
+    <form id="ask">
+      <input name="question" value="Why are our Valencia sites at risk?" required>
+      <select name="event_id">
+        <option value="EMSR773">EMSR773 &middot; Valencia 2024</option>
+        <option value="EMSR517">EMSR517 &middot; Ahr 2021</option>
+      </select>
+      <input name="replay_ts" placeholder="replay ts, optional" size="22">
+      <button id="go">Run</button>
+    </form>
+    <div id="runerr" class="err mono hide"></div>
+  </div>
+
+  <div id="out" class="hide">
+    <div class="panel">
+      <h2>Pipeline</h2>
+      <div class="chips" id="trace"></div>
+    </div>
+
+    <div class="panel">
+      <h2>Answer</h2>
+      <div id="summary"></div>
+    </div>
+
+    <div class="panel" id="judgepanel">
+      <h2>Judge</h2>
+      <div class="grid" id="judge"></div>
+    </div>
+
+    <div class="panel">
+      <h2>Exposure</h2>
+      <div class="grid" id="exposure"></div>
+    </div>
+
+    <div class="panel">
+      <h2>Hypotheses and Skeptic verdicts</h2>
+      <div id="hypotheses"></div>
+    </div>
+
+    <div class="panel">
+      <h2>Playbook</h2>
+      <div id="playbook"></div>
+    </div>
+
+    <div class="panel">
+      <h2>Review</h2>
+      <div id="approval"></div>
+    </div>
+
+    <div class="panel">
+      <h2>Claims and citations</h2>
+      <div id="claims"></div>
+    </div>
+  </div>
+</main>
+
+<script>
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s == null ? "" : s).replace(
+  /[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const pct = (x) => (x == null ? "n/a" : (x * 100).toFixed(0) + "%");
+// evidence arrives keyed by query id, anomalies as a list.
+const count = (x) => (Array.isArray(x) ? x.length : x ? Object.keys(x).length : 0);
+const eur = (x) => (x == null ? "n/a" : "€" + Math.round(x).toLocaleString("en-GB"));
+
+let run = null;
+
+async function api(path, opts) {
+  const r = await fetch(path, opts);
+  const body = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(body.detail || r.status + " " + r.statusText);
+  return body;
+}
+
+(async () => {
+  try {
+    const cfg = await api("/config");
+    const ver = await api("/version");
+    const on = Object.entries(cfg.flags).filter((e) => e[1]).map((e) => e[0].replace("FF_", ""));
+    $("#status").textContent = on.join(" / ") + " / " + cfg.schema;
+    $("#build").textContent = ver.sha.slice(0, 12) + " / " + ver.built;
+  } catch (e) {
+    $("#status").textContent = "service unreachable";
+    $("#status").className = "tag err";
+  }
+  // ?run=<id> opens a past run without starting a new one.
+  const past = new URLSearchParams(location.search).get("run");
+  if (past && /^[A-Za-z0-9_-]{1,64}$/.test(past)) {
+    try {
+      run = await api("/runs/" + past);
+      render();
+    } catch (err) {
+      $("#runerr").textContent = err.message;
+      $("#runerr").className = "err mono";
+    }
+  }
+})();
+
+$("#ask").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const f = new FormData(e.target);
+  const body = { question: f.get("question"), event_id: f.get("event_id") };
+  if (f.get("replay_ts")) body.replay_ts = f.get("replay_ts");
+  $("#go").disabled = true;
+  $("#go").textContent = "Running";
+  $("#runerr").className = "err mono hide";
+  try {
+    run = await api("/runs", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    render();
+  } catch (err) {
+    $("#runerr").textContent = err.message;
+    $("#runerr").className = "err mono";
+  } finally {
+    $("#go").disabled = false;
+    $("#go").textContent = "Run";
+  }
+});
+
+function stat(k, n, cls) {
+  return '<div class="stat"><div class="n ' + (cls || "") + '">' + esc(n) +
+    '</div><div class="k">' + esc(k) + "</div></div>";
+}
+
+function render() {
+  $("#out").className = "";
+
+  $("#trace").innerHTML = run.trace.map((t) => {
+    const bits = [t.lane, t.model_id, t.latency_ms == null ? null : t.latency_ms + "ms"]
+      .filter(Boolean).join(" ");
+    return '<span class="chip" title="' + esc(t.summary) + '"><b>' + esc(t.node) +
+      "</b> " + esc(bits) + "</span>";
+  }).join("");
+
+  const marked = esc(run.summary || "(no summary)").replace(/\[([^\]]+)\]/g, (m, ids) =>
+    ids.split(",").map((id) =>
+      '<button class="cite" data-claim="' + esc(id.trim()) + '">' + esc(id.trim()) +
+      "</button>").join(" "));
+  $("#summary").innerHTML = "<p>" + marked + "</p>";
+
+  const j = run.judge_summary;
+  $("#judgepanel").className = j ? "panel" : "panel hide";
+  if (j) {
+    $("#judge").innerHTML = [
+      stat("overall", j.overall.toFixed(2), j.passes ? "ok" : "bad"),
+      stat("citation coverage", pct(j.citation_coverage)),
+      stat("numeric accuracy", pct(j.numeric_accuracy)),
+      stat("claims judged", j.n_claims),
+      stat("verdict", j.passes ? "pass" : "fail", j.passes ? "ok" : "bad"),
+    ].join("");
+  }
+
+  const x = run.exposure || {};
+  $("#exposure").innerHTML = [
+    stat("policies", x.policies == null ? 0 : x.policies),
+    stat("sum insured", eur(x.sum_insured_eur)),
+    stat("sites", count(x.assets)),
+    stat("anomalies", count(run.anomalies)),
+    stat("evidence queries", count(run.evidence)),
+    stat("revise rounds", run.revise_rounds == null ? 0 : run.revise_rounds),
+  ].join("");
+
+  $("#hypotheses").innerHTML = (run.hypotheses || []).map((h) => {
+    const cls = h.status === "supported" ? "ok" : h.status === "not_supported" ? "bad" : "warn";
+    return '<div class="row"><span class="pill ' + cls + '">' + esc(h.status) +
+      '</span><span class="mono dim"> ' + esc(h.id) + " / " + esc(h.link) + "</span><div>" +
+      esc(h.statement) + "</div>" +
+      (h.rationale ? '<div class="dim mono">' + esc(h.rationale) + "</div>" : "") +
+      "</div>";
+  }).join("") || '<p class="dim">none</p>';
+
+  $("#playbook").innerHTML = run.playbook.map((a) =>
+    '<div class="row"><span class="pill ' + (a.released ? "ok" : "warn") + '">' +
+    (a.released ? "released" : "held") + '</span><span class="mono dim"> ' + a.horizon_h +
+    "h" + (a.outbound ? " / outbound" : "") + "</span><div>" + esc(a.text) +
+    '</div><div class="dim mono">' + esc((a.claim_ids || []).join(", ")) + "</div></div>"
+  ).join("");
+
+  renderApproval();
+
+  $("#claims").innerHTML = run.claims.map((c) =>
+    '<div class="row"><span class="mono dim">' + esc(c.claim_id) + " / " + esc(c.kind) +
+    '</span><div id="claim-' + esc(c.claim_id) + '">' + esc(c.text) +
+    '</div><div class="chips" style="margin-top:6px">' +
+    (c.citations || []).map((ct) =>
+      '<span class="chip" title="' + esc([ct.title, ct.publisher, ct.licence, ct.quote]
+        .filter(Boolean).join(" / ")) + '"><b>' + esc(ct.layer) + "</b> " +
+      esc(ct.title || ct.source_url || "cited") + "</span>").join("") +
+    "</div></div>"
+  ).join("");
+}
+
+function renderApproval() {
+  const a = run.approval || {};
+  const box = $("#approval");
+  if (a.status !== "awaiting") {
+    box.innerHTML = '<span class="pill ' + (a.status === "rejected" ? "bad" : "ok") + '">' +
+      esc(run.status) + "</span>" +
+      (a.reviewer_note ? '<div class="dim mono">' + esc(a.reviewer_note) + "</div>" : "");
+    return;
+  }
+  box.innerHTML = '<p class="dim">No outbound action is released until a reviewer decides.</p>' +
+    '<textarea id="note" placeholder="replacement summary for edit, or a note for reject">' +
+    '</textarea><div class="chips" style="margin-top:10px">' +
+    '<button data-act="approve">Approve</button>' +
+    '<button class="ghost" data-act="edit">Edit</button>' +
+    '<button class="ghost" data-act="reject">Reject</button></div>' +
+    '<div id="apperr" class="err mono"></div>';
+  box.querySelectorAll("button[data-act]").forEach((b) =>
+    b.addEventListener("click", () => decide(b.dataset.act)));
+}
+
+async function decide(action) {
+  const text = $("#note").value.trim();
+  const body = { action: action, reviewer: "console" };
+  if (action === "edit") {
+    if (!text) {
+      $("#apperr").textContent = "edit needs replacement text";
+      return;
+    }
+    body.edits = text;
+  } else if (text) {
+    body.reviewer_note = text;
+  }
+  try {
+    run = await api("/runs/" + run.run_id + "/approval", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    render();
+  } catch (err) {
+    $("#apperr").textContent = err.message;
+  }
+}
+
+document.addEventListener("click", (e) => {
+  const id = e.target.dataset && e.target.dataset.claim;
+  if (!id) return;
+  const el = document.getElementById("claim-" + id);
+  if (!el) return;
+  el.scrollIntoView({ behavior: "smooth", block: "center" });
+  el.style.outline = "2px solid var(--accent)";
+  setTimeout(() => { el.style.outline = ""; }, 1200);
+});
+</script>

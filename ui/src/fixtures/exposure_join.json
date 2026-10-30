@@ -1,0 +1,3233 @@
+[
+  {
+    "policy_id": "SYN-00001",
+    "site_id": "osm_n10172262799",
+    "lat": 39.464259,
+    "lon": -0.433454,
+    "in_footprint": true,
+    "sum_insured_eur": 3616000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00002",
+    "site_id": "osm_n10287933573",
+    "lat": 39.456347,
+    "lon": -0.372145,
+    "in_footprint": false,
+    "sum_insured_eur": 4586000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00003",
+    "site_id": "osm_n10295146716",
+    "lat": 39.457928,
+    "lon": -0.371782,
+    "in_footprint": false,
+    "sum_insured_eur": 733000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00004",
+    "site_id": "osm_n10402123069",
+    "lat": 39.456779,
+    "lon": -0.374161,
+    "in_footprint": false,
+    "sum_insured_eur": 4174000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00005",
+    "site_id": "osm_n10608291685",
+    "lat": 39.469188,
+    "lon": -0.368701,
+    "in_footprint": false,
+    "sum_insured_eur": 4646000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00006",
+    "site_id": "osm_n106333350",
+    "lat": 39.453176,
+    "lon": -0.403384,
+    "in_footprint": false,
+    "sum_insured_eur": 1477000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00007",
+    "site_id": "osm_n10689322325",
+    "lat": 39.414482,
+    "lon": -0.380661,
+    "in_footprint": true,
+    "sum_insured_eur": 510000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00008",
+    "site_id": "osm_n106914654",
+    "lat": 39.450565,
+    "lon": -0.372165,
+    "in_footprint": false,
+    "sum_insured_eur": 1416000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00009",
+    "site_id": "osm_n106914701",
+    "lat": 39.452605,
+    "lon": -0.37522,
+    "in_footprint": false,
+    "sum_insured_eur": 359000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00010",
+    "site_id": "osm_n106914719",
+    "lat": 39.454908,
+    "lon": -0.375751,
+    "in_footprint": false,
+    "sum_insured_eur": 1866000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00011",
+    "site_id": "osm_n10990441387",
+    "lat": 39.464887,
+    "lon": -0.389553,
+    "in_footprint": false,
+    "sum_insured_eur": 3735000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00012",
+    "site_id": "osm_n109967232",
+    "lat": 39.453765,
+    "lon": -0.403726,
+    "in_footprint": false,
+    "sum_insured_eur": 3500000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00013",
+    "site_id": "osm_n11028064590",
+    "lat": 39.48064,
+    "lon": -0.380174,
+    "in_footprint": false,
+    "sum_insured_eur": 3722000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00014",
+    "site_id": "osm_n11112459475",
+    "lat": 39.455503,
+    "lon": -0.387656,
+    "in_footprint": false,
+    "sum_insured_eur": 4803000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00015",
+    "site_id": "osm_n11188865653",
+    "lat": 39.428836,
+    "lon": -0.365633,
+    "in_footprint": true,
+    "sum_insured_eur": 782000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00016",
+    "site_id": "osm_n11225653639",
+    "lat": 39.451927,
+    "lon": -0.604266,
+    "in_footprint": false,
+    "sum_insured_eur": 4062000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00017",
+    "site_id": "osm_n11363919479",
+    "lat": 39.432404,
+    "lon": -0.391713,
+    "in_footprint": true,
+    "sum_insured_eur": 1830000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00018",
+    "site_id": "osm_n11371781948",
+    "lat": 39.484851,
+    "lon": -0.361915,
+    "in_footprint": false,
+    "sum_insured_eur": 4454000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00019",
+    "site_id": "osm_n11385772769",
+    "lat": 39.459657,
+    "lon": -0.373907,
+    "in_footprint": false,
+    "sum_insured_eur": 4323000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00020",
+    "site_id": "osm_n11549370042",
+    "lat": 39.426022,
+    "lon": -0.381119,
+    "in_footprint": true,
+    "sum_insured_eur": 3901000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00021",
+    "site_id": "osm_n11700296754",
+    "lat": 39.471523,
+    "lon": -0.379881,
+    "in_footprint": false,
+    "sum_insured_eur": 4107000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00022",
+    "site_id": "osm_n11731569643",
+    "lat": 39.463635,
+    "lon": -0.38216,
+    "in_footprint": false,
+    "sum_insured_eur": 4816000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00023",
+    "site_id": "osm_n11804872286",
+    "lat": 39.489317,
+    "lon": -0.371726,
+    "in_footprint": false,
+    "sum_insured_eur": 417000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00024",
+    "site_id": "osm_n11804872287",
+    "lat": 39.489555,
+    "lon": -0.372791,
+    "in_footprint": false,
+    "sum_insured_eur": 2048000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00025",
+    "site_id": "osm_n12097813503",
+    "lat": 39.460916,
+    "lon": -0.366848,
+    "in_footprint": false,
+    "sum_insured_eur": 2259000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00026",
+    "site_id": "osm_n12138540233",
+    "lat": 39.460652,
+    "lon": -0.36949,
+    "in_footprint": false,
+    "sum_insured_eur": 662000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00027",
+    "site_id": "osm_n12237784781",
+    "lat": 39.484468,
+    "lon": -0.362641,
+    "in_footprint": false,
+    "sum_insured_eur": 2093000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00028",
+    "site_id": "osm_n12311509905",
+    "lat": 39.458125,
+    "lon": -0.360425,
+    "in_footprint": false,
+    "sum_insured_eur": 1577000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00029",
+    "site_id": "osm_n12322998683",
+    "lat": 39.441499,
+    "lon": -0.457389,
+    "in_footprint": false,
+    "sum_insured_eur": 1354000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00030",
+    "site_id": "osm_n12386032854",
+    "lat": 39.421485,
+    "lon": -0.385863,
+    "in_footprint": false,
+    "sum_insured_eur": 3163000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00031",
+    "site_id": "osm_n12486617927",
+    "lat": 39.494293,
+    "lon": -0.39552,
+    "in_footprint": false,
+    "sum_insured_eur": 3512000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00032",
+    "site_id": "osm_n12593875451",
+    "lat": 39.438018,
+    "lon": -0.431021,
+    "in_footprint": true,
+    "sum_insured_eur": 4107000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00033",
+    "site_id": "osm_n12593875455",
+    "lat": 39.43737,
+    "lon": -0.432025,
+    "in_footprint": true,
+    "sum_insured_eur": 2473000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00034",
+    "site_id": "osm_n12593875457",
+    "lat": 39.436325,
+    "lon": -0.430816,
+    "in_footprint": true,
+    "sum_insured_eur": 10900000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00035",
+    "site_id": "osm_n12593875467",
+    "lat": 39.43641,
+    "lon": -0.430166,
+    "in_footprint": true,
+    "sum_insured_eur": 832000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00036",
+    "site_id": "osm_n12593875469",
+    "lat": 39.436364,
+    "lon": -0.429055,
+    "in_footprint": true,
+    "sum_insured_eur": 9898000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00037",
+    "site_id": "osm_n12595251281",
+    "lat": 39.440865,
+    "lon": -0.426066,
+    "in_footprint": true,
+    "sum_insured_eur": 5080000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00038",
+    "site_id": "osm_n12652615228",
+    "lat": 39.48957,
+    "lon": -0.463388,
+    "in_footprint": false,
+    "sum_insured_eur": 2983000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00039",
+    "site_id": "osm_n12724163247",
+    "lat": 39.486102,
+    "lon": -0.36297,
+    "in_footprint": false,
+    "sum_insured_eur": 1210000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00040",
+    "site_id": "osm_n12724178201",
+    "lat": 39.48624,
+    "lon": -0.362698,
+    "in_footprint": false,
+    "sum_insured_eur": 2129000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00041",
+    "site_id": "osm_n12765911990",
+    "lat": 39.462058,
+    "lon": -0.387179,
+    "in_footprint": false,
+    "sum_insured_eur": 429000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00042",
+    "site_id": "osm_n12863072890",
+    "lat": 39.458085,
+    "lon": -0.403222,
+    "in_footprint": false,
+    "sum_insured_eur": 2676000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00043",
+    "site_id": "osm_n12923580800",
+    "lat": 39.472694,
+    "lon": -0.380855,
+    "in_footprint": false,
+    "sum_insured_eur": 4421000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00044",
+    "site_id": "osm_n13179003338",
+    "lat": 39.459415,
+    "lon": -0.372145,
+    "in_footprint": false,
+    "sum_insured_eur": 3304000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00045",
+    "site_id": "osm_n13203779457",
+    "lat": 39.466093,
+    "lon": -0.42966,
+    "in_footprint": true,
+    "sum_insured_eur": 3066000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00046",
+    "site_id": "osm_n13206753531",
+    "lat": 39.474355,
+    "lon": -0.419814,
+    "in_footprint": false,
+    "sum_insured_eur": 4302000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00047",
+    "site_id": "osm_n13227010701",
+    "lat": 39.443635,
+    "lon": -0.366961,
+    "in_footprint": false,
+    "sum_insured_eur": 4687000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00048",
+    "site_id": "osm_n13238980533",
+    "lat": 39.40518,
+    "lon": -0.40843,
+    "in_footprint": false,
+    "sum_insured_eur": 3761000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00049",
+    "site_id": "osm_n13252954772",
+    "lat": 39.471261,
+    "lon": -0.419089,
+    "in_footprint": false,
+    "sum_insured_eur": 1182000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00050",
+    "site_id": "osm_n13289385687",
+    "lat": 39.404187,
+    "lon": -0.406192,
+    "in_footprint": false,
+    "sum_insured_eur": 1516000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00051",
+    "site_id": "osm_n13388467986",
+    "lat": 39.473361,
+    "lon": -0.416716,
+    "in_footprint": false,
+    "sum_insured_eur": 667000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00052",
+    "site_id": "osm_n13448629263",
+    "lat": 39.482334,
+    "lon": -0.437854,
+    "in_footprint": false,
+    "sum_insured_eur": 739000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00053",
+    "site_id": "osm_n13449799801",
+    "lat": 39.433824,
+    "lon": -0.545969,
+    "in_footprint": false,
+    "sum_insured_eur": 3459000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00054",
+    "site_id": "osm_n13464822423",
+    "lat": 39.480302,
+    "lon": -0.449122,
+    "in_footprint": false,
+    "sum_insured_eur": 4649000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00055",
+    "site_id": "osm_n13524405601",
+    "lat": 39.477513,
+    "lon": -0.422506,
+    "in_footprint": false,
+    "sum_insured_eur": 3371000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00056",
+    "site_id": "osm_n13532894501",
+    "lat": 39.472982,
+    "lon": -0.411716,
+    "in_footprint": false,
+    "sum_insured_eur": 3418000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00057",
+    "site_id": "osm_n13623389996",
+    "lat": 39.438106,
+    "lon": -0.427645,
+    "in_footprint": true,
+    "sum_insured_eur": 6062000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00058",
+    "site_id": "osm_n13623389997",
+    "lat": 39.438366,
+    "lon": -0.427872,
+    "in_footprint": true,
+    "sum_insured_eur": 7241000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00059",
+    "site_id": "osm_n13623390000",
+    "lat": 39.438884,
+    "lon": -0.428315,
+    "in_footprint": true,
+    "sum_insured_eur": 1685000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00060",
+    "site_id": "osm_n13623452102",
+    "lat": 39.43927,
+    "lon": -0.428759,
+    "in_footprint": true,
+    "sum_insured_eur": 6275000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00061",
+    "site_id": "osm_n13645714201",
+    "lat": 39.425622,
+    "lon": -0.420109,
+    "in_footprint": true,
+    "sum_insured_eur": 972000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00062",
+    "site_id": "osm_n13720483501",
+    "lat": 39.449533,
+    "lon": -0.361966,
+    "in_footprint": false,
+    "sum_insured_eur": 4493000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00063",
+    "site_id": "osm_n13776717378",
+    "lat": 39.472408,
+    "lon": -0.377422,
+    "in_footprint": false,
+    "sum_insured_eur": 2391000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00064",
+    "site_id": "osm_n1386005517",
+    "lat": 39.495027,
+    "lon": -0.379437,
+    "in_footprint": false,
+    "sum_insured_eur": 764000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00065",
+    "site_id": "osm_n13919195601",
+    "lat": 39.493758,
+    "lon": -0.380225,
+    "in_footprint": false,
+    "sum_insured_eur": 431000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00066",
+    "site_id": "osm_n13919195701",
+    "lat": 39.497541,
+    "lon": -0.37693,
+    "in_footprint": false,
+    "sum_insured_eur": 3728000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00067",
+    "site_id": "osm_n13953593144",
+    "lat": 39.462421,
+    "lon": -0.384948,
+    "in_footprint": false,
+    "sum_insured_eur": 182000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00068",
+    "site_id": "osm_n13953593145",
+    "lat": 39.459871,
+    "lon": -0.38369,
+    "in_footprint": false,
+    "sum_insured_eur": 592000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00069",
+    "site_id": "osm_n13956086114",
+    "lat": 39.393958,
+    "lon": -0.407018,
+    "in_footprint": false,
+    "sum_insured_eur": 1128000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00070",
+    "site_id": "osm_n13965019186",
+    "lat": 39.47716,
+    "lon": -0.417532,
+    "in_footprint": false,
+    "sum_insured_eur": 1194000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00071",
+    "site_id": "osm_n13972356861",
+    "lat": 39.469392,
+    "lon": -0.370765,
+    "in_footprint": false,
+    "sum_insured_eur": 757000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00072",
+    "site_id": "osm_n13972356862",
+    "lat": 39.497083,
+    "lon": -0.374169,
+    "in_footprint": false,
+    "sum_insured_eur": 3599000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00073",
+    "site_id": "osm_n13997889203",
+    "lat": 39.485429,
+    "lon": -0.383873,
+    "in_footprint": false,
+    "sum_insured_eur": 2983000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00074",
+    "site_id": "osm_n13997889205",
+    "lat": 39.485174,
+    "lon": -0.383226,
+    "in_footprint": false,
+    "sum_insured_eur": 463000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00075",
+    "site_id": "osm_n14003316701",
+    "lat": 39.456105,
+    "lon": -0.402865,
+    "in_footprint": false,
+    "sum_insured_eur": 4490000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00076",
+    "site_id": "osm_n14064131826",
+    "lat": 39.39647,
+    "lon": -0.409754,
+    "in_footprint": false,
+    "sum_insured_eur": 2940000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00077",
+    "site_id": "osm_n14114731981",
+    "lat": 39.471885,
+    "lon": -0.409608,
+    "in_footprint": false,
+    "sum_insured_eur": 4299000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00078",
+    "site_id": "osm_n14127662890",
+    "lat": 39.468265,
+    "lon": -0.405642,
+    "in_footprint": false,
+    "sum_insured_eur": 4595000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00079",
+    "site_id": "osm_n14163531101",
+    "lat": 39.48395,
+    "lon": -0.385137,
+    "in_footprint": false,
+    "sum_insured_eur": 553000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00080",
+    "site_id": "osm_n14197011105",
+    "lat": 39.482297,
+    "lon": -0.444973,
+    "in_footprint": false,
+    "sum_insured_eur": 217000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00081",
+    "site_id": "osm_n1474264704",
+    "lat": 39.491168,
+    "lon": -0.395792,
+    "in_footprint": false,
+    "sum_insured_eur": 2122000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00082",
+    "site_id": "osm_n1479104479",
+    "lat": 39.491926,
+    "lon": -0.396561,
+    "in_footprint": false,
+    "sum_insured_eur": 298000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00083",
+    "site_id": "osm_n1480123244",
+    "lat": 39.491046,
+    "lon": -0.399123,
+    "in_footprint": false,
+    "sum_insured_eur": 514000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00084",
+    "site_id": "osm_n155270091",
+    "lat": 39.465555,
+    "lon": -0.458588,
+    "in_footprint": true,
+    "sum_insured_eur": 1127000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00085",
+    "site_id": "osm_n1594857166",
+    "lat": 39.488398,
+    "lon": -0.375138,
+    "in_footprint": false,
+    "sum_insured_eur": 3879000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00086",
+    "site_id": "osm_n1667454433",
+    "lat": 39.431174,
+    "lon": -0.416465,
+    "in_footprint": true,
+    "sum_insured_eur": 325000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00087",
+    "site_id": "osm_n1769502694",
+    "lat": 39.431362,
+    "lon": -0.417332,
+    "in_footprint": true,
+    "sum_insured_eur": 687000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00088",
+    "site_id": "osm_n1783289780",
+    "lat": 39.460463,
+    "lon": -0.375808,
+    "in_footprint": false,
+    "sum_insured_eur": 3198000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00089",
+    "site_id": "osm_n1783289782",
+    "lat": 39.465295,
+    "lon": -0.375361,
+    "in_footprint": false,
+    "sum_insured_eur": 4393000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00090",
+    "site_id": "osm_n1783289783",
+    "lat": 39.469607,
+    "lon": -0.368283,
+    "in_footprint": false,
+    "sum_insured_eur": 4210000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00091",
+    "site_id": "osm_n1783289787",
+    "lat": 39.459867,
+    "lon": -0.374117,
+    "in_footprint": false,
+    "sum_insured_eur": 3211000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00092",
+    "site_id": "osm_n1783289793",
+    "lat": 39.465406,
+    "lon": -0.364447,
+    "in_footprint": false,
+    "sum_insured_eur": 2455000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00093",
+    "site_id": "osm_n1792880816",
+    "lat": 39.482699,
+    "lon": -0.370389,
+    "in_footprint": false,
+    "sum_insured_eur": 3533000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00094",
+    "site_id": "osm_n1792880817",
+    "lat": 39.483961,
+    "lon": -0.369714,
+    "in_footprint": false,
+    "sum_insured_eur": 1150000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00095",
+    "site_id": "osm_n1825683369",
+    "lat": 39.426786,
+    "lon": -0.482428,
+    "in_footprint": false,
+    "sum_insured_eur": 505000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00096",
+    "site_id": "osm_n1850882649",
+    "lat": 39.461698,
+    "lon": -0.393825,
+    "in_footprint": false,
+    "sum_insured_eur": 2215000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00097",
+    "site_id": "osm_n1887524474",
+    "lat": 39.394903,
+    "lon": -0.409173,
+    "in_footprint": false,
+    "sum_insured_eur": 1608000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00098",
+    "site_id": "osm_n2281179758",
+    "lat": 39.485583,
+    "lon": -0.362086,
+    "in_footprint": false,
+    "sum_insured_eur": 3094000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00099",
+    "site_id": "osm_n2475527908",
+    "lat": 39.468554,
+    "lon": -0.38133,
+    "in_footprint": false,
+    "sum_insured_eur": 2985000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00100",
+    "site_id": "osm_n2501207349",
+    "lat": 39.499317,
+    "lon": -0.40874,
+    "in_footprint": false,
+    "sum_insured_eur": 171000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00101",
+    "site_id": "osm_n2509914530",
+    "lat": 39.456389,
+    "lon": -0.462061,
+    "in_footprint": false,
+    "sum_insured_eur": 1445000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00102",
+    "site_id": "osm_n2509914531",
+    "lat": 39.456314,
+    "lon": -0.462888,
+    "in_footprint": false,
+    "sum_insured_eur": 3654000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00103",
+    "site_id": "osm_n2610813148",
+    "lat": 39.46404,
+    "lon": -0.427942,
+    "in_footprint": true,
+    "sum_insured_eur": 495000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00104",
+    "site_id": "osm_n2656119553",
+    "lat": 39.490616,
+    "lon": -0.381196,
+    "in_footprint": false,
+    "sum_insured_eur": 3434000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00105",
+    "site_id": "osm_n2656119556",
+    "lat": 39.491251,
+    "lon": -0.380819,
+    "in_footprint": false,
+    "sum_insured_eur": 4387000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00106",
+    "site_id": "osm_n2682321461",
+    "lat": 39.452159,
+    "lon": -0.389844,
+    "in_footprint": false,
+    "sum_insured_eur": 854000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00107",
+    "site_id": "osm_n2909140136",
+    "lat": 39.477305,
+    "lon": -0.41985,
+    "in_footprint": false,
+    "sum_insured_eur": 2929000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00108",
+    "site_id": "osm_n3004594121",
+    "lat": 39.472706,
+    "lon": -0.414643,
+    "in_footprint": false,
+    "sum_insured_eur": 604000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00109",
+    "site_id": "osm_n3013881972",
+    "lat": 39.46787,
+    "lon": -0.385602,
+    "in_footprint": false,
+    "sum_insured_eur": 2086000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00110",
+    "site_id": "osm_n3367095327",
+    "lat": 39.481261,
+    "lon": -0.453647,
+    "in_footprint": false,
+    "sum_insured_eur": 2932000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00111",
+    "site_id": "osm_n3600385824",
+    "lat": 39.49323,
+    "lon": -0.392937,
+    "in_footprint": false,
+    "sum_insured_eur": 1843000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00112",
+    "site_id": "osm_n3658278552",
+    "lat": 39.463669,
+    "lon": -0.371927,
+    "in_footprint": false,
+    "sum_insured_eur": 898000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00113",
+    "site_id": "osm_n3688197204",
+    "lat": 39.466552,
+    "lon": -0.429215,
+    "in_footprint": true,
+    "sum_insured_eur": 2585000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00114",
+    "site_id": "osm_n3698712535",
+    "lat": 39.461451,
+    "lon": -0.387723,
+    "in_footprint": false,
+    "sum_insured_eur": 3551000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00115",
+    "site_id": "osm_n4090161071",
+    "lat": 39.413852,
+    "lon": -0.399218,
+    "in_footprint": false,
+    "sum_insured_eur": 1628000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00116",
+    "site_id": "osm_n4103882463",
+    "lat": 39.45815,
+    "lon": -0.39282,
+    "in_footprint": false,
+    "sum_insured_eur": 1724000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00117",
+    "site_id": "osm_n4111725004",
+    "lat": 39.483401,
+    "lon": -0.383136,
+    "in_footprint": false,
+    "sum_insured_eur": 3968000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00118",
+    "site_id": "osm_n4111725005",
+    "lat": 39.469676,
+    "lon": -0.38373,
+    "in_footprint": false,
+    "sum_insured_eur": 1601000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00119",
+    "site_id": "osm_n4307621589",
+    "lat": 39.475093,
+    "lon": -0.389903,
+    "in_footprint": false,
+    "sum_insured_eur": 746000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00120",
+    "site_id": "osm_n4523277176",
+    "lat": 39.484434,
+    "lon": -0.383364,
+    "in_footprint": false,
+    "sum_insured_eur": 4958000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00121",
+    "site_id": "osm_n4599543390",
+    "lat": 39.467168,
+    "lon": -0.37925,
+    "in_footprint": false,
+    "sum_insured_eur": 2521000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00122",
+    "site_id": "osm_n4679988389",
+    "lat": 39.481301,
+    "lon": -0.361178,
+    "in_footprint": false,
+    "sum_insured_eur": 1001000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00123",
+    "site_id": "osm_n4710305268",
+    "lat": 39.471038,
+    "lon": -0.380214,
+    "in_footprint": false,
+    "sum_insured_eur": 182000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00124",
+    "site_id": "osm_n472668096",
+    "lat": 39.465096,
+    "lon": -0.463013,
+    "in_footprint": false,
+    "sum_insured_eur": 558000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00125",
+    "site_id": "osm_n4729551850",
+    "lat": 39.422841,
+    "lon": -0.386679,
+    "in_footprint": false,
+    "sum_insured_eur": 3182000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00126",
+    "site_id": "osm_n4734189852",
+    "lat": 39.483711,
+    "lon": -0.384617,
+    "in_footprint": false,
+    "sum_insured_eur": 4046000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00127",
+    "site_id": "osm_n4741418422",
+    "lat": 39.465817,
+    "lon": -0.369553,
+    "in_footprint": false,
+    "sum_insured_eur": 538000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00128",
+    "site_id": "osm_n4744211521",
+    "lat": 39.47271,
+    "lon": -0.379618,
+    "in_footprint": false,
+    "sum_insured_eur": 3589000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00129",
+    "site_id": "osm_n4897372522",
+    "lat": 39.465314,
+    "lon": -0.387623,
+    "in_footprint": false,
+    "sum_insured_eur": 1823000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00130",
+    "site_id": "osm_n4932505621",
+    "lat": 39.466113,
+    "lon": -0.382366,
+    "in_footprint": false,
+    "sum_insured_eur": 2299000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00131",
+    "site_id": "osm_n4932505622",
+    "lat": 39.466505,
+    "lon": -0.369337,
+    "in_footprint": false,
+    "sum_insured_eur": 2478000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00132",
+    "site_id": "osm_n4937348723",
+    "lat": 39.472613,
+    "lon": -0.384232,
+    "in_footprint": false,
+    "sum_insured_eur": 1203000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00133",
+    "site_id": "osm_n4948961222",
+    "lat": 39.460848,
+    "lon": -0.363468,
+    "in_footprint": false,
+    "sum_insured_eur": 2021000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00134",
+    "site_id": "osm_n4985396904",
+    "lat": 39.364438,
+    "lon": -0.473875,
+    "in_footprint": false,
+    "sum_insured_eur": 3820000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00135",
+    "site_id": "osm_n4985397682",
+    "lat": 39.364986,
+    "lon": -0.472283,
+    "in_footprint": false,
+    "sum_insured_eur": 3315000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00136",
+    "site_id": "osm_n5125499106",
+    "lat": 39.366867,
+    "lon": -0.411413,
+    "in_footprint": false,
+    "sum_insured_eur": 1698000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00137",
+    "site_id": "osm_n525664378",
+    "lat": 39.443604,
+    "lon": -0.391747,
+    "in_footprint": false,
+    "sum_insured_eur": 3103000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00138",
+    "site_id": "osm_n5257504624",
+    "lat": 39.485979,
+    "lon": -0.392597,
+    "in_footprint": false,
+    "sum_insured_eur": 4243000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00139",
+    "site_id": "osm_n5268218400",
+    "lat": 39.361075,
+    "lon": -0.412433,
+    "in_footprint": false,
+    "sum_insured_eur": 3104000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00140",
+    "site_id": "osm_n5273932723",
+    "lat": 39.473199,
+    "lon": -0.367471,
+    "in_footprint": false,
+    "sum_insured_eur": 2073000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00141",
+    "site_id": "osm_n5286621801",
+    "lat": 39.358483,
+    "lon": -0.410433,
+    "in_footprint": false,
+    "sum_insured_eur": 456000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00142",
+    "site_id": "osm_n5286621802",
+    "lat": 39.358032,
+    "lon": -0.411918,
+    "in_footprint": false,
+    "sum_insured_eur": 413000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00143",
+    "site_id": "osm_n5286767386",
+    "lat": 39.363534,
+    "lon": -0.419307,
+    "in_footprint": false,
+    "sum_insured_eur": 2905000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00144",
+    "site_id": "osm_n5299082020",
+    "lat": 39.487994,
+    "lon": -0.390385,
+    "in_footprint": false,
+    "sum_insured_eur": 2419000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00145",
+    "site_id": "osm_n5299082723",
+    "lat": 39.48794,
+    "lon": -0.389615,
+    "in_footprint": false,
+    "sum_insured_eur": 2627000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00146",
+    "site_id": "osm_n530074755",
+    "lat": 39.483095,
+    "lon": -0.395919,
+    "in_footprint": false,
+    "sum_insured_eur": 3331000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00147",
+    "site_id": "osm_n5606961623",
+    "lat": 39.489762,
+    "lon": -0.389269,
+    "in_footprint": false,
+    "sum_insured_eur": 1732000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00148",
+    "site_id": "osm_n5609473044",
+    "lat": 39.449254,
+    "lon": -0.388624,
+    "in_footprint": false,
+    "sum_insured_eur": 4373000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00149",
+    "site_id": "osm_n5863363297",
+    "lat": 39.484352,
+    "lon": -0.383953,
+    "in_footprint": false,
+    "sum_insured_eur": 3167000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00150",
+    "site_id": "osm_n5972762969",
+    "lat": 39.475145,
+    "lon": -0.363238,
+    "in_footprint": false,
+    "sum_insured_eur": 2020000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00151",
+    "site_id": "osm_n6203257907",
+    "lat": 39.426753,
+    "lon": -0.414924,
+    "in_footprint": true,
+    "sum_insured_eur": 2586000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00152",
+    "site_id": "osm_n6291636875",
+    "lat": 39.487395,
+    "lon": -0.362287,
+    "in_footprint": false,
+    "sum_insured_eur": 362000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00153",
+    "site_id": "osm_n6318095963",
+    "lat": 39.48299,
+    "lon": -0.378122,
+    "in_footprint": false,
+    "sum_insured_eur": 2344000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00154",
+    "site_id": "osm_n6320623003",
+    "lat": 39.483911,
+    "lon": -0.363227,
+    "in_footprint": false,
+    "sum_insured_eur": 1706000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00155",
+    "site_id": "osm_n6337557628",
+    "lat": 39.492835,
+    "lon": -0.371295,
+    "in_footprint": false,
+    "sum_insured_eur": 954000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00156",
+    "site_id": "osm_n6395687842",
+    "lat": 39.476104,
+    "lon": -0.365177,
+    "in_footprint": false,
+    "sum_insured_eur": 3801000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00157",
+    "site_id": "osm_n6395687843",
+    "lat": 39.464119,
+    "lon": -0.383227,
+    "in_footprint": false,
+    "sum_insured_eur": 458000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00158",
+    "site_id": "osm_n6395687845",
+    "lat": 39.460534,
+    "lon": -0.375871,
+    "in_footprint": false,
+    "sum_insured_eur": 2560000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00159",
+    "site_id": "osm_n6395687847",
+    "lat": 39.487465,
+    "lon": -0.373813,
+    "in_footprint": false,
+    "sum_insured_eur": 3070000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00160",
+    "site_id": "osm_n6404014385",
+    "lat": 39.471782,
+    "lon": -0.396704,
+    "in_footprint": false,
+    "sum_insured_eur": 3024000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00161",
+    "site_id": "osm_n6436894203",
+    "lat": 39.466262,
+    "lon": -0.38315,
+    "in_footprint": false,
+    "sum_insured_eur": 3655000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00162",
+    "site_id": "osm_n6439787530",
+    "lat": 39.467331,
+    "lon": -0.383875,
+    "in_footprint": false,
+    "sum_insured_eur": 2603000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00163",
+    "site_id": "osm_n6444763097",
+    "lat": 39.491386,
+    "lon": -0.38558,
+    "in_footprint": false,
+    "sum_insured_eur": 1555000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00164",
+    "site_id": "osm_n6445298659",
+    "lat": 39.492586,
+    "lon": -0.389516,
+    "in_footprint": false,
+    "sum_insured_eur": 2440000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00165",
+    "site_id": "osm_n6445318707",
+    "lat": 39.493017,
+    "lon": -0.387243,
+    "in_footprint": false,
+    "sum_insured_eur": 1073000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00166",
+    "site_id": "osm_n6505455770",
+    "lat": 39.422283,
+    "lon": -0.506723,
+    "in_footprint": false,
+    "sum_insured_eur": 4123000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00167",
+    "site_id": "osm_n6625118553",
+    "lat": 39.481686,
+    "lon": -0.390377,
+    "in_footprint": false,
+    "sum_insured_eur": 2846000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00168",
+    "site_id": "osm_n6638503684",
+    "lat": 39.477561,
+    "lon": -0.382918,
+    "in_footprint": false,
+    "sum_insured_eur": 299000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00169",
+    "site_id": "osm_n6761092925",
+    "lat": 39.467002,
+    "lon": -0.368154,
+    "in_footprint": false,
+    "sum_insured_eur": 740000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00170",
+    "site_id": "osm_n6780758447",
+    "lat": 39.494228,
+    "lon": -0.463766,
+    "in_footprint": false,
+    "sum_insured_eur": 4873000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00171",
+    "site_id": "osm_n6780792057",
+    "lat": 39.467082,
+    "lon": -0.427115,
+    "in_footprint": true,
+    "sum_insured_eur": 3352000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00172",
+    "site_id": "osm_n6780820348",
+    "lat": 39.431468,
+    "lon": -0.416895,
+    "in_footprint": true,
+    "sum_insured_eur": 768000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00173",
+    "site_id": "osm_n6780821331",
+    "lat": 39.364284,
+    "lon": -0.411256,
+    "in_footprint": false,
+    "sum_insured_eur": 2265000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00174",
+    "site_id": "osm_n6780825515",
+    "lat": 39.364049,
+    "lon": -0.463223,
+    "in_footprint": false,
+    "sum_insured_eur": 2215000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00175",
+    "site_id": "osm_n6872751289",
+    "lat": 39.439664,
+    "lon": -0.460465,
+    "in_footprint": false,
+    "sum_insured_eur": 957000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00176",
+    "site_id": "osm_n6925562886",
+    "lat": 39.492191,
+    "lon": -0.466641,
+    "in_footprint": false,
+    "sum_insured_eur": 2210000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00177",
+    "site_id": "osm_n6997447769",
+    "lat": 39.467494,
+    "lon": -0.380138,
+    "in_footprint": false,
+    "sum_insured_eur": 4840000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00178",
+    "site_id": "osm_n7007615513",
+    "lat": 39.448397,
+    "lon": -0.388836,
+    "in_footprint": false,
+    "sum_insured_eur": 4593000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00179",
+    "site_id": "osm_n7010619306",
+    "lat": 39.449606,
+    "lon": -0.388877,
+    "in_footprint": false,
+    "sum_insured_eur": 3461000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00180",
+    "site_id": "osm_n7012002431",
+    "lat": 39.449201,
+    "lon": -0.391516,
+    "in_footprint": false,
+    "sum_insured_eur": 1460000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00181",
+    "site_id": "osm_n7037829545",
+    "lat": 39.452758,
+    "lon": -0.391919,
+    "in_footprint": false,
+    "sum_insured_eur": 4262000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00182",
+    "site_id": "osm_n7048720801",
+    "lat": 39.452705,
+    "lon": -0.389451,
+    "in_footprint": false,
+    "sum_insured_eur": 4368000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00183",
+    "site_id": "osm_n7095989075",
+    "lat": 39.434457,
+    "lon": -0.469252,
+    "in_footprint": false,
+    "sum_insured_eur": 3944000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00184",
+    "site_id": "osm_n7095989078",
+    "lat": 39.433319,
+    "lon": -0.471594,
+    "in_footprint": false,
+    "sum_insured_eur": 2172000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00185",
+    "site_id": "osm_n7095989079",
+    "lat": 39.433103,
+    "lon": -0.470755,
+    "in_footprint": false,
+    "sum_insured_eur": 4779000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00186",
+    "site_id": "osm_n7095989082",
+    "lat": 39.43881,
+    "lon": -0.461749,
+    "in_footprint": false,
+    "sum_insured_eur": 1112000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00187",
+    "site_id": "osm_n7095989084",
+    "lat": 39.426026,
+    "lon": -0.482482,
+    "in_footprint": false,
+    "sum_insured_eur": 4746000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00188",
+    "site_id": "osm_n7096022394",
+    "lat": 39.433891,
+    "lon": -0.473137,
+    "in_footprint": false,
+    "sum_insured_eur": 664000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00189",
+    "site_id": "osm_n7096022396",
+    "lat": 39.436076,
+    "lon": -0.466766,
+    "in_footprint": false,
+    "sum_insured_eur": 530000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00190",
+    "site_id": "osm_n7096022397",
+    "lat": 39.438202,
+    "lon": -0.469241,
+    "in_footprint": false,
+    "sum_insured_eur": 1850000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00191",
+    "site_id": "osm_n7096022400",
+    "lat": 39.424706,
+    "lon": -0.46905,
+    "in_footprint": false,
+    "sum_insured_eur": 2670000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00192",
+    "site_id": "osm_n7229695329",
+    "lat": 39.457852,
+    "lon": -0.386719,
+    "in_footprint": false,
+    "sum_insured_eur": 4804000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00193",
+    "site_id": "osm_n7229695333",
+    "lat": 39.457463,
+    "lon": -0.38606,
+    "in_footprint": false,
+    "sum_insured_eur": 3660000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00194",
+    "site_id": "osm_n7246953333",
+    "lat": 39.46392,
+    "lon": -0.38338,
+    "in_footprint": false,
+    "sum_insured_eur": 4028000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00195",
+    "site_id": "osm_n7472366410",
+    "lat": 39.46336,
+    "lon": -0.396424,
+    "in_footprint": false,
+    "sum_insured_eur": 1602000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00196",
+    "site_id": "osm_n7960469622",
+    "lat": 39.416151,
+    "lon": -0.379735,
+    "in_footprint": true,
+    "sum_insured_eur": 680000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00197",
+    "site_id": "osm_n825264576",
+    "lat": 39.495496,
+    "lon": -0.370429,
+    "in_footprint": false,
+    "sum_insured_eur": 4921000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00198",
+    "site_id": "osm_n8482715601",
+    "lat": 39.359766,
+    "lon": -0.465042,
+    "in_footprint": false,
+    "sum_insured_eur": 4556000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00199",
+    "site_id": "osm_n8494625740",
+    "lat": 39.47598,
+    "lon": -0.453751,
+    "in_footprint": false,
+    "sum_insured_eur": 3779000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00200",
+    "site_id": "osm_n9145986371",
+    "lat": 39.493324,
+    "lon": -0.465164,
+    "in_footprint": false,
+    "sum_insured_eur": 3702000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00201",
+    "site_id": "osm_n9378941027",
+    "lat": 39.473374,
+    "lon": -0.399975,
+    "in_footprint": false,
+    "sum_insured_eur": 3702000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00202",
+    "site_id": "osm_n9399686411",
+    "lat": 39.492552,
+    "lon": -0.560635,
+    "in_footprint": false,
+    "sum_insured_eur": 7647000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00203",
+    "site_id": "osm_n9422617622",
+    "lat": 39.454476,
+    "lon": -0.374522,
+    "in_footprint": false,
+    "sum_insured_eur": 2746000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00204",
+    "site_id": "osm_n9422824207",
+    "lat": 39.450737,
+    "lon": -0.373007,
+    "in_footprint": false,
+    "sum_insured_eur": 2335000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00205",
+    "site_id": "osm_n9422824209",
+    "lat": 39.450656,
+    "lon": -0.372952,
+    "in_footprint": false,
+    "sum_insured_eur": 3833000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00206",
+    "site_id": "osm_n9422824213",
+    "lat": 39.450479,
+    "lon": -0.372829,
+    "in_footprint": false,
+    "sum_insured_eur": 4094000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00207",
+    "site_id": "osm_n9556107317",
+    "lat": 39.470759,
+    "lon": -0.392966,
+    "in_footprint": false,
+    "sum_insured_eur": 2063000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00208",
+    "site_id": "osm_n9560676317",
+    "lat": 39.469308,
+    "lon": -0.390803,
+    "in_footprint": false,
+    "sum_insured_eur": 3972000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00209",
+    "site_id": "osm_n9878417505",
+    "lat": 39.461609,
+    "lon": -0.3624,
+    "in_footprint": false,
+    "sum_insured_eur": 4190000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00210",
+    "site_id": "osm_n99503486",
+    "lat": 39.476659,
+    "lon": -0.362813,
+    "in_footprint": false,
+    "sum_insured_eur": 4558000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00211",
+    "site_id": "osm_r12210770",
+    "lat": 39.494265,
+    "lon": -0.362721,
+    "in_footprint": false,
+    "sum_insured_eur": 800000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00212",
+    "site_id": "osm_r21129098",
+    "lat": 39.474794,
+    "lon": -0.412659,
+    "in_footprint": false,
+    "sum_insured_eur": 1795000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00213",
+    "site_id": "osm_w1064273567",
+    "lat": 39.479634,
+    "lon": -0.445199,
+    "in_footprint": false,
+    "sum_insured_eur": 3604000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00214",
+    "site_id": "osm_w1064917875",
+    "lat": 39.377669,
+    "lon": -0.409062,
+    "in_footprint": false,
+    "sum_insured_eur": 2745000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00215",
+    "site_id": "osm_w1091062953",
+    "lat": 39.492693,
+    "lon": -0.468491,
+    "in_footprint": false,
+    "sum_insured_eur": 4059000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00216",
+    "site_id": "osm_w1091064478",
+    "lat": 39.480094,
+    "lon": -0.473844,
+    "in_footprint": false,
+    "sum_insured_eur": 3562000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00217",
+    "site_id": "osm_w1113157048",
+    "lat": 39.45451,
+    "lon": -0.371051,
+    "in_footprint": false,
+    "sum_insured_eur": 1255000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00218",
+    "site_id": "osm_w1117809711",
+    "lat": 39.356598,
+    "lon": -0.597645,
+    "in_footprint": false,
+    "sum_insured_eur": 2310000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00219",
+    "site_id": "osm_w1163121382",
+    "lat": 39.457622,
+    "lon": -0.403966,
+    "in_footprint": false,
+    "sum_insured_eur": 246000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00220",
+    "site_id": "osm_w1172836766",
+    "lat": 39.457616,
+    "lon": -0.363442,
+    "in_footprint": false,
+    "sum_insured_eur": 387000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00221",
+    "site_id": "osm_w118251587",
+    "lat": 39.499859,
+    "lon": -0.404275,
+    "in_footprint": false,
+    "sum_insured_eur": 4438000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00222",
+    "site_id": "osm_w118251590",
+    "lat": 39.500343,
+    "lon": -0.404114,
+    "in_footprint": false,
+    "sum_insured_eur": 1712000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00223",
+    "site_id": "osm_w1198442172",
+    "lat": 39.367493,
+    "lon": -0.466765,
+    "in_footprint": false,
+    "sum_insured_eur": 4568000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00224",
+    "site_id": "osm_w1225001099",
+    "lat": 39.439111,
+    "lon": -0.431988,
+    "in_footprint": true,
+    "sum_insured_eur": 2731000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00225",
+    "site_id": "osm_w1225716813",
+    "lat": 39.439545,
+    "lon": -0.425403,
+    "in_footprint": true,
+    "sum_insured_eur": 5688000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00226",
+    "site_id": "osm_w1225716822",
+    "lat": 39.440678,
+    "lon": -0.426732,
+    "in_footprint": true,
+    "sum_insured_eur": 519000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00227",
+    "site_id": "osm_w1225998192",
+    "lat": 39.44173,
+    "lon": -0.428077,
+    "in_footprint": true,
+    "sum_insured_eur": 3558000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00228",
+    "site_id": "osm_w1232246075",
+    "lat": 39.423309,
+    "lon": -0.438305,
+    "in_footprint": false,
+    "sum_insured_eur": 10593000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00229",
+    "site_id": "osm_w1232508158",
+    "lat": 39.415895,
+    "lon": -0.436615,
+    "in_footprint": false,
+    "sum_insured_eur": 1546000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00230",
+    "site_id": "osm_w1250846930",
+    "lat": 39.414986,
+    "lon": -0.382553,
+    "in_footprint": true,
+    "sum_insured_eur": 3379000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00231",
+    "site_id": "osm_w1250846932",
+    "lat": 39.413474,
+    "lon": -0.385135,
+    "in_footprint": true,
+    "sum_insured_eur": 3633000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00232",
+    "site_id": "osm_w1253919948",
+    "lat": 39.481643,
+    "lon": -0.401449,
+    "in_footprint": false,
+    "sum_insured_eur": 3467000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00233",
+    "site_id": "osm_w1259361942",
+    "lat": 39.47649,
+    "lon": -0.404918,
+    "in_footprint": false,
+    "sum_insured_eur": 2472000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00234",
+    "site_id": "osm_w1279478132",
+    "lat": 39.481562,
+    "lon": -0.390315,
+    "in_footprint": false,
+    "sum_insured_eur": 699000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00235",
+    "site_id": "osm_w1281158367",
+    "lat": 39.46503,
+    "lon": -0.413138,
+    "in_footprint": false,
+    "sum_insured_eur": 3136000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00236",
+    "site_id": "osm_w1286364708",
+    "lat": 39.49346,
+    "lon": -0.363307,
+    "in_footprint": false,
+    "sum_insured_eur": 701000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00237",
+    "site_id": "osm_w1312437058",
+    "lat": 39.42714,
+    "lon": -0.393735,
+    "in_footprint": true,
+    "sum_insured_eur": 4362000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00238",
+    "site_id": "osm_w1317432519",
+    "lat": 39.42607,
+    "lon": -0.393008,
+    "in_footprint": false,
+    "sum_insured_eur": 653000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00239",
+    "site_id": "osm_w1330030561",
+    "lat": 39.42919,
+    "lon": -0.412056,
+    "in_footprint": true,
+    "sum_insured_eur": 1235000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00240",
+    "site_id": "osm_w1330184158",
+    "lat": 39.424093,
+    "lon": -0.420059,
+    "in_footprint": true,
+    "sum_insured_eur": 5935000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00241",
+    "site_id": "osm_w1330188231",
+    "lat": 39.42516,
+    "lon": -0.420519,
+    "in_footprint": true,
+    "sum_insured_eur": 1435000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00242",
+    "site_id": "osm_w1331599902",
+    "lat": 39.425407,
+    "lon": -0.422758,
+    "in_footprint": true,
+    "sum_insured_eur": 4426000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00243",
+    "site_id": "osm_w1332065298",
+    "lat": 39.425887,
+    "lon": -0.405028,
+    "in_footprint": true,
+    "sum_insured_eur": 2795000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00244",
+    "site_id": "osm_w1332091823",
+    "lat": 39.425056,
+    "lon": -0.376745,
+    "in_footprint": true,
+    "sum_insured_eur": 3686000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00245",
+    "site_id": "osm_w1332148161",
+    "lat": 39.424236,
+    "lon": -0.405211,
+    "in_footprint": true,
+    "sum_insured_eur": 2303000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00246",
+    "site_id": "osm_w1332148166",
+    "lat": 39.42457,
+    "lon": -0.406343,
+    "in_footprint": true,
+    "sum_insured_eur": 4491000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00247",
+    "site_id": "osm_w1332175342",
+    "lat": 39.481259,
+    "lon": -0.555019,
+    "in_footprint": false,
+    "sum_insured_eur": 10194000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00248",
+    "site_id": "osm_w1332734459",
+    "lat": 39.47864,
+    "lon": -0.571331,
+    "in_footprint": false,
+    "sum_insured_eur": 9121000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00249",
+    "site_id": "osm_w1336416168",
+    "lat": 39.416262,
+    "lon": -0.382983,
+    "in_footprint": true,
+    "sum_insured_eur": 6697000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00250",
+    "site_id": "osm_w1336416172",
+    "lat": 39.416559,
+    "lon": -0.383251,
+    "in_footprint": true,
+    "sum_insured_eur": 5744000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00251",
+    "site_id": "osm_w1336632331",
+    "lat": 39.410138,
+    "lon": -0.382232,
+    "in_footprint": true,
+    "sum_insured_eur": 4329000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00252",
+    "site_id": "osm_w1336650251",
+    "lat": 39.413098,
+    "lon": -0.39894,
+    "in_footprint": false,
+    "sum_insured_eur": 1971000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00253",
+    "site_id": "osm_w1355664380",
+    "lat": 39.423111,
+    "lon": -0.395142,
+    "in_footprint": false,
+    "sum_insured_eur": 4449000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00254",
+    "site_id": "osm_w1373517689",
+    "lat": 39.400253,
+    "lon": -0.40412,
+    "in_footprint": false,
+    "sum_insured_eur": 3923000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00255",
+    "site_id": "osm_w1387479932",
+    "lat": 39.419015,
+    "lon": -0.400567,
+    "in_footprint": false,
+    "sum_insured_eur": 11440000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00256",
+    "site_id": "osm_w1417916630",
+    "lat": 39.479765,
+    "lon": -0.424881,
+    "in_footprint": false,
+    "sum_insured_eur": 188000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00257",
+    "site_id": "osm_w1435345805",
+    "lat": 39.467983,
+    "lon": -0.430283,
+    "in_footprint": true,
+    "sum_insured_eur": 6349000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00258",
+    "site_id": "osm_w1443194287",
+    "lat": 39.475515,
+    "lon": -0.435299,
+    "in_footprint": false,
+    "sum_insured_eur": 781000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00259",
+    "site_id": "osm_w147256014",
+    "lat": 39.455559,
+    "lon": -0.457851,
+    "in_footprint": false,
+    "sum_insured_eur": 1947000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00260",
+    "site_id": "osm_w1473706663",
+    "lat": 39.477764,
+    "lon": -0.430627,
+    "in_footprint": true,
+    "sum_insured_eur": 7405000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00261",
+    "site_id": "osm_w1473706677",
+    "lat": 39.483213,
+    "lon": -0.417728,
+    "in_footprint": false,
+    "sum_insured_eur": 781000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00262",
+    "site_id": "osm_w150145564",
+    "lat": 39.471046,
+    "lon": -0.490635,
+    "in_footprint": true,
+    "sum_insured_eur": 4894000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00263",
+    "site_id": "osm_w150145567",
+    "lat": 39.47126,
+    "lon": -0.487331,
+    "in_footprint": true,
+    "sum_insured_eur": 4808000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00264",
+    "site_id": "osm_w150148108",
+    "lat": 39.468895,
+    "lon": -0.487528,
+    "in_footprint": true,
+    "sum_insured_eur": 743000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00265",
+    "site_id": "osm_w1517002177",
+    "lat": 39.400081,
+    "lon": -0.406894,
+    "in_footprint": false,
+    "sum_insured_eur": 2003000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00266",
+    "site_id": "osm_w1543016569",
+    "lat": 39.395805,
+    "lon": -0.408034,
+    "in_footprint": false,
+    "sum_insured_eur": 3148000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00267",
+    "site_id": "osm_w1545457776",
+    "lat": 39.475423,
+    "lon": -0.457672,
+    "in_footprint": false,
+    "sum_insured_eur": 1248000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00268",
+    "site_id": "osm_w1558180931",
+    "lat": 39.468215,
+    "lon": -0.540768,
+    "in_footprint": true,
+    "sum_insured_eur": 6093000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00269",
+    "site_id": "osm_w168912674",
+    "lat": 39.478981,
+    "lon": -0.417822,
+    "in_footprint": false,
+    "sum_insured_eur": 3717000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00270",
+    "site_id": "osm_w172462821",
+    "lat": 39.500169,
+    "lon": -0.404807,
+    "in_footprint": false,
+    "sum_insured_eur": 3714000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00271",
+    "site_id": "osm_w178882857",
+    "lat": 39.469657,
+    "lon": -0.606847,
+    "in_footprint": false,
+    "sum_insured_eur": 582000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00272",
+    "site_id": "osm_w187422561",
+    "lat": 39.486248,
+    "lon": -0.38091,
+    "in_footprint": false,
+    "sum_insured_eur": 4444000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00273",
+    "site_id": "osm_w20418654",
+    "lat": 39.48057,
+    "lon": -0.390562,
+    "in_footprint": false,
+    "sum_insured_eur": 3810000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00274",
+    "site_id": "osm_w208689107",
+    "lat": 39.499707,
+    "lon": -0.408548,
+    "in_footprint": false,
+    "sum_insured_eur": 860000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00275",
+    "site_id": "osm_w216891043",
+    "lat": 39.477876,
+    "lon": -0.380527,
+    "in_footprint": false,
+    "sum_insured_eur": 1998000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00276",
+    "site_id": "osm_w218870627",
+    "lat": 39.459087,
+    "lon": -0.448514,
+    "in_footprint": true,
+    "sum_insured_eur": 992000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00277",
+    "site_id": "osm_w22893985",
+    "lat": 39.477499,
+    "lon": -0.395714,
+    "in_footprint": false,
+    "sum_insured_eur": 3837000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00278",
+    "site_id": "osm_w231939088",
+    "lat": 39.434101,
+    "lon": -0.426995,
+    "in_footprint": true,
+    "sum_insured_eur": 4760000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00279",
+    "site_id": "osm_w231939604",
+    "lat": 39.435098,
+    "lon": -0.432577,
+    "in_footprint": true,
+    "sum_insured_eur": 733000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00280",
+    "site_id": "osm_w23578006",
+    "lat": 39.46455,
+    "lon": -0.413473,
+    "in_footprint": false,
+    "sum_insured_eur": 1060000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00281",
+    "site_id": "osm_w23700948",
+    "lat": 39.477227,
+    "lon": -0.404909,
+    "in_footprint": false,
+    "sum_insured_eur": 170000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00282",
+    "site_id": "osm_w23738803",
+    "lat": 39.47828,
+    "lon": -0.426219,
+    "in_footprint": false,
+    "sum_insured_eur": 4612000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00283",
+    "site_id": "osm_w23761013",
+    "lat": 39.488891,
+    "lon": -0.40505,
+    "in_footprint": false,
+    "sum_insured_eur": 2183000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00284",
+    "site_id": "osm_w240395612",
+    "lat": 39.475088,
+    "lon": -0.482823,
+    "in_footprint": true,
+    "sum_insured_eur": 4487000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00285",
+    "site_id": "osm_w243605779",
+    "lat": 39.451039,
+    "lon": -0.460174,
+    "in_footprint": false,
+    "sum_insured_eur": 3216000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00286",
+    "site_id": "osm_w243606377",
+    "lat": 39.46314,
+    "lon": -0.469451,
+    "in_footprint": false,
+    "sum_insured_eur": 3228000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00287",
+    "site_id": "osm_w248098116",
+    "lat": 39.411888,
+    "lon": -0.383866,
+    "in_footprint": true,
+    "sum_insured_eur": 2202000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00288",
+    "site_id": "osm_w248099366",
+    "lat": 39.411614,
+    "lon": -0.381871,
+    "in_footprint": true,
+    "sum_insured_eur": 2896000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00289",
+    "site_id": "osm_w248100375",
+    "lat": 39.411015,
+    "lon": -0.380994,
+    "in_footprint": true,
+    "sum_insured_eur": 9861000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00290",
+    "site_id": "osm_w248226004",
+    "lat": 39.410511,
+    "lon": -0.384404,
+    "in_footprint": true,
+    "sum_insured_eur": 4512000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00291",
+    "site_id": "osm_w248226017",
+    "lat": 39.409498,
+    "lon": -0.384337,
+    "in_footprint": true,
+    "sum_insured_eur": 642000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00292",
+    "site_id": "osm_w248235650",
+    "lat": 39.417223,
+    "lon": -0.380139,
+    "in_footprint": true,
+    "sum_insured_eur": 4117000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00293",
+    "site_id": "osm_w248271870",
+    "lat": 39.415401,
+    "lon": -0.378957,
+    "in_footprint": true,
+    "sum_insured_eur": 698000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00294",
+    "site_id": "osm_w248271871",
+    "lat": 39.418947,
+    "lon": -0.379131,
+    "in_footprint": true,
+    "sum_insured_eur": 4173000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00295",
+    "site_id": "osm_w248450812",
+    "lat": 39.416747,
+    "lon": -0.382121,
+    "in_footprint": true,
+    "sum_insured_eur": 1362000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00296",
+    "site_id": "osm_w248451602",
+    "lat": 39.420826,
+    "lon": -0.376152,
+    "in_footprint": true,
+    "sum_insured_eur": 1948000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00297",
+    "site_id": "osm_w248463543",
+    "lat": 39.421197,
+    "lon": -0.379126,
+    "in_footprint": true,
+    "sum_insured_eur": 10061000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00298",
+    "site_id": "osm_w248463546",
+    "lat": 39.420304,
+    "lon": -0.378006,
+    "in_footprint": true,
+    "sum_insured_eur": 2261000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00299",
+    "site_id": "osm_w248463547",
+    "lat": 39.421094,
+    "lon": -0.378792,
+    "in_footprint": true,
+    "sum_insured_eur": 371000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00300",
+    "site_id": "osm_w248463549",
+    "lat": 39.421368,
+    "lon": -0.379061,
+    "in_footprint": true,
+    "sum_insured_eur": 7062000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00301",
+    "site_id": "osm_w249512679",
+    "lat": 39.41343,
+    "lon": -0.381308,
+    "in_footprint": true,
+    "sum_insured_eur": 3163000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00302",
+    "site_id": "osm_w255218182",
+    "lat": 39.489467,
+    "lon": -0.455997,
+    "in_footprint": false,
+    "sum_insured_eur": 1938000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00303",
+    "site_id": "osm_w262671785",
+    "lat": 39.427979,
+    "lon": -0.406857,
+    "in_footprint": true,
+    "sum_insured_eur": 2306000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00304",
+    "site_id": "osm_w301465503",
+    "lat": 39.461627,
+    "lon": -0.443763,
+    "in_footprint": true,
+    "sum_insured_eur": 848000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00305",
+    "site_id": "osm_w311344228",
+    "lat": 39.41604,
+    "lon": -0.380215,
+    "in_footprint": true,
+    "sum_insured_eur": 2996000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00306",
+    "site_id": "osm_w312144727",
+    "lat": 39.497702,
+    "lon": -0.382951,
+    "in_footprint": false,
+    "sum_insured_eur": 1627000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00307",
+    "site_id": "osm_w378391081",
+    "lat": 39.456435,
+    "lon": -0.46667,
+    "in_footprint": false,
+    "sum_insured_eur": 2296000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00308",
+    "site_id": "osm_w404032583",
+    "lat": 39.452847,
+    "lon": -0.373957,
+    "in_footprint": false,
+    "sum_insured_eur": 4868000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00309",
+    "site_id": "osm_w413112869",
+    "lat": 39.478563,
+    "lon": -0.376273,
+    "in_footprint": false,
+    "sum_insured_eur": 907000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00310",
+    "site_id": "osm_w428042785",
+    "lat": 39.476596,
+    "lon": -0.366742,
+    "in_footprint": false,
+    "sum_insured_eur": 3363000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00311",
+    "site_id": "osm_w469414720",
+    "lat": 39.476192,
+    "lon": -0.552724,
+    "in_footprint": false,
+    "sum_insured_eur": 740000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00312",
+    "site_id": "osm_w472724414",
+    "lat": 39.416305,
+    "lon": -0.384912,
+    "in_footprint": true,
+    "sum_insured_eur": 4714000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00313",
+    "site_id": "osm_w472724429",
+    "lat": 39.415438,
+    "lon": -0.385039,
+    "in_footprint": true,
+    "sum_insured_eur": 1927000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00314",
+    "site_id": "osm_w484127842",
+    "lat": 39.485491,
+    "lon": -0.526219,
+    "in_footprint": false,
+    "sum_insured_eur": 8041000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00315",
+    "site_id": "osm_w515599827",
+    "lat": 39.480523,
+    "lon": -0.390642,
+    "in_footprint": false,
+    "sum_insured_eur": 2034000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00316",
+    "site_id": "osm_w538980909",
+    "lat": 39.424218,
+    "lon": -0.421583,
+    "in_footprint": true,
+    "sum_insured_eur": 537000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00317",
+    "site_id": "osm_w558581603",
+    "lat": 39.468531,
+    "lon": -0.424051,
+    "in_footprint": true,
+    "sum_insured_eur": 2213000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00318",
+    "site_id": "osm_w606134291",
+    "lat": 39.406681,
+    "lon": -0.421551,
+    "in_footprint": false,
+    "sum_insured_eur": 7800000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00319",
+    "site_id": "osm_w610831098",
+    "lat": 39.456681,
+    "lon": -0.377191,
+    "in_footprint": false,
+    "sum_insured_eur": 10921000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00320",
+    "site_id": "osm_w618277751",
+    "lat": 39.366104,
+    "lon": -0.460597,
+    "in_footprint": false,
+    "sum_insured_eur": 343000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00321",
+    "site_id": "osm_w624256340",
+    "lat": 39.415155,
+    "lon": -0.383549,
+    "in_footprint": true,
+    "sum_insured_eur": 3517000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00322",
+    "site_id": "osm_w624256341",
+    "lat": 39.415304,
+    "lon": -0.384361,
+    "in_footprint": true,
+    "sum_insured_eur": 3487000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00323",
+    "site_id": "osm_w636630500",
+    "lat": 39.468308,
+    "lon": -0.416137,
+    "in_footprint": false,
+    "sum_insured_eur": 1276000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00324",
+    "site_id": "osm_w636630502",
+    "lat": 39.468242,
+    "lon": -0.415754,
+    "in_footprint": false,
+    "sum_insured_eur": 10556000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00325",
+    "site_id": "osm_w657857713",
+    "lat": 39.449566,
+    "lon": -0.380089,
+    "in_footprint": false,
+    "sum_insured_eur": 3967000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00326",
+    "site_id": "osm_w662061509",
+    "lat": 39.428626,
+    "lon": -0.406387,
+    "in_footprint": true,
+    "sum_insured_eur": 5027000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00327",
+    "site_id": "osm_w668451220",
+    "lat": 39.414416,
+    "lon": -0.382143,
+    "in_footprint": true,
+    "sum_insured_eur": 1896000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00328",
+    "site_id": "osm_w668451224",
+    "lat": 39.415093,
+    "lon": -0.383093,
+    "in_footprint": true,
+    "sum_insured_eur": 4959000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00329",
+    "site_id": "osm_w668451227",
+    "lat": 39.415268,
+    "lon": -0.384165,
+    "in_footprint": true,
+    "sum_insured_eur": 3186000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00330",
+    "site_id": "osm_w668451230",
+    "lat": 39.4135,
+    "lon": -0.385278,
+    "in_footprint": true,
+    "sum_insured_eur": 2227000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00331",
+    "site_id": "osm_w668451234",
+    "lat": 39.413664,
+    "lon": -0.386104,
+    "in_footprint": true,
+    "sum_insured_eur": 4259000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00332",
+    "site_id": "osm_w673089848",
+    "lat": 39.490703,
+    "lon": -0.359755,
+    "in_footprint": false,
+    "sum_insured_eur": 3944000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00333",
+    "site_id": "osm_w683561166",
+    "lat": 39.498751,
+    "lon": -0.394616,
+    "in_footprint": false,
+    "sum_insured_eur": 1486000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00334",
+    "site_id": "osm_w683561235",
+    "lat": 39.495316,
+    "lon": -0.391008,
+    "in_footprint": false,
+    "sum_insured_eur": 2404000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00335",
+    "site_id": "osm_w683679948",
+    "lat": 39.452358,
+    "lon": -0.387476,
+    "in_footprint": false,
+    "sum_insured_eur": 3420000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00336",
+    "site_id": "osm_w684131266",
+    "lat": 39.45838,
+    "lon": -0.388764,
+    "in_footprint": false,
+    "sum_insured_eur": 2384000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00337",
+    "site_id": "osm_w686983480",
+    "lat": 39.469844,
+    "lon": -0.385471,
+    "in_footprint": false,
+    "sum_insured_eur": 9538000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00338",
+    "site_id": "osm_w688342956",
+    "lat": 39.489269,
+    "lon": -0.391821,
+    "in_footprint": false,
+    "sum_insured_eur": 1346000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00339",
+    "site_id": "osm_w688342957",
+    "lat": 39.489185,
+    "lon": -0.391803,
+    "in_footprint": false,
+    "sum_insured_eur": 1542000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00340",
+    "site_id": "osm_w689636511",
+    "lat": 39.47255,
+    "lon": -0.396597,
+    "in_footprint": false,
+    "sum_insured_eur": 867000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00341",
+    "site_id": "osm_w722884650",
+    "lat": 39.465285,
+    "lon": -0.460128,
+    "in_footprint": false,
+    "sum_insured_eur": 4463000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00342",
+    "site_id": "osm_w722885304",
+    "lat": 39.45691,
+    "lon": -0.452655,
+    "in_footprint": false,
+    "sum_insured_eur": 3199000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00343",
+    "site_id": "osm_w724078520",
+    "lat": 39.420181,
+    "lon": -0.504722,
+    "in_footprint": false,
+    "sum_insured_eur": 2109000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00344",
+    "site_id": "osm_w724079197",
+    "lat": 39.420612,
+    "lon": -0.504344,
+    "in_footprint": false,
+    "sum_insured_eur": 2194000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00345",
+    "site_id": "osm_w772801234",
+    "lat": 39.410106,
+    "lon": -0.3907,
+    "in_footprint": true,
+    "sum_insured_eur": 465000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00346",
+    "site_id": "osm_w772801239",
+    "lat": 39.410628,
+    "lon": -0.390455,
+    "in_footprint": true,
+    "sum_insured_eur": 4333000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00347",
+    "site_id": "osm_w772801258",
+    "lat": 39.411468,
+    "lon": -0.389165,
+    "in_footprint": true,
+    "sum_insured_eur": 8353000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00348",
+    "site_id": "osm_w775222200",
+    "lat": 39.464673,
+    "lon": -0.378656,
+    "in_footprint": false,
+    "sum_insured_eur": 1736000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00349",
+    "site_id": "osm_w777291452",
+    "lat": 39.453919,
+    "lon": -0.374685,
+    "in_footprint": false,
+    "sum_insured_eur": 3015000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00350",
+    "site_id": "osm_w849747048",
+    "lat": 39.424298,
+    "lon": -0.375665,
+    "in_footprint": true,
+    "sum_insured_eur": 3818000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00351",
+    "site_id": "osm_w852691387",
+    "lat": 39.454697,
+    "lon": -0.472485,
+    "in_footprint": false,
+    "sum_insured_eur": 10662000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00352",
+    "site_id": "osm_w855372036",
+    "lat": 39.413559,
+    "lon": -0.385588,
+    "in_footprint": true,
+    "sum_insured_eur": 324000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00353",
+    "site_id": "osm_w855372037",
+    "lat": 39.413434,
+    "lon": -0.38495,
+    "in_footprint": true,
+    "sum_insured_eur": 1441000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00354",
+    "site_id": "osm_w855372038",
+    "lat": 39.413391,
+    "lon": -0.384723,
+    "in_footprint": true,
+    "sum_insured_eur": 4959000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00355",
+    "site_id": "osm_w895065018",
+    "lat": 39.460848,
+    "lon": -0.388944,
+    "in_footprint": false,
+    "sum_insured_eur": 3300000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00356",
+    "site_id": "osm_w895938824",
+    "lat": 39.456619,
+    "lon": -0.394679,
+    "in_footprint": false,
+    "sum_insured_eur": 3369000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00357",
+    "site_id": "osm_w913912691",
+    "lat": 39.459659,
+    "lon": -0.469553,
+    "in_footprint": false,
+    "sum_insured_eur": 4303000.0,
+    "segment": "retail"
+  },
+  {
+    "policy_id": "SYN-00358",
+    "site_id": "osm_w913912693",
+    "lat": 39.473003,
+    "lon": -0.466531,
+    "in_footprint": false,
+    "sum_insured_eur": 1105000.0,
+    "segment": "industrial"
+  },
+  {
+    "policy_id": "SYN-00359",
+    "site_id": "osm_w916293104",
+    "lat": 39.494763,
+    "lon": -0.40344,
+    "in_footprint": false,
+    "sum_insured_eur": 430000.0,
+    "segment": "retail"
+  }
+]

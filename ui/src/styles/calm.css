@@ -1,0 +1,21 @@
+/* CalmAnswer: a quick or forecast answer in plain words. Tokens only, so light and dark both work. */
+.calm { display: grid; gap: 0.55rem; min-width: 0; margin: 0.6rem 0; }
+.calm > * { min-width: 0; margin: 0; overflow-wrap: anywhere; }
+.calm-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 0.6rem; }
+.calm-horizon { color: var(--muted); font-size: 0.85rem; }
+.calm-headline { font-size: 1.35rem; line-height: 1.25; font-weight: 700; color: var(--text); }
+.calm-line { font-size: 1rem; line-height: 1.45; }
+.calm-disclaimer { margin: 0; }
+
+/* Native <details>: the summary keeps its own marker and semantics; only padding and focus are styled. */
+.calm-why > summary { padding: 0.45rem 0; }
+.calm-why > summary:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; border-radius: var(--radius-sm); }
+
+.calm-context { border: 1px solid var(--border); border-left: 4px solid var(--brand-border); border-radius: var(--radius-sm); background: var(--surface-2); padding: 0.5rem 0.7rem; }
+.calm-context p { margin: 0; }
+.calm-context-title { font-weight: 650; font-size: 0.85rem; color: var(--muted); margin-bottom: 0.15rem; }
+
+.calm-next { display: grid; gap: 0.4rem; }
+.calm-links { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.3rem 1rem; }
+.calm-links a { display: inline-block; padding: 0.3rem 0; }
+.calm-next .button { justify-self: start; max-width: 100%; white-space: normal; min-height: 2.5rem; }

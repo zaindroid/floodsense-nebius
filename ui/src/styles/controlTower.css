@@ -1,0 +1,66 @@
+/* Control tower. Tokens come from global.css; status tones reuse .plain-chip--* (nothing is red). */
+.ct { min-width: 0; }
+.ct-honest { margin: 0.15rem 0 0; color: var(--muted); font-size: 0.88rem; max-width: 60ch; }
+.ct-tiles-wrap { display: grid; gap: 0.35rem; }
+.kpis.ct-tiles { grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr)); margin: 0; }
+.kpis.ct-tiles dd { font-size: 1.25rem; }
+.ct-line { margin: 0; overflow-wrap: anywhere; }
+
+.ct-state { margin: 0; padding: 0.7rem 0.9rem; border-radius: var(--radius-sm); background: var(--brand-soft); border: 1px solid var(--brand-border); color: var(--brand-ink); overflow-wrap: anywhere; }
+.ct-state--down { background: var(--cached-bg); color: var(--cached-ink); border-color: var(--border); padding: 0.9rem; }
+.ct-state--down p { margin: 0 0 0.6rem; }
+.ct-state--demo { background: var(--sample-bg); border-color: var(--sample-border); color: var(--warn-ink); }
+
+.ct-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0.8rem; align-items: start; }
+.ct-map, .ct-feed { padding: 0.9rem; display: grid; gap: 0.6rem; min-width: 0; }
+.ct-map .now-subtitle, .ct-feed .now-subtitle { margin: 0; }
+.ct-map .leaflet-container { max-width: 100%; }
+
+.ct-feed__head { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; }
+.ct-pill { font-size: 0.75rem; padding: 0.1rem 0.55rem; border-radius: 999px; background: var(--cached-bg); color: var(--cached-ink); border: 1px solid var(--border); }
+.ct-pill--on { background: var(--risk-low-soft); color: var(--ok-ink); border-color: var(--live-border); }
+
+.ct-filters { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.ct-filters select { max-width: 100%; min-height: 36px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); color: var(--text); padding: 0.25rem 0.5rem; font: inherit; }
+.ct-auto { border: 1px dashed var(--border); border-radius: var(--radius-sm); padding: 0.55rem 0.7rem; display: grid; gap: 0.25rem; }
+.ct-auto .note { margin: 0; }
+.ct-switch { display: flex; gap: 0.55rem; align-items: flex-start; font-weight: 600; cursor: pointer; }
+.ct-switch input { margin-top: 0.2rem; width: 1.1rem; height: 1.1rem; flex: none; }
+
+.ct-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; max-height: 38rem; overflow-y: auto; overscroll-behavior: contain; }
+.ct-empty { margin: 0; }
+.ct-event { display: grid; gap: 0.25rem; padding: 0.6rem 0.7rem; border: 1px solid var(--border); border-left-width: 4px; border-radius: var(--radius-sm); background: var(--surface); min-width: 0; }
+.ct-event--elevated { border-left-color: var(--risk-moderate); }
+.ct-event--watch { border-left-color: var(--sample-border); }
+.ct-event--neutral { border-left-color: var(--brand-border); }
+.ct-event--normal { border-left-color: var(--risk-low); }
+.ct-event--unknown { border-left-color: var(--border); }
+.ct-event__who { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; }
+.ct-event__who time { margin-left: auto; font-variant-numeric: tabular-nums; }
+.ct-icon { flex: none; color: var(--brand); }
+.ct-event__text { margin: 0; overflow-wrap: anywhere; line-height: 1.4; }
+.ct-event__detail { grid-column: 1 / -1; margin: 0.2rem 0 0; }
+.ct-event__detail pre { margin: 0.25rem 0 0; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 0.78rem; }
+.ct-event__meta { margin: 0; display: flex; gap: 0.35rem 0.7rem; flex-wrap: wrap; align-items: center; color: var(--muted); }
+.ct-event__place { font-weight: 600; color: var(--text); }
+.ct-foot { margin: 0; overflow-wrap: anywhere; }
+
+.ct-event--new { animation: ct-in 0.45s ease-out; }
+@keyframes ct-in {
+  from { opacity: 0; transform: translateY(-8px); background: var(--brand-soft); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ct-event--new { animation: none; }
+}
+
+@media (max-width: 900px) {
+  .ct-grid { grid-template-columns: minmax(0, 1fr); }
+  .ct-list { max-height: none; }
+}
+@media (max-width: 480px) {
+  .kpis.ct-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ct-map, .ct-feed { padding: 0.65rem; }
+  .ct-filters select { width: 100%; }
+  .ct-filters label { flex: 1 1 100%; }
+}

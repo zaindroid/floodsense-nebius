@@ -1,0 +1,3 @@
+-r requirements.txt
+# Test-only: an in-memory Redis for tests/test_redis_cache.py.
+fakeredis>=2.20,<3

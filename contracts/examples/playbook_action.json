@@ -1,0 +1,7 @@
+{
+  "action_id": "act_example_review",
+  "run_id": "run_example_valencia",
+  "title": "Example action: review the example site",
+  "detail": "Example only. This action cites the example citation and must not be sent.",
+  "citation_ids": ["cit_example_open_meteo"]
+}

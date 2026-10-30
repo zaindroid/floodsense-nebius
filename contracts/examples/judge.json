@@ -1,0 +1,14 @@
+{
+  "overall_score": 1,
+  "claims": [
+    {
+      "claim_id": "claim_example_rain",
+      "grounding": "supported",
+      "citation_faithful": true,
+      "numbers_match": true,
+      "score": 1,
+      "rationale": "Example fixture. Not a Judge result from a model.",
+      "model_id": "meterless/deep"
+    }
+  ]
+}

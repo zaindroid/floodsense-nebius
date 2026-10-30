@@ -1,0 +1,19 @@
+FloodSense EU engines sidecar
+
+This directory includes software from Meterless
+(https://github.com/Meterless/meterless), licensed under the Apache License,
+Version 2.0. Copied unchanged from commit 1742dec (19 Oct 2026):
+
+  vendor/hmem/reference/src/          engines/hmem/reference/src/
+  vendor/hmem/conformance/            engines/hmem/conformance/
+  vendor/hmem/reference/tsconfig.json engines/hmem/reference/tsconfig.json
+  vendor/world-model/reference/src/   engines/world-model/reference/src/
+  vendor/world-model/conformance/     engines/world-model/conformance/
+  vendor/world-model/reference/tsconfig.json
+                                      engines/world-model/reference/tsconfig.json
+
+The full license text for each engine is in vendor/hmem/LICENSE and
+vendor/world-model/LICENSE. The upstream vitest smoke tests were not copied;
+the conformance suites are the acceptance check here.
+
+Everything outside vendor/ (src/, test/, scripts/) is FloodSense code.

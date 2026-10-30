@@ -1,0 +1,12 @@
+{
+  "query_id": "qry_example_discharge",
+  "view": "floodsense_seed.discharge_daily",
+  "sql": "SELECT site_id, discharge_m3s FROM floodsense_seed.discharge_daily WHERE site_id = 'valencia-example'",
+  "rows_sample": [
+    {
+      "site_id": "valencia-example"
+    }
+  ],
+  "row_count": 128,
+  "executed_at_utc": "2024-10-29T18:00:00Z"
+}

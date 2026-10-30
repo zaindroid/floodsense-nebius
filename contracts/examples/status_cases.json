@@ -1,0 +1,45 @@
+{
+  "description": "Plain-status parity: the UI (ui/src/lib/places.ts statusView, gauges.ts, euWatch.ts) and the control tower (agents tower.py) must agree. Both test suites read this file.",
+  "words": [
+    { "kind": "gauge", "status": "over", "word": "Above mean high water", "tone": "elevated", "rank": 0 },
+    { "kind": "gauge", "status": "near", "word": "Close to mean high water", "tone": "watch", "rank": 2 },
+    { "kind": "gauge", "status": "ok", "word": "Normal", "tone": "normal", "rank": 8 },
+    { "kind": "gauge", "status": "unknown", "word": "No reading", "tone": "unknown", "rank": 9 },
+    { "kind": "model", "status": "over", "word": "Elevated (model)", "tone": "elevated", "rank": 1 },
+    { "kind": "model", "status": "near", "word": "Watch (model)", "tone": "watch", "rank": 3 },
+    { "kind": "model", "status": "ok", "word": "Normal", "tone": "normal", "rank": 8 },
+    { "kind": "model", "status": "unknown", "word": "No reading", "tone": "unknown", "rank": 9 },
+    { "kind": "valencia", "status": "over", "word": "Far above its recent normal (model)", "tone": "elevated", "rank": 4 },
+    { "kind": "valencia", "status": "near", "word": "Above its recent normal (model)", "tone": "neutral", "rank": 5 },
+    { "kind": "valencia", "status": "ok", "word": "Normal", "tone": "normal", "rank": 8 },
+    { "kind": "valencia", "status": "unknown", "word": "No reading", "tone": "unknown", "rank": 9 }
+  ],
+  "gauge_rows": [
+    { "name": "above, fresh", "row": { "station": "KÖLN", "water": "RHEIN", "ts_utc": "2026-10-27T12:45:00Z", "level_cm": 812, "mhw_cm": 780, "band": "above", "is_stale": false }, "stale": false, "band_status": "over", "event_status": "over" },
+    { "name": "near, fresh", "row": { "station": "KÖLN", "water": "RHEIN", "ts_utc": "2026-10-27T12:45:00Z", "level_cm": 700, "mhw_cm": 780, "band": "near", "is_stale": "false" }, "stale": false, "band_status": "near", "event_status": "near" },
+    { "name": "below, fresh", "row": { "station": "KÖLN", "water": "RHEIN", "ts_utc": "2026-10-27T12:45:00Z", "level_cm": 300, "mhw_cm": 780, "band": "below", "is_stale": false }, "stale": false, "band_status": "ok", "event_status": "ok" },
+    { "name": "above but flagged stale", "row": { "station": "KÖLN", "water": "RHEIN", "ts_utc": "2026-10-27T12:45:00Z", "level_cm": 812, "mhw_cm": 780, "band": "above", "is_stale": true }, "stale": true, "band_status": "over", "event_status": "unknown" },
+    { "name": "above, is_stale missing means stale", "row": { "station": "KÖLN", "water": "RHEIN", "ts_utc": "2026-10-27T12:45:00Z", "level_cm": 812, "mhw_cm": 780, "band": "above" }, "stale": true, "band_status": "over", "event_status": "unknown" },
+    { "name": "unknown band stays unknown", "row": { "station": "KÖLN", "water": "RHEIN", "ts_utc": "2026-10-27T12:45:00Z", "level_cm": 812, "mhw_cm": 780, "band": "unknown", "is_stale": false }, "stale": false, "band_status": "unknown", "event_status": "unknown" },
+    { "name": "no band is not computed from the level", "row": { "station": "KÖLN", "water": "RHEIN", "ts_utc": "2026-10-27T12:45:00Z", "level_cm": 812, "mhw_cm": 780, "is_stale": false }, "stale": false, "band_status": "unknown", "event_status": "unknown" }
+  ],
+  "model_bands": [
+    { "band": "above", "status": "over" },
+    { "band": "near", "status": "near" },
+    { "band": "below", "status": "ok" },
+    { "band": "unknown", "status": "unknown" },
+    { "band": "", "status": "unknown" },
+    { "band": "severe", "status": "unknown" }
+  ],
+  "valencia_rule": "Each point is measured against its own past rows (ui/src/lib/euWatch.ts valenciaCuts): watch at 2x and over at 4x the median of the past discharge, the median floored at 5 m3/s. The value tested is the higher of the latest past row and the forecast maximum. The latest past row is the last entry of past.",
+  "valencia": [
+    { "name": "forecast far above its own normal", "past": [10, 10, 10], "forecast_max": 45.0, "status": "over" },
+    { "name": "now above twice its normal", "past": [10, 10, 25], "forecast_max": 12.0, "status": "near" },
+    { "name": "a steady high point is not raised", "past": [30, 30, 30], "forecast_max": 35.0, "status": "ok" },
+    { "name": "near-dry point: median floored at 5, cuts 10 and 20", "past": [0.1, 0.2, 0.1], "forecast_max": 9.9, "status": "ok" },
+    { "name": "near-dry point exactly on the watch cut", "past": [0.1, 0.2, 0.1], "forecast_max": 10.0, "status": "near" },
+    { "name": "exactly on the over cut", "past": [10, 10, 10], "forecast_max": 40.0, "status": "over" },
+    { "name": "no past rows: floor of 5, so 12 is near", "past": [], "forecast_max": 12.0, "status": "near" },
+    { "name": "no reading", "past": [], "forecast_max": null, "status": "unknown" }
+  ]
+}

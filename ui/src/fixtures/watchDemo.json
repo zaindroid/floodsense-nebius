@@ -1,0 +1,722 @@
+{
+ "recorded_at": "2026-10-27T13:50:55Z",
+ "note": "Recorded from the agents service run on a host against the real Zetaris views; rule-based, no model calls.",
+ "status": {
+  "note": "Rule-based watchers: no model calls. Model-written work only appears when a full investigation is started.",
+  "loop": {
+   "enabled": true,
+   "alive": true,
+   "interval_s": 300.0,
+   "next_cycle_at": "2026-10-27T13:54:14Z"
+  },
+  "scanning": false,
+  "started_at": "2026-10-27T13:49:07Z",
+  "last_cycle": {
+   "ran": true,
+   "trigger": "manual",
+   "started_at": "2026-10-27T13:50:54Z",
+   "finished_at": "2026-10-27T13:50:55Z",
+   "duration_ms": 1141,
+   "sources": 45,
+   "elevated": 13,
+   "new": 0,
+   "errors": {},
+   "auto_assess_run_id": null
+  },
+  "counts": {
+   "sources": 45,
+   "elevated": 13,
+   "events": 29,
+   "awaiting_approval": 0
+  },
+  "latest_event_id": "w00000029",
+  "awaiting_run_ids": [],
+  "auto_assess": {
+   "enabled": false,
+   "per_hour": 1,
+   "per_day": 3,
+   "used_hour": 0,
+   "used_day": 0,
+   "next_allowed_at": null,
+   "uses_model_calls": true
+  },
+  "persisted": true,
+  "served_from": "live",
+  "cached_at": null
+ },
+ "events": [
+  {
+   "id": "w00000001",
+   "ts": "2026-10-27T13:49:14Z",
+   "kind": "detected",
+   "agent": "Watch",
+   "place_id": "model:EU03",
+   "place": "Orleans",
+   "river": "Loire",
+   "country": "FR",
+   "status": "Elevated (model)",
+   "tone": "elevated",
+   "text": "Loire at Orleans: Elevated (model). The 7-day model maximum is 233 m³/s, 5.1 times the past-30-day median of 46.1 m³/s. Model, not an official warning.",
+   "run_id": null,
+   "source": {
+    "view": "eu_watch",
+    "query_id": "c27eb690-4a4b-4424-88ba-feed91366818"
+   },
+   "data": {
+    "previous": null,
+    "ratio": 5.064439140811455
+   }
+  },
+  {
+   "id": "w00000002",
+   "ts": "2026-10-27T13:49:14Z",
+   "kind": "checked",
+   "agent": "Forecast",
+   "place_id": "model:EU03",
+   "place": "Orleans",
+   "river": "Loire",
+   "country": "FR",
+   "status": "Elevated (model)",
+   "tone": "elevated",
+   "text": "Forecast check for Loire at Orleans: rain forecast 0.6 mm over the next 48 h (wettest hour 0.5 mm); GloFAS 7-day maximum 233 m³/s. FloodSense screening: elevated. Rule-based, not an official warning.",
+   "run_id": null,
+   "source": {
+    "view": "weather_forecast",
+    "query_id": "e1832853-1c02-4c92-988d-71fe0336f0d6"
+   },
+   "data": {
+    "rain_48h_mm": 0.6,
+    "max_hour_mm": 0.5,
+    "forecast_max_m3s": 233.42,
+    "screening": "Elevated"
+   }
+  },
+  {
+   "id": "w00000003",
+   "ts": "2026-10-27T13:49:14Z",
+   "kind": "detected",
+   "agent": "Watch",
+   "place_id": "model:EU10",
+   "place": "Liege",
+   "river": "Meuse",
+   "country": "BE",
+   "status": "Elevated (model)",
+   "tone": "elevated",
+   "text": "Meuse at Liege: Elevated (model). The 7-day model maximum is 163 m³/s, 4.3 times the past-30-day median of 38.0 m³/s. Model, not an official warning.",
+   "run_id": null,
+   "source": {
+    "view": "eu_watch",
+    "query_id": "c27eb690-4a4b-4424-88ba-feed91366818"
+   },
+   "data": {
+    "previous": null,
+    "ratio": 4.296706192358366
+   }
+  },
+  {
+   "id": "w00000004",
+   "ts": "2026-10-27T13:49:14Z",
+   "kind": "checked",
+   "agent": "Forecast",
+   "place_id": "model:EU10",
+   "place": "Liege",
+   "river": "Meuse",
+   "country": "BE",
+   "status": "Elevated (model)",
+   "tone": "elevated",
+   "text": "Forecast check for Meuse at Liege: rain forecast 1.2 mm over the next 48 h (wettest hour 0.7 mm); GloFAS 7-day maximum 163 m³/s. FloodSense screening: elevated. Rule-based, not an official warning.",
+   "run_id": null,
+   "source": {
+    "view": "weather_forecast",
+    "query_id": "e1832853-1c02-4c92-988d-71fe0336f0d6"
+   },
+   "data": {
+    "rain_48h_mm": 1.2,
+    "max_hour_mm": 0.7,
+    "forecast_max_m3s": 163.06,
+    "screening": "Elevated"
+   }
+  },
+  {
+   "id": "w00000005",
+   "ts": "2026-10-27T13:49:14Z",
+   "kind": "detected",
+   "agent": "Watch",
+   "place_id": "model:EU06",
+   "place": "Warsaw",
+   "river": "Vistula",
+   "country": "PL",
+   "status": "Elevated (model)",
+   "tone": "elevated",
+   "text": "Vistula at Warsaw: Elevated (model). The 7-day model maximum is 210 m³/s, 3.3 times the past-30-day median of 63.3 m³/s. Model, not an official warning.",
+   "run_id": null,
+   "source": {
+    "view": "eu_watch",
+    "query_id": "c27eb690-4a4b-4424-88ba-feed91366818"
+   },
+   "data": {
+    "previous": null,
+    "ratio": 3.3168958432116327
+   }
+  },
+  {
+   "id": "w00000006",
+   "ts": "2026-10-27T13:49:14Z",
+   "kind": "checked",
+   "agent": "Forecast",
+   "place_id": "model:EU06",
+   "place": "Warsaw",
+   "river": "Vistula",
+   "country": "PL",
+   "status": "Elevated (model)",
+   "tone": "elevated",
+   "text": "Forecast check for Vistula at Warsaw: rain forecast 0.2 mm over the next 48 h (wettest hour 0.1 mm); GloFAS 7-day maximum 210 m³/s. FloodSense screening: elevated. Rule-based, not an official warning.",
+   "run_id": null,
+   "source": {
+    "view": "weather_forecast",
+    "query_id": "e1832853-1c02-4c92-988d-71fe0336f0d6"
+   },
+   "data": {
+    "rain_48h_mm": 0.2,
+    "max_hour_mm": 0.1,
+    "forecast_max_m3s": 209.86,
+    "screening": "Elevated"
+   }
+  },
+  {
+   "id": "w00000007",
+   "ts": "2026-10-27T13:49:14Z",
+   "kind": "detected",
+   "agent": "Watch",
+   "place_id": "model:EU01",
+   "place": "Paris",
+   "river": "Seine",
+   "country": "FR",
+   "status": "Elevated (model)",
+   "tone": "elevated",
+   "text": "Seine at Paris: Elevated (model). The 7-day model maximum is 213 m³/s, 2.3 times the past-30-day median of 91.0 m³/s. Model, not an official warning.",
+   "run_id": null,
+   "source": {
+    "view": "eu_watch",
+    "query_id": "c27eb690-4a4b-4424-88ba-feed91366818"
+   },
+   "data": {
+    "previous": null,
+    "ratio": 2.3394898856640283
+   }
+  },
+  {
+   "id": "w00000008",
+   "ts": "2026-10-27T13:49:14Z",
+   "kind": "checked",
+   "agent": "Forecast",
+   "place_id": "model:EU01",
+   "place": "Paris",
+   "river": "Seine",
+   "country": "FR",
+   "status": "Elevated (model)",
+   "tone": "elevated",
+   "text": "Forecast check for Seine at Paris: rain forecast 0.9 mm over the next 48 h (wettest hour 0.5 mm); GloFAS 7-day maximum 213 m³/s. FloodSense screening: elevated. Rule-based, not an official warning.",
+   "run_id": null,
+   "source": {
+    "view": "weather_forecast",
+    "query_id": "e1832853-1c02-4c92-988d-71fe0336f0d6"
+   },
+   "data": {
+    "rain_48h_mm": 0.9,
+    "max_hour_mm": 0.5,
+    "forecast_max_m3s": 212.8,
+    "screening": "Elevated"
+   }
+  },
+  {
+   "id": "w00000009",
+   "ts": "2026-10-27T13:49:14Z",
+   "kind": "detected",
+   "agent": "Watch",
+   "place_id": "model:EU04",
+   "place": "Piacenza",
+   "river": "Po",
+   "country": "IT",
+   "status": "Elevated (model)",
+   "tone": "elevated",
+   "text": "Po at Piacenza: Elevated (model). The 7-day model maximum is 907 m³/s, 2.3 times the past-30-day median of 390 m³/s. Model, not an official warning.",
+   "run_id": null,
+   "source": {
+    "view": "eu_watch",
+    "query_id": "c27eb690-4a4b-4424-88ba-feed91366818"
+   },
+   "data": {
+    "previous": null,
+    "ratio": 2.3231839317509317
+   }
+  },
+  {
+   "id": "w00000010",
+   "ts": "2026-10-27T13:49:14Z",
+   "kind": "checked",
+   "agent": "Forecast",
+   "place_id": "model:EU04",
+   "place": "Piacenza",
+   "river": "Po",
+   "country": "IT",
+   "status": "Elevated (model)",
+   "tone": "elevated",
+   "text": "Forecast check for Po at Piacenza: rain forecast 0 mm over the next 48 h (wettest hour 0 mm); GloFAS 7-day maximum 907 m³/s. FloodSense screening: elevated. Rule-based, not an official warning.",
+   "run_id": null,
+   "source": {
+    "view": "weather_forecast",
+    "query_id": "e1832853-1c02-4c92-988d-71fe0336f0d6"
+   },
+   "data": {
+    "rain_48h_mm": 0.0,
+    "max_hour_mm": 0.0,
+    "forecast_max_m3s": 906.82,
+    "screening": "Elevated"
+   }
+  },
+  {
+   "id": "w00000011",
+   "ts": "2026-10-27T13:49:14Z",
+   "kind": "detected",
+   "agent": "Watch",
+   "place_id": "model:EU02",
+   "place": "Lyon",
+   "river": "Rhone",
+   "country": "FR",
+   "status": "Watch (model)",
+   "tone": "watch",
+   "text": "Rhone at Lyon: Watch (model). The 7-day model maximum is 458 m³/s, 2.0 times the past-30-day median of 230 m³/s. Model, not an official warning.",
+   "run_id": null,
+   "source": {
+    "view": "eu_watch",
+    "query_id": "c27eb690-4a4b-4424-88ba-feed91366818"
+   },
+   "data": {
+    "previous": null,
+    "ratio": 1.9903998609934623
+   }
+  },
+  {
+   "id": "w00000012",
+   "ts": "2026-10-27T13:49:14Z",
+   "kind": "checked",
+   "agent": "Forecast",
+   "place_id": "model:EU02",
+   "place": "Lyon",
+   "river": "Rhone",
+   "country": "FR",
+   "status": "Watch (model)",
+   "tone": "watch",
+   "text": "Forecast check for Rhone at Lyon: rain forecast 0 mm over the next 48 h (wettest hour 0 mm); GloFAS 7-day maximum 458 m³/s. FloodSense screening: watch. Rule-based, not an official warning.",
+   "run_id": null,
+   "source": {
+    "view": "weather_forecast",
+    "query_id": "e1832853-1c02-4c92-988d-71fe0336f0d6"
+   },
+   "data": {
+    "rain_48h_mm": 0.0,
+    "max_hour_mm": 0.0,
+    "forecast_max_m3s": 458.2,
+    "screening": "Watch"
+   }
+  },
+  {
+   "id": "w00000013",
+   "ts": "2026-10-27T13:49:14Z",
+   "kind": "detected",
+   "agent": "Watch",
+   "place_id": "model:EU11",
+   "place": "Prague",
+   "river": "Vltava",
+   "country": "CZ",
+   "status": "Watch (model)",
+   "tone": "watch",
+   "text": "Vltava at Prague: Watch (model). The 7-day model maximum is 29.4 m³/s, 1.7 times the past-30-day median of 16.9 m³/s. Model, not an official warning.",
+   "run_id": null,
+   "source": {
+    "view": "eu_watch",
+    "query_id": "c27eb690-4a4b-4424-88ba-feed91366818"
+   },
+   "data": {
+    "previous": null,
+    "ratio": 1.7417826473201068
+   }
+  },
+  {
+   "id": "w00000014",
+   "ts": "2026-10-27T13:49:14Z",
+   "kind": "checked",
+   "agent": "Forecast",
+   "place_id": "model:EU11",
+   "place": "Prague",
+   "river": "Vltava",
+   "country": "CZ",
+   "status": "Watch (model)",
+   "tone": "watch",
+   "text": "Forecast check for Vltava at Prague: rain forecast 1.9 mm over the next 48 h (wettest hour 0.8 mm); GloFAS 7-day maximum 29.4 m³/s. FloodSense screening: watch. Rule-based, not an official warning.",
+   "run_id": null,
+   "source": {
+    "view": "weather_forecast",
+    "query_id": "e1832853-1c02-4c92-988d-71fe0336f0d6"
+   },
+   "data": {
+    "rain_48h_mm": 1.9,
+    "max_hour_mm": 0.85,
+    "forecast_max_m3s": 29.41,
+    "screening": "Watch"
+   }
+  },
+  {
+   "id": "w00000015",
+   "ts": "2026-10-27T13:49:14Z",
+   "kind": "detected",
+   "agent": "Watch",
+   "place_id": "model:EU09",
+   "place": "Szeged",
+   "river": "Tisza",
+   "country": "HU",
+   "status": "Watch (model)",
+   "tone": "watch",
+   "text": "Tisza at Szeged: Watch (model). The 7-day model maximum is 137 m³/s, 1.6 times the past-30-day median of 83.8 m³/s. Model, not an official warning.",
+   "run_id": null,
+   "source": {
+    "view": "eu_watch",
+    "query_id": "c27eb690-4a4b-4424-88ba-feed91366818"
+   },
+   "data": {
+    "previous": null,
+    "ratio": 1.63483447658813
+   }
+  },
+  {
+   "id": "w00000016",
+   "ts": "2026-10-27T13:49:14Z",
+   "kind": "checked",
+   "agent": "Forecast",
+   "place_id": "model:EU09",
+   "place": "Szeged",
+   "river": "Tisza",
+   "country": "HU",
+   "status": "Watch (model)",
+   "tone": "watch",
+   "text": "Forecast check for Tisza at Szeged: rain forecast 0 mm over the next 48 h (wettest hour 0 mm); GloFAS 7-day maximum 137 m³/s. FloodSense screening: watch. Rule-based, not an official warning.",
+   "run_id": null,
+   "source": {
+    "view": "weather_forecast",
+    "query_id": "e1832853-1c02-4c92-988d-71fe0336f0d6"
+   },
+   "data": {
+    "rain_48h_mm": 0.0,
+    "max_hour_mm": 0.0,
+    "forecast_max_m3s": 137.04,
+    "screening": "Watch"
+   }
+  },
+  {
+   "id": "w00000017",
+   "ts": "2026-10-27T13:49:14Z",
+   "kind": "detected",
+   "agent": "Watch",
+   "place_id": "valencia:VAL04",
+   "place": "Alfafar",
+   "river": "",
+   "country": "ES",
+   "status": "Above its recent normal (model)",
+   "tone": "neutral",
+   "text": "Alfafar: Above its recent normal (model). Modelled river flow reaches 30.9 m³/s (latest hour and next 48 h), measured against this point's own past flow (above twice, and far above four times, its median; the median is never taken below 5 m³/s). Not official.",
+   "run_id": null,
+   "source": {
+    "view": "hazard_now",
+    "query_id": "07469df9-6da3-4026-a1a8-e67e845ab9fe"
+   },
+   "data": {
+    "previous": null,
+    "ratio": 0.3865
+   }
+  },
+  {
+   "id": "w00000018",
+   "ts": "2026-10-27T13:49:14Z",
+   "kind": "checked",
+   "agent": "Forecast",
+   "place_id": "valencia:VAL04",
+   "place": "Alfafar",
+   "river": "",
+   "country": "ES",
+   "status": "Above its recent normal (model)",
+   "tone": "neutral",
+   "text": "Forecast check for Alfafar: rain forecast 0 mm over the next 48 h (wettest hour 0 mm); model discharge maximum in the forecast window 30.9 m³/s. FloodSense screening: normal. Rule-based, not an official warning.",
+   "run_id": null,
+   "source": {
+    "view": "weather_forecast",
+    "query_id": "e1832853-1c02-4c92-988d-71fe0336f0d6"
+   },
+   "data": {
+    "rain_48h_mm": 0.0,
+    "max_hour_mm": 0.0,
+    "forecast_max_m3s": 30.92,
+    "screening": "Normal"
+   }
+  },
+  {
+   "id": "w00000019",
+   "ts": "2026-10-27T13:49:14Z",
+   "kind": "exposure",
+   "agent": "Exposure",
+   "place_id": "valencia:VAL04",
+   "place": "Alfafar",
+   "river": "",
+   "country": "ES",
+   "status": "Above its recent normal (model)",
+   "tone": "neutral",
+   "text": "Exposure near Alfafar (also covering Benetússer, Sedaví, Catarroja, Paiporta): 359 insured sites of the demo book within about 25 km, 1,065,397,000 EUR insured in total (synthetic demo portfolio).",
+   "run_id": null,
+   "source": {
+    "view": "exposure_join",
+    "query_id": "71ae0b0e-9e10-4c71-8a9f-993151be9af5"
+   },
+   "data": {
+    "sites": 359,
+    "insured_eur": 1065397000.0,
+    "radius_km": 25.0,
+    "also_covers": [
+     "Benetússer",
+     "Sedaví",
+     "Catarroja",
+     "Paiporta"
+    ]
+   }
+  },
+  {
+   "id": "w00000020",
+   "ts": "2026-10-27T13:49:14Z",
+   "kind": "detected",
+   "agent": "Watch",
+   "place_id": "valencia:VAL05",
+   "place": "Benetússer",
+   "river": "",
+   "country": "ES",
+   "status": "Above its recent normal (model)",
+   "tone": "neutral",
+   "text": "Benetússer: Above its recent normal (model). Modelled river flow reaches 30.9 m³/s (latest hour and next 48 h), measured against this point's own past flow (above twice, and far above four times, its median; the median is never taken below 5 m³/s). Not official.",
+   "run_id": null,
+   "source": {
+    "view": "hazard_now",
+    "query_id": "07469df9-6da3-4026-a1a8-e67e845ab9fe"
+   },
+   "data": {
+    "previous": null,
+    "ratio": 0.3865
+   }
+  },
+  {
+   "id": "w00000021",
+   "ts": "2026-10-27T13:49:14Z",
+   "kind": "checked",
+   "agent": "Forecast",
+   "place_id": "valencia:VAL05",
+   "place": "Benetússer",
+   "river": "",
+   "country": "ES",
+   "status": "Above its recent normal (model)",
+   "tone": "neutral",
+   "text": "Forecast check for Benetússer: rain forecast 0 mm over the next 48 h (wettest hour 0 mm); model discharge maximum in the forecast window 30.9 m³/s. FloodSense screening: normal. Rule-based, not an official warning.",
+   "run_id": null,
+   "source": {
+    "view": "weather_forecast",
+    "query_id": "e1832853-1c02-4c92-988d-71fe0336f0d6"
+   },
+   "data": {
+    "rain_48h_mm": 0.0,
+    "max_hour_mm": 0.0,
+    "forecast_max_m3s": 30.92,
+    "screening": "Normal"
+   }
+  },
+  {
+   "id": "w00000022",
+   "ts": "2026-10-27T13:49:14Z",
+   "kind": "detected",
+   "agent": "Watch",
+   "place_id": "valencia:VAL03",
+   "place": "Sedaví",
+   "river": "",
+   "country": "ES",
+   "status": "Above its recent normal (model)",
+   "tone": "neutral",
+   "text": "Sedaví: Above its recent normal (model). Modelled river flow reaches 30.9 m³/s (latest hour and next 48 h), measured against this point's own past flow (above twice, and far above four times, its median; the median is never taken below 5 m³/s). Not official.",
+   "run_id": null,
+   "source": {
+    "view": "hazard_now",
+    "query_id": "07469df9-6da3-4026-a1a8-e67e845ab9fe"
+   },
+   "data": {
+    "previous": null,
+    "ratio": 0.3865
+   }
+  },
+  {
+   "id": "w00000023",
+   "ts": "2026-10-27T13:49:14Z",
+   "kind": "checked",
+   "agent": "Forecast",
+   "place_id": "valencia:VAL03",
+   "place": "Sedaví",
+   "river": "",
+   "country": "ES",
+   "status": "Above its recent normal (model)",
+   "tone": "neutral",
+   "text": "Forecast check for Sedaví: rain forecast 0 mm over the next 48 h (wettest hour 0 mm); model discharge maximum in the forecast window 30.9 m³/s. FloodSense screening: normal. Rule-based, not an official warning.",
+   "run_id": null,
+   "source": {
+    "view": "weather_forecast",
+    "query_id": "e1832853-1c02-4c92-988d-71fe0336f0d6"
+   },
+   "data": {
+    "rain_48h_mm": 0.0,
+    "max_hour_mm": 0.0,
+    "forecast_max_m3s": 30.92,
+    "screening": "Normal"
+   }
+  },
+  {
+   "id": "w00000024",
+   "ts": "2026-10-27T13:49:14Z",
+   "kind": "detected",
+   "agent": "Watch",
+   "place_id": "valencia:VAL02",
+   "place": "Catarroja",
+   "river": "",
+   "country": "ES",
+   "status": "Above its recent normal (model)",
+   "tone": "neutral",
+   "text": "Catarroja: Above its recent normal (model). Modelled river flow reaches 30.1 m³/s (latest hour and next 48 h), measured against this point's own past flow (above twice, and far above four times, its median; the median is never taken below 5 m³/s). Not official.",
+   "run_id": null,
+   "source": {
+    "view": "hazard_now",
+    "query_id": "07469df9-6da3-4026-a1a8-e67e845ab9fe"
+   },
+   "data": {
+    "previous": null,
+    "ratio": 0.375625
+   }
+  },
+  {
+   "id": "w00000025",
+   "ts": "2026-10-27T13:49:14Z",
+   "kind": "checked",
+   "agent": "Forecast",
+   "place_id": "valencia:VAL02",
+   "place": "Catarroja",
+   "river": "",
+   "country": "ES",
+   "status": "Above its recent normal (model)",
+   "tone": "neutral",
+   "text": "Forecast check for Catarroja: rain forecast 0.1 mm over the next 48 h (wettest hour 0.1 mm); model discharge maximum in the forecast window 30.1 m³/s. FloodSense screening: normal. Rule-based, not an official warning.",
+   "run_id": null,
+   "source": {
+    "view": "weather_forecast",
+    "query_id": "e1832853-1c02-4c92-988d-71fe0336f0d6"
+   },
+   "data": {
+    "rain_48h_mm": 0.1,
+    "max_hour_mm": 0.1,
+    "forecast_max_m3s": 30.05,
+    "screening": "Normal"
+   }
+  },
+  {
+   "id": "w00000026",
+   "ts": "2026-10-27T13:49:14Z",
+   "kind": "detected",
+   "agent": "Watch",
+   "place_id": "valencia:VAL01",
+   "place": "Paiporta",
+   "river": "",
+   "country": "ES",
+   "status": "Above its recent normal (model)",
+   "tone": "neutral",
+   "text": "Paiporta: Above its recent normal (model). Modelled river flow reaches 30.1 m³/s (latest hour and next 48 h), measured against this point's own past flow (above twice, and far above four times, its median; the median is never taken below 5 m³/s). Not official.",
+   "run_id": null,
+   "source": {
+    "view": "hazard_now",
+    "query_id": "07469df9-6da3-4026-a1a8-e67e845ab9fe"
+   },
+   "data": {
+    "previous": null,
+    "ratio": 0.375625
+   }
+  },
+  {
+   "id": "w00000027",
+   "ts": "2026-10-27T13:49:14Z",
+   "kind": "checked",
+   "agent": "Forecast",
+   "place_id": "valencia:VAL01",
+   "place": "Paiporta",
+   "river": "",
+   "country": "ES",
+   "status": "Above its recent normal (model)",
+   "tone": "neutral",
+   "text": "Forecast check for Paiporta: rain forecast 0.1 mm over the next 48 h (wettest hour 0.1 mm); model discharge maximum in the forecast window 30.1 m³/s. FloodSense screening: normal. Rule-based, not an official warning.",
+   "run_id": null,
+   "source": {
+    "view": "weather_forecast",
+    "query_id": "e1832853-1c02-4c92-988d-71fe0336f0d6"
+   },
+   "data": {
+    "rain_48h_mm": 0.1,
+    "max_hour_mm": 0.1,
+    "forecast_max_m3s": 30.05,
+    "screening": "Normal"
+   }
+  },
+  {
+   "id": "w00000028",
+   "ts": "2026-10-27T13:49:14Z",
+   "kind": "info",
+   "agent": "Watch",
+   "place_id": null,
+   "place": "",
+   "river": "",
+   "country": "",
+   "status": "",
+   "tone": "unknown",
+   "text": "First scan: 45 sources watched, 13 elevated, 13 new or higher. Rule-based, no model calls.",
+   "run_id": null,
+   "source": {
+    "view": "watch",
+    "query_id": null
+   },
+   "data": {
+    "sources": 45,
+    "elevated": 13,
+    "new": 13
+   }
+  },
+  {
+   "id": "w00000029",
+   "ts": "2026-10-27T13:50:55Z",
+   "kind": "info",
+   "agent": "Watch",
+   "place_id": null,
+   "place": "",
+   "river": "",
+   "country": "",
+   "status": "",
+   "tone": "unknown",
+   "text": "Scan requested from the console: 45 sources watched, 13 elevated, 0 new or higher. Rule-based, no model calls.",
+   "run_id": null,
+   "source": {
+    "view": "watch",
+    "query_id": null
+   },
+   "data": {
+    "sources": 45,
+    "elevated": 13,
+    "new": 0
+   }
+  }
+ ]
+}

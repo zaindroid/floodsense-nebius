@@ -1,0 +1,21 @@
+{
+  "citation_id": "cit_example_layer_c",
+  "claim_id": "claim_example_rain",
+  "layer": "c",
+  "source_url": "https://mapping.emergency.copernicus.eu/activations/EMSR773",
+  "title": "EMSR773 delineation map",
+  "publisher": "Copernicus Emergency Management Service",
+  "accessed_at": "2026-10-26T00:00:00Z",
+  "licence": "CEMS On-Demand Mapping Terms",
+  "attribution": "Copernicus Emergency Management Service (© 2024 European Union), EMSR773",
+  "locator": {
+    "page": 12,
+    "paragraph": 3,
+    "lines": "3-5"
+  },
+  "quote": "Example verbatim quote for a layer c citation. It is not a measurement.",
+  "content_sha256": "7a1b4abc13a0e78e364e8c68e8a7a27ba1b7039651b20fa6b4bec2784c961212",
+  "storage": "full_text",
+  "query_id": "qry_example_discharge",
+  "chunk_id": "chunk_example_emsr773_p12"
+}

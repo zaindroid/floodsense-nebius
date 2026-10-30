@@ -1,0 +1,5 @@
+# Direct deps for the shared contract package and its tests.
+# Not installed into the API or agent images.
+# Pinned to the versions the contract tests passed on 2026-10-22.
+pydantic==2.14.1
+jsonschema==4.26.0
