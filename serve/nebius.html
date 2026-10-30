@@ -71,6 +71,7 @@
   .btn:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
   .err { margin: 0; font-size: .85rem; color: #ffb3a3; min-height: 1em; }
   .hidden { display: none !important; }
+  .btn.wait { opacity: .75; pointer-events: none; cursor: default; }
 
   .foot { margin: 2.4rem 0 0; font-size: .82rem; color: var(--soft); opacity: 0; animation: appear .8s 1.6s ease-out forwards; }
 
@@ -120,8 +121,7 @@
         <h2 id="nb-title">Nebius Cloud</h2>
         <p id="sub" class="sub">Wakes in about a minute</p>
         <div class="level" aria-hidden="true"><span id="level"></span></div>
-        <a id="start" class="btn nb hidden" href="/nebius/start">Start on Nebius</a>
-        <a id="open" class="btn nb hidden" href="#" target="_blank" rel="noopener">Open on Nebius</a>
+        <a id="nb-go" class="btn nb hidden" href="/nebius/start">Open on Nebius</a>
         <p id="err" class="err" role="alert"></p>
       </section>
     </div>
@@ -133,21 +133,31 @@
   const $ = (id) => document.getElementById(id);
   const at = (iso) => iso ? new Date(iso).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "";
   let timer = null;
+  const going = new URLSearchParams(location.search).get("go") === "nebius";
 
   function show(s) {
     const busy = ["STARTING", "STOPPING"].includes(s.state) || (s.state === "RUNNING" && !s.ready);
-    const label = !s.configured ? "Offline" : s.ready ? "Ready" : s.state === "STOPPED" ? "Asleep"
+    // Asleep: the one button wakes the VM (after the login) and comes back with ?go,
+    // and the page then opens the Nebius demo by itself as soon as it is ready.
+    const waking = busy || (going && s.state === "STOPPED");
+    const label = !s.configured ? "Offline" : s.ready ? "Live" : waking && s.state === "STOPPED" ? "Waking" : s.state === "STOPPED" ? "Asleep"
       : s.state === "STARTING" ? "Waking" : s.state === "RUNNING" ? "Starting app" : s.state === "STOPPING" ? "Going to sleep" : "Unavailable";
     $("pill").textContent = label;
-    $("pill").className = "pill" + (s.ready ? " ok" : busy ? " busy" : "");
+    $("pill").className = "pill" + (s.ready ? " ok" : waking ? " busy" : "");
     $("level").style.width = (s.ready ? 100 : s.state === "RUNNING" ? 72 : s.state === "STARTING" ? 38 : 4) + "%";
-    $("sub").textContent = s.ready ? (s.stops_at ? `Running until ${at(s.stops_at)}` : "Running") : busy ? "Getting ready" : "Wakes in about a minute";
-    $("start").classList.toggle("hidden", !(s.configured && ["STOPPED", "ERROR"].includes(s.state)));
-    $("open").classList.toggle("hidden", !s.ready);
-    if (s.demo_url) $("open").href = s.demo_url;
+    const go = $("nb-go");
+    if (s.ready && going) { location.replace(s.demo_url); return; }
+    go.classList.toggle("hidden", !s.configured || !(s.ready || waking || ["STOPPED", "ERROR"].includes(s.state)));
+    go.classList.toggle("wait", !s.ready && waking);
+    if (s.ready) { go.href = s.demo_url; go.target = "_blank"; go.rel = "noopener"; go.textContent = "Open on Nebius"; }
+    else if (waking) { go.removeAttribute("href"); go.removeAttribute("target"); go.textContent = going ? "Opening when ready…" : "Waking up…"; }
+    else { go.href = "/nebius/start"; go.removeAttribute("target"); go.textContent = "Open on Nebius"; }
+    $("sub").textContent = s.ready ? (s.stops_at ? `Running until ${at(s.stops_at)}` : "Running")
+      : waking ? (going ? "Waking up, opens by itself in about a minute" : "Waking up, about a minute")
+      : "Asleep, wakes in about a minute when you open it";
     $("err").textContent = "";
     clearTimeout(timer);
-    timer = setTimeout(refresh, busy ? 4000 : 30000);
+    timer = setTimeout(refresh, busy || going ? 4000 : 30000);
   }
 
   async function refresh() {

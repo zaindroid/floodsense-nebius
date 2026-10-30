@@ -144,7 +144,7 @@ class ControlsTest(unittest.TestCase):
         n, vm, c = self._wired("STOPPED")
         r = c.get("/start", follow_redirects=False)
         self.assertEqual(r.status_code, 303)
-        self.assertEqual(r.headers["location"], "/")
+        self.assertEqual(r.headers["location"], "/?go=nebius")
         self.assertEqual(vm.calls, ["start"])
 
     def test_start_on_a_running_vm_does_not_start_it_again(self) -> None:

@@ -171,9 +171,10 @@ async def start() -> dict:
 
 @app.get("/start")
 async def start_and_return() -> RedirectResponse:
-    """The entry page links here: the browser asks for the login, then comes back."""
+    """The entry page links here: the browser asks for the login, then comes back
+    to a page that opens the Nebius demo by itself once the VM is ready."""
     await start()
-    return RedirectResponse("/", status_code=303)
+    return RedirectResponse("/?go=nebius", status_code=303)
 
 
 @app.post("/api/stop")
