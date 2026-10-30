@@ -25,7 +25,7 @@ export function homeInsurer(root) {
     const hit = sites.filter((s) => s.in_footprint);
     const segments = [...new Set(sites.map((s) => s.segment))].sort();
     const top = [...hit].sort((a, b) => b.sum_insured_eur - a.sum_insured_eur).slice(0, 8);
-    const mapEl = h("div", { class: "map", role: "img", "aria-label": `Map of ${sites.length} insured sites around Valencia, ${hit.length} inside the flood footprint` });
+    const mapEl = h("div", { class: "map pins-only", role: "img", "aria-label": `Map of ${sites.length} insured sites around Valencia, ${hit.length} inside the flood footprint` });
 
     fill(body,
       h("div", { class: "widgets" },

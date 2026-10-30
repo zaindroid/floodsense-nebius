@@ -530,3 +530,9 @@ details.more[open] > summary::before { transform: rotate(45deg); }
   .hydro .area { opacity: 1; animation: none; }
   .pipeline li.now .dot, .mode.live::before, .dock-dot, .typing::after, .flow .node.busy rect, .flow .node.wait rect, .flow-log li { animation: none; }
 }
+
+/* Insured sites on the 3D map: hundreds of points around one city, with no reading
+   to fill a dial. They stay small pins at every zoom instead of opening into dials. */
+.pins-only .gpin__dial, .pins-only .gpin__pulse { display: none !important; }
+.pins-only .map3d--near .gpin__pin { display: block; }
+.pins-only .gpin__pin { left: -8px; width: 16px; height: 23px; animation: none; }
