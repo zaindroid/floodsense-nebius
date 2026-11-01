@@ -14,11 +14,7 @@ Entry for the **Nebius x NVIDIA Global AI Hackathon**, track Best Apps and Agent
 
 ## Try it
 
-| | |
-|---|---|
-| Live app | **https://floodsense-nebius.zaindroid.me** |
-| Login | `demo` / `test123` (keeps the Token Factory credit for judges) |
-| Same app on Nebius AI Cloud | Open https://floodsense-nebius.zaindroid.me and press **Open on Nebius**. The VM sleeps to save credit. It wakes in about a minute and the app opens on its own. |
+Live demo: **https://floodsense-nebius.zaindroid.me**. It's open, with no login.
 
 A short tour:
 
@@ -42,10 +38,6 @@ straight from data, with no model call.
   - The deep lane runs `nvidia/Nemotron-3.5-Super-VL`. It handles the Judge's grounding checks and
     repairs.
   - Each answer records which model gave it, plus its tokens and cost.
-- **Nebius AI Cloud** runs the same app on a VM (2 vCPU, 8 GB, Ubuntu 24.04). It runs as Docker
-  Compose services: a Caddy proxy with HTTPS, the API, the agents and Redis. This site starts and
-  stops the VM through a service account that can only power that one VM on and off. The VM
-  sleeps again after 120 minutes.
 - **Zetaris** is the only way the app reads data. The agents query its views:
   - live German gauge levels (PEGELONLINE, updated every 10 minutes)
   - European river forecasts (Open-Meteo, GloFAS)
@@ -67,13 +59,7 @@ the commit.
 | `api/` | FastAPI: runs, live streams, approvals, watch status, Zetaris views |
 | `ui-merged/web/` | The role-based web UI with the 3D map, served at `/app/` |
 | `engines/`, `contracts/` | Memory and world-model engines, shared data contracts |
-| `serve/` | What this copy adds: the login, the start page and the Nebius VM controls |
-
-What `serve/` adds:
-
-- `login.py` puts one login in front of the app, so no stranger can spend the Token Factory credit.
-  `/health`, `/ready` and `/version` stay open.
-- `nebius.py` and `nebius.html` make the start page and `/nebius/api/{status,start,stop,extend}`.
+| `serve/` | What this copy adds: the entry page, and one app that mounts the API and the UI |
 
 ## Run it yourself
 
@@ -81,18 +67,12 @@ Set these on the host, never in the repo:
 
 - `LLM_BACKEND=nebius` and `NEBIUS_API_KEY`
 - `ZETARIS_REST_URL`, `ZETARIS_API_KEY` and `FF_LIVE_DATA`
-- `JUDGE_PASSWORD`
 - optionally `TAVILY_API_KEY`
-- for the VM controls, `NEBIUS_INSTANCE_ID` and `NEBIUS_DEMO_URL`, plus either
-  `NEBIUS_SA_CREDENTIALS` or all three of `NEBIUS_SA_ID`, `NEBIUS_SA_PUBLIC_KEY_ID` and
-  `NEBIUS_SA_PRIVATE_KEY`
 
 ```sh
 docker build -t floodsense-nebius .
 docker run -p 8080:8080 --env-file .env floodsense-nebius
 ```
-
-Tests for `serve/`: `python -m unittest serve.test_nebius_front` (needs `fastapi`, `httpx`, `nebius`).
 
 ## Notes
 

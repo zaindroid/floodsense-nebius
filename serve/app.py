@@ -1,6 +1,6 @@
 """The one app this container serves.
 
-Mounts the team's API under /api, the Nebius VM controls under /nebius and
+Mounts the team's API under /api, the entry page at / and
 the role-based UI (main's ui-merged) at /app/. The four endpoints the platform asks for live here,
 because they describe the container rather than any one service inside it.
 """
@@ -16,25 +16,13 @@ from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.main import app as api_app  # api/app/main.py, mirrored from main
-from serve import nebius
-from serve.login import Login
 from serve.stream import app as stream_app
 
 AGENTS_URL = os.environ.get("AGENTS_URL", "http://127.0.0.1:8100").rstrip("/")
 MERGED = Path(os.environ.get("UI_MERGED", "/srv/ui-merged")).resolve()
+PAGE = Path(__file__).with_name("index.html")
 
 app = FastAPI(title="FloodSense EU — console", version=api_app.version)
-app.add_middleware(Login)
-
-
-@app.on_event("startup")
-async def _begin() -> None:
-    nebius.begin()
-
-
-@app.on_event("shutdown")
-async def _end() -> None:
-    await nebius.end()
 
 
 @app.get("/health")
@@ -74,17 +62,17 @@ def version() -> dict[str, str]:
 # of it would hide their implementation behind a copy of it.
 app.mount("/api/stream", stream_app)
 app.mount("/api", api_app)
-app.mount("/nebius", nebius.app)
 
 
 @app.get("/", include_in_schema=False)
 def entry() -> FileResponse:
-    # The front door: the two ways to try the demo. The app itself is at /app/.
-    return FileResponse(nebius.PAGE, headers={"cache-control": "no-store"})
+    # The front door. The app itself is at /app/.
+    return FileResponse(PAGE, headers={"cache-control": "no-store"})
 
 
 @app.get("/nebius", include_in_schema=False)
 def nebius_page() -> RedirectResponse:
+    # Old links to the VM page.
     return RedirectResponse("/")
 
 

@@ -1,7 +1,7 @@
 # FloodSense EU for the Nebius hackathon, as one container: the role-based UI
 # (main's ui-merged, plain files), the API proxy, the agents graph and the
 # engines sidecar, mirrored from the monorepo's main. serve/ is this repository's own: the
-# judge login and the /nebius page that starts and stops the Nebius VM copy.
+# entry page and the one app that mounts it all.
 
 # 1. the engines run TypeScript directly and have no runtime dependencies,
 # so the node binary alone is the whole of what they need.
@@ -18,8 +18,7 @@ RUN apt-get update \
 WORKDIR /srv
 COPY api/requirements.txt api-requirements.txt
 COPY agents/requirements.txt agents-requirements.txt
-# nebius: the SDK the /nebius page uses to start and stop the VM.
-RUN pip install --no-cache-dir -r api-requirements.txt -r agents-requirements.txt nebius
+RUN pip install --no-cache-dir -r api-requirements.txt -r agents-requirements.txt
 
 COPY api/app ./app
 COPY agents/floodsense_agents ./floodsense_agents

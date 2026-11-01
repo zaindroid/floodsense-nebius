@@ -17,6 +17,5 @@ redis: false
 ai: false
 
 # Set after the first start with set_app_env_vars, because each is tied to an
-# external account: LLM_BACKEND, NEBIUS_API_KEY, the ZETARIS_* gateway values,
-# JUDGE_PASSWORD, and for the /nebius page NEBIUS_INSTANCE_ID, NEBIUS_DEMO_URL
-# and the power-operator service account key.
+# external account: LLM_BACKEND, NEBIUS_API_KEY, the ZETARIS_* gateway values
+# and TAVILY_API_KEY.
